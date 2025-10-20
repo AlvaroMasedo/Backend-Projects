@@ -3,19 +3,22 @@ declare(strict_types=1);
 
 require __DIR__   . '/../config/db_connection.php';
 require __DIR__ . '/../models/pdo-afegir.php';
-/*require __DIR__ . '/../models/pdo-modificar.php';
 require __DIR__ . '/../models/pdo-eliminar.php';
-require __DIR__ . '/../models/pdo-consultar.php';*/
+require __DIR__ . '/../models/pdo-consultar.php';
+/*require __DIR__ . '/../models/pdo-modificar.php';
+*/
 
 //Obtenir l'acció des de la URL
 $action = $_GET['action'] ?? '';
 
+//Declaració de variables
+$dni = $nom = $cos = '';
+$errorDni = $errorNom = $errorId ='';
+$enviatMissatge = '';
+$resultats = []; 
+
 //Metode per gestionar l'afegir article
 if ($action === 'afegir'){
-    // variables per a la vista (eviten notices)
-    $dni = $nom = $cos = '';
-    $errorDni = $errorNom = '';
-    $enviatMissatge = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Obtenir dades del formulari
@@ -51,10 +54,68 @@ if ($action === 'afegir'){
     exit;
 }
 
-// Si no es 'afegir', tornar a l'índex
-header('Location: ../index.php');
-exit;
-        
+
+//Metode per gestionar l'eliminar article
+if ($action === 'eliminar'){
     
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        //Obtenir dades del formulari
+        $id = trim($_POST['id'] ?? '');
+
+        // Instanciar el model i eliminar
+        $eliminar = new PdoEliminar($conn);
+        if (empty($id)){
+            $enviatMissatge = '<p class="error">EL CAMP ID ÉS OBLIGATORI PER CERCAR.</p>';
+        } else if (!preg_match('/^\d+$/', $id)) {
+            $errorId = '<p class="error">EL FORMAT DE L\'ID NO ÉS VÀLID.</p>';
+        } else if(!$eliminar->existeixId($id)) {
+            $errorId = '<p class="error">L\'ID INTRODUÏT NO EXISTEIX A LA BASE DE DADES.</p>';
+        }else {
+            try{
+                $ok = $eliminar->eliminar($id);
+
+                if ($ok) {
+                    $enviatMissatge = '<p class="success">ARTICLE ELIMINAT CORRECTAMENT.</p>';
+                } else {
+                    $enviatMissatge = '<p class="error">ERROR EN ELIMINAR L\'ARTICLE. COMPROVA QUE EL DNI ÉS CORRECTE.</p>';
+                } 
+            } catch (PDOException $e) {
+                throw new PDOException('Error a l\'eliminar l\'article: ' . $e->getMessage());
+            }
+        }
+    }
+
+    require __DIR__ . '/../views/vista_eliminar.php';
+    exit;
+}
+
+//Metode per gestionar el consultar article
+if ($action === 'consultar'){
+    
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        //Obtenir dades del formulari
+        $dni = trim($_POST['dni'] ?? '');
+
+        // Instanciar el model i consultar
+        $consultar = new PdoConsultar($conn);
+        if (empty($dni)){
+            $errorDni = '<p class="error">EL CAMP DNI ÉS OBLIGATORI PER CERCAR.</p>';
+        } else if (!preg_match('/^\d{8}[-\s]?[A-Za-z]$/', $dni)) {
+            $errorDni = '<p class="error">EL FORMAT DEL DNI NO ÉS VÀLID.</p>';
+        } else if(!$consultar->existeixDNI($dni)) {
+            $errorDni = '<p class="error">EL DNI INTRODUÏT NO EXISTEIX A LA BASE DE DADES.</p>';
+        }else {
+            try{
+                $resultats = $consultar->consultar($dni);
+
+            } catch (PDOException $e) {
+                throw new PDOException('Error a l\'consultar l\'article: ' . $e->getMessage());
+            }
+        }
+    }
+
+    require __DIR__ . '/../views/vista_consultar.php';
+    exit;
+}
 
 

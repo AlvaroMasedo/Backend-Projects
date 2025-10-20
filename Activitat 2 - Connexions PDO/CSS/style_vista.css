@@ -37,7 +37,6 @@ form {
 }
 
 form label {
-	width: 72px;
 	font-weight: bold;
 	display: inline-block;
     margin-top: 30px;
@@ -125,3 +124,25 @@ a:hover {
 	background-color: rgb(255, 255, 255);
 	color: black;
 }
+
+table {
+    margin-top: 20px;
+    width: 50%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ebebeb;
+}
+
+thead {
+    background-color: #ff3030;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: left;
+}
+
+tr{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    border-bottom: 1px solid #ddd;
+}
+
