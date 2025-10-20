@@ -5,8 +5,8 @@ require __DIR__   . '/../config/db_connection.php';
 require __DIR__ . '/../models/pdo-afegir.php';
 require __DIR__ . '/../models/pdo-eliminar.php';
 require __DIR__ . '/../models/pdo-consultar.php';
-/*require __DIR__ . '/../models/pdo-modificar.php';
-*/
+require __DIR__ . '/../models/pdo-modificar.php';
+
 
 //Obtenir l'acció des de la URL
 $action = $_GET['action'] ?? '';
@@ -115,6 +115,48 @@ if ($action === 'consultar'){
     }
 
     require __DIR__ . '/../views/vista_consultar.php';
+    exit;
+}
+
+//Metode per gestionar el modificar article
+if ($action === 'modificar'){
+    //Obtenir dades del formulari
+    $id = trim($_POST['id'] ?? '');
+
+    // Instanciar el model i modificar
+    $modificar = new PdoModificar($conn);
+    if (empty($id)){
+        $enviatMissatge = '<p class="error">EL CAMP ID ÉS OBLIGATORI PER CERCAR.</p>';
+    } else if (!preg_match('/^\d+$/', $id)) {
+        $errorId = '<p class="error">EL FORMAT DE L\'ID NO ÉS VÀLID.</p>';
+    } else if(!$modificar->existeixId((int)$id)) {
+        $errorId = '<p class="error">L\'ID INTRODUÏT NO EXISTEIX A LA BASE DE DADES.</p>';
+    } else {
+        $dni = trim($_POST['dni'] ?? '');
+        $nom = trim($_POST['nom'] ?? '');
+        $cos = trim($_POST['cos'] ?? '');
+
+        if (empty($dni) || empty($nom) || empty($cos)) {
+            $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+        } else if (!preg_match('/^\d{8}[-\s]?[A-Za-z]$/', $dni)) {
+            $errorDni = '<p class="error">EL FORMAT DEL DNI NO ÉS VÀLID.</p>';
+        } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
+            $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
+        } else {
+            try{
+                $ok = $modificar->modificar((int)$id, $dni, $nom, $cos);
+
+                if ($ok) {
+                    $enviatMissatge = '<p class="success">ARTICLE MODIFICAT CORRECTAMENT.</p>';
+                } else {
+                    $enviatMissatge = '<p class="error">ERROR EN MODIFICAR L\'ARTICLE. COMPROVA QUE EL DNI ÉS CORRECTE.</p>';
+                } 
+            } catch (PDOException $e) {
+                throw new PDOException('Error a l\'modificar l\'article: ' . $e->getMessage());
+            }
+        }
+    }
+    require __DIR__ . '/../views/vista_modificar.php';
     exit;
 }
 
