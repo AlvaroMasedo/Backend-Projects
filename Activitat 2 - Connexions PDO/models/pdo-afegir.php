@@ -21,4 +21,5 @@ class afegirArticle{
             ':cos' => $cos
         ]);
     }
+
 }

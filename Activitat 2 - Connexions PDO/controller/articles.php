@@ -14,7 +14,7 @@ $action = $_GET['action'] ?? '';
 if ($action === 'afegir'){
     // variables per a la vista (eviten notices)
     $dni = $nom = $cos = '';
-    $errorDni = $errorNom = $errorCos = '';
+    $errorDni = $errorNom = '';
     $enviatMissatge = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,14 +25,21 @@ if ($action === 'afegir'){
 
         // Instanciar el model i afegir
         $afegir = new afegirArticle($conn);
-        $ok = $afegir->afegir($dni, $nom, $cos);
 
-        if ($ok) {
-            $enviatMissatge = '<p>Article afegit correctament.</p>';
-            // opcional: netejar camps
-            $dni = $nom = $cos = '';
+        if (empty($dni) || empty($nom) || empty($cos)) {
+            $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+        } else if (!preg_match('/^\d{8}[-\s]?[A-Za-z]$/', $dni)) {
+            $errorDni = '<p class="error">EL FORMAT DEL DNI NO ÉS VÀLID.</p>';
+        } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
+            $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
         } else {
-            $enviatMissatge = '<p>Error en afegir article.</p>';
+            $ok = $afegir->afegir($dni, $nom, $cos);
+
+            if ($ok) {
+                $enviatMissatge = '<p class="success">ARTICLE AFEGIT CORRECTAMENT.</p>';
+            } else {
+                $enviatMissatge = '<p class="error">ERROR EN AFEGIR UN ARTICLE.</p>';
+            } 
         }
     }
 
