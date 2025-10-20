@@ -24,7 +24,7 @@ if ($action === 'afegir'){
         $cos = trim($_POST['cos'] ?? '');
 
         // Instanciar el model i afegir
-        $afegir = new afegirArticle($conn);
+        $afegir = new PdoAfegir($conn);
 
         if (empty($dni) || empty($nom) || empty($cos)) {
             $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
@@ -33,13 +33,17 @@ if ($action === 'afegir'){
         } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
             $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
         } else {
-            $ok = $afegir->afegir($dni, $nom, $cos);
+            try{
+                $ok = $afegir->afegir($dni, $nom, $cos);
 
-            if ($ok) {
-                $enviatMissatge = '<p class="success">ARTICLE AFEGIT CORRECTAMENT.</p>';
-            } else {
-                $enviatMissatge = '<p class="error">ERROR EN AFEGIR UN ARTICLE.</p>';
-            } 
+                if ($ok) {
+                    $enviatMissatge = '<p class="success">ARTICLE AFEGIT CORRECTAMENT.</p>';
+                } else {
+                    $enviatMissatge = '<p class="error">ERROR EN AFEGIR UN ARTICLE.</p>';
+                } 
+            } catch (PDOException $e) {
+                throw new PDOException('Error a l\'afegir l\'article: ' . $e->getMessage());
+            }
         }
     }
 

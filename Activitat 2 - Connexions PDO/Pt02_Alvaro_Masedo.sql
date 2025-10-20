@@ -9,7 +9,8 @@ USE pt02_alvaro_masedo;
 
 /*Crea la taula d'articles*/
 CREATE TABLE IF NOT EXISTS articles (
-    dni VARCHAR(9) NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    dni VARCHAR(9) NOT NULL,
     Nom VARCHAR(50) NOT NULL,
     Cos TEXT NOT NULL
 );

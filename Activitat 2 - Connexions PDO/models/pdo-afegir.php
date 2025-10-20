@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-class afegirArticle{
+class PdoAfegir{
     // Propietat per a la connexió a la base de dades
     private PDO $conn;
 
