@@ -13,9 +13,9 @@
     <div class="separador"></div>
     <div class="container">
         <button onclick="location.href='views/vista_afegir.php'">Afegir</button>
-        <button>Modificar</button>
-        <button>Eliminar</button>
-        <button>Consultar</button>
+        <button onclick="location.href='views/vista_modificar.php'">Modificar</button>
+        <button onclick="location.href='views/vista_eliminar.php'">Eliminar</button>
+        <button onclick="location.href='views/vista_consultar.php'">Consultar</button>
     </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 //Conexió a la base de dades amb PDO
+declare(strict_types=1);
 
 //Dades de connexió
 $host = 'localhost';
@@ -20,7 +21,6 @@ try {
     $conn = new PDO($dsn, $username, $password, $options);
 
     //Missatge de connexió exitosa
-    echo "Connexió exitosa a la base de dades.";
 } catch (PDOException $e) {
     //Codi d'estat HTTP 500 en cas d'error
     http_response_code(500);
