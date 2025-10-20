@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__   . '/../config/db_connection.php';
+require __DIR__   . '/../../config/db_connection.php';
 require __DIR__ . '/../models/pdo-afegir.php';
 require __DIR__ . '/../models/pdo-eliminar.php';
 require __DIR__ . '/../models/pdo-consultar.php';
@@ -29,7 +29,8 @@ if ($action === 'afegir'){
         // Instanciar el model i afegir
         $afegir = new PdoAfegir($conn);
 
-        if (empty($dni) || empty($nom) || empty($cos)) {
+    
+        if (empty($dni) || empty($nom) || empty($cos)) {        
             $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
         } else if (!preg_match('/^\d{8}[-\s]?[A-Za-z]$/', $dni)) {
             $errorDni = '<p class="error">EL FORMAT DEL DNI NO ÉS VÀLID.</p>';

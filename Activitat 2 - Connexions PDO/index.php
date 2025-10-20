@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulari</title>
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="resources/CSS/style.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
 </head>
 
@@ -12,10 +12,10 @@
     <h2>Articles</h2>
     <div class="separador"></div>
     <div class="container">
-        <button onclick="location.href='views/vista_afegir.php'">Afegir</button>
-        <button onclick="location.href='views/vista_modificar.php'">Modificar</button>
-        <button onclick="location.href='views/vista_eliminar.php'">Eliminar</button>
-        <button onclick="location.href='views/vista_consultar.php'">Consultar</button>
+        <button onclick="location.href='app/views/vista_afegir.php'">Afegir</button>
+        <button onclick="location.href='app/views/vista_modificar.php'">Modificar</button>
+        <button onclick="location.href='app/views/vista_eliminar.php'">Eliminar</button>
+        <button onclick="location.href='app/views/vista_consultar.php'">Consultar</button>
     </div>
 </body>
 </html>

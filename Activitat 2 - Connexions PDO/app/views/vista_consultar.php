@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulari</title>
-    <link rel="stylesheet" href="../CSS/style_vista.css">
+    <link rel="stylesheet" href="../../resources/CSS/style_vista.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
 </head>
 
@@ -22,7 +22,7 @@
         <input type="submit" name="btn-enviar" value="CONSULTAR ARTICLE">
 
         <!-- Enllaç per tornar a la vista principal -->
-        <a href="../index.php">TORNA ENRRERE</a>
+        <a href="../../index.php">TORNA ENRRERE</a>
     </form>
     <!-- Panell on mostra les entrades consultades-->
         <div>
