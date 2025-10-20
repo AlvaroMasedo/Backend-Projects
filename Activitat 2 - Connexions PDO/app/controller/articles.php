@@ -101,7 +101,7 @@ if ($action === 'consultar'){
         $consultar = new PdoConsultar($conn);
         if (empty($dni)){
             $errorDni = '<p class="error">EL CAMP DNI ÉS OBLIGATORI PER CERCAR.</p>';
-        } else if (!preg_match('/^\d{8}[-\s]?[A-Za-z]$/', $dni)) {
+        } else if (!preg_match('/^\d{8}?[A-Za-z]$/', $dni)) {
             $errorDni = '<p class="error">EL FORMAT DEL DNI NO ÉS VÀLID.</p>';
         } else if(!$consultar->existeixDNI($dni)) {
             $errorDni = '<p class="error">EL DNI INTRODUÏT NO EXISTEIX A LA BASE DE DADES.</p>';
