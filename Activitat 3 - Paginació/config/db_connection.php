@@ -25,7 +25,7 @@ try {
     //Codi d'estat HTTP 500 en cas d'error
     http_response_code(500);
 
-    //Missatge d'error en cas de fallada
-    echo "Error de connexió: " . $e->getMessage();
+    //Missatge genèric d'error
+    die("Error de connexió a la base de dades.");
 }
 ?>

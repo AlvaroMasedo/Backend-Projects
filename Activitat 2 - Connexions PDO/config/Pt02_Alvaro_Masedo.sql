@@ -1,11 +1,11 @@
 /*Elimina la base de dades si existeix*/
-DROP DATABASE IF EXISTS pt02_alvaro_masedo;
+DROP DATABASE IF EXISTS Alvaro_Masedo_BBDD;
 
 /*Crea la base de dades*/
-CREATE DATABASE pt02_alvaro_masedo;
+CREATE DATABASE Alvaro_Masedo_BBDD;
 
 /*Utilitza la base de dades*/
-USE pt02_alvaro_masedo;
+USE Alvaro_Masedo_BBDD;
 
 /*Crea la taula d'articles*/
 CREATE TABLE IF NOT EXISTS articles (
