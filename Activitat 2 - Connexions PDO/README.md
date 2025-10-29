@@ -13,12 +13,6 @@ Instal·lació i configuració
      `config/db_connection.php` — línies on es defineix `$username` i `$password`.
    - També en aquest fitxer pots canviar el port si cal (actualment el DSN usa el port 3366).
 
-3. Codificació i opcions PDO:
-   - La connexió utilitza `charset=utf8mb4` i opcions:
-     - ERRMODE => EXCEPTION
-     - DEFAULT_FETCH_MODE => FETCH_ASSOC
-     - EMULATE_PREPARES => false
-
 Estructura del projecte (resum)
 - config/
   - db_connection.php — connexió PDO i credencials.
