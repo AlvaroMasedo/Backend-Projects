@@ -6,28 +6,6 @@ El projecte està desenvolupat amb **PHP** i **HTML + CSS**
 
 ---
 
-## Estructura del projecte
-
-Activitat 3 - Paginació/
-│
-├── index.php # Controlador principal (lògica PHP)
-├── config/
-│       └── db_connection.php # Connexió a la base de dades
-│       └── Pt03_Alvaro Masedo.sql # Script per crear la base de dades amb algunes entrades
-│
-├── app/
-│ └── view/
-│       ├── vista.index.php # Vista principal (HTML + PHP)
-│       └── vista.error.php # Vista d’error en cas de no haver-hi dades
-│
-├── resources/
-│ └── css/
-│       └── style.css # Estils propis (base + targetes + paginació)
-│
-└── README.md # Document explicatiu del projecte
-
----
-
 ## Funcionament general
 
 1. **`index.php`** és el punt d’entrada.  
