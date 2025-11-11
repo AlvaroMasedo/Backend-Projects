@@ -1,6 +1,6 @@
-<!--Álvaro Masedo Pérez-->
 <?php
 declare(strict_types=1);
+//Álvaro Masedo Pérez
 
 class PdoRegistrar{
     // Propietat per a la connexió a la base de dades
@@ -12,16 +12,16 @@ class PdoRegistrar{
     }
 
     // Mètode per registrar un usuari
-    public function registrar(string $nom, string $cognom, string $nickname, string $email, string $contrasenya): bool {
-        
-        $sql = "INSERT INTO usuaris (nickname, nom, cognom, email, contrasenya) VALUES (:nickname, :nom, :cognom, :email, :contrasenya)";
+    public function registrar(string $nickname ,string $nom, string $cognom, string $email, string $contrasenya, int $administrador ): bool { 
+        $sql = "INSERT INTO usuaris (nickname, nom, cognom, email, contrasenya, administrador) VALUES (:nickname, :nom, :cognom, :email, :contrasenya, :administrador)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':nickname' => $nickname,
             ':nom' => $nom,
             ':cognom' => $cognom,
             ':email' => $email,
-            ':contrasenya' => $contrasenya
+            ':contrasenya' => $contrasenya,
+            ':administrador' => $administrador
         ]);
     }
 }

@@ -1,7 +1,8 @@
-<!--Álvaro Masedo Pérez-->
 <?php
-//Conexió a la base de dades amb PDO
 declare(strict_types=1);
+//Álvaro Masedo Pérez
+
+//Conexió a la base de dades amb PDO
 
 //Dades de connexió
 $host = 'localhost';
