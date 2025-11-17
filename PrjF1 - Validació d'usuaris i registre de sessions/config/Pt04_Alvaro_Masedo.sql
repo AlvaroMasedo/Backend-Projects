@@ -24,3 +24,4 @@ CREATE TABLE IF NOT EXISTS usuaris (
     contrasenya VARCHAR (255) NOT NULL,
     administrador TINYINT(1) NOT NULL
 );
+

@@ -47,10 +47,30 @@ function iniciarSesio(){
                 $ok = $login->login($email, $contrasenya_encriptada);
 
                 if ($ok) {
-                    $enviatMissatge = '<p class="success">HAS INICIAT SESSIÓ CORRECTAMENT.</p>';
+                     
+                    //Iniciem la sessió
+                    session_start();
+
+                    //Regenerem l'id de sessió per seguretat
+                    session_regenerate_id(true);
+
+                    //Guardem les dades de l'usuari a la sessió
+                    $_SESSION['usuari'] = [
+                        'nickname' => $ok['nickname'],
+                        'nom' => $ok['nom'],
+                        'cognom' => $ok['cognom'],
+                        'email' => $ok['email'],
+                        'administrador' => $ok['administrador']
+                    ];
+
+                    //Redirigir a la pàgina principal
+                    header('Location: ../../index.php');
+                    exit;
+                    
                 } else {
                     $enviatMissatge = '<p class="error">ERROR A L\'INICIAR SESSIÓ.</p>';
                 }
+               
             } catch (PDOException $e) {
                 throw new PDOException('Error a l\'iniciar sessió' . $e->getMessage());
             }

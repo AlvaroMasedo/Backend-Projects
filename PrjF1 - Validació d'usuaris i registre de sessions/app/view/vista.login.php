@@ -1,4 +1,12 @@
 <!--Álvaro Masedo Pérez-->
+<?php
+// Verificar si la sessió ha expirat mitjançant paràmetre GET o cookie
+$sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] == '1') || (isset($_COOKIE['session_expired']) && $_COOKIE['session_expired'] == '1');
+
+if ($sessionExpired && isset($_COOKIE['session_expired'])) {
+    setcookie('session_expired', '', time() - 3600, '/'); // Borrar cookie tras mostrar mensaje
+}
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -9,6 +17,16 @@
     <title>LogIn</title>        
 </head>
 <body>
+    <?php if ($sessionExpired): ?>
+    <div class="alert-overlay">
+        <div class="alert">
+            <p>S'ha tancat la sessió.</p>
+            <a class="button" href="vista.login.php">INICIAR SESSIÓ</a>
+            <br>
+            <a class="link" href="../../index.php">Navega com usuari anònim</a>
+        </div>
+    </div>
+    <?php endif; ?>
     <header>
         <ul>
             <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home"></b></a></li>

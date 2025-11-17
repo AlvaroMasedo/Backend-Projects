@@ -26,6 +26,7 @@ function registrarUsuari(){
         $contrasenya = trim($_POST['contrasenya'] ?? '');
         $repContrasenya = trim($_POST['repContrasenya'] ?? '');
         $contrasenya_encriptada = hash('sha256', $contrasenya);
+        $administrador = 0;
 
         // Instanciar els models i afegir
         $registrar = new PdoRegistrar($conn);
@@ -66,10 +67,27 @@ function registrarUsuari(){
         // Si tot és correcte, registrar usuari
         } else {
             try {
-                $ok = $registrar->registrar($nickname, $nom, $cognom, $email, $contrasenya_encriptada, 0);
+                $ok = $registrar->registrar($nickname, $nom, $cognom, $email, $contrasenya_encriptada, $administrador);
 
                 if ($ok) {
-                    $enviatMissatge = '<p class="success">T\'HAS REGISTRAT CORRECTAMENT.</p>';
+
+                    //Iniciem sessió i guardem dades de l'usuari
+                    session_start();
+
+                    // Regenerar ID de sessió per seguretat
+                    session_regenerate_id(true);
+
+                    $_SESSION['usuari'] = [
+                        'nickname' => $nickname,
+                        'nom' => $nom,
+                        'cognom' => $cognom,
+                        'email' => $email,
+                        'administrador' => $administrador
+                    ];
+                    
+                    //Redirigir a la pàgina de confirmació
+                    header('Location: ../view/vista.registrat.php');
+                    exit;
                 } else {
                     $enviatMissatge = '<p class="error">ERROR AL REGISTRAR-SE.</p>';
                 }
