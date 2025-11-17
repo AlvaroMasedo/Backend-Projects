@@ -51,20 +51,20 @@ require_once __DIR__ . '/../../includes/session_check.php';
         </ul>
     </header>
     <div class="perfil-container">
-        <h2>Perfil d'Usuari</h2>
+        <h1>Perfil d'Usuari</h1>
         <?php if (isset($_SESSION['usuari'])): ?>
+            <p class="perfil-p"><strong>Nickname:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?></p>
             <p class="perfil-p"><strong>Nom:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['nom']); ?></p>
             
             <!-- Mostra el camp cognoms si està disponible -->
-             <p class="perfil-p"><strong>Cognom:</strong> 
+            <p class="perfil-p"><strong>Cognom:</strong> 
             <?php if (!empty($_SESSION['usuari']['cognom'])): ?>
                 <?php echo htmlspecialchars($_SESSION['usuari']['cognom']); ?></p>
             <?php else: ?>
                 No proporcionat</p>
             <?php endif; ?>
-            <p class="perfil-p"><strong>Nickname:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?></p>
+            
             <p class="perfil-p"><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['email']); ?></p>
-            <!-- Afegeix més camps de perfil segons sigui necessari -->
         <?php else: ?>
             <p>No hi ha cap usuari connectat.</p>
         <?php endif; ?>

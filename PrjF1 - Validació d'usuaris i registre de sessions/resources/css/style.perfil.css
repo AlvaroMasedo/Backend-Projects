@@ -59,7 +59,6 @@ img:hover {
 }
 
 h1 {
-    text-align: center;
     color: rgb(0, 0, 0);
     font-family: 'Formula1-Bold', cursive;
     font-size: 40px;
@@ -67,7 +66,7 @@ h1 {
 
 h2 {
     text-align: center;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-family: 'Formula1-Bold', cursive;
     font-size: 30px;
 }
@@ -209,18 +208,17 @@ p {
 }
 
 .perfil-container {
-    text-align: center;
     border: 0px solid;
     border-radius: 20px;
-    background-color: #15141f;
-    margin-left: 33%;
-    margin-right: 33%;
+    background-color: #ffffff;
+    margin-left: 6%;
+    margin-right: 6%;
     margin-top: 2rem;
-    box-shadow: 1px 2px 20px rgb(0, 0, 0);
     padding: 1%;
+    height: 730px;
 }  
 
 .perfil-p{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: white;
+    color: rgb(0, 0, 0);
 }
