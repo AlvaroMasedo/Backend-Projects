@@ -119,7 +119,7 @@ if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)
 	$perPageMode = 'all';
 } else {
 	// Valor numèric (o default)
-	$articlesPerPagina = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 5;
+	$articlesPerPagina = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 4;
 	if ($articlesPerPagina < 1) {
 		$articlesPerPagina = 1;
 	}
