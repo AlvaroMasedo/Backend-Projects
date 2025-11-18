@@ -313,27 +313,6 @@ hr {
   margin: 12px 0 0;
 }
 
-@media (max-width: 420px) {
-  .cards-grid {
-    padding: 12px;
-    gap: 12px;
-  }
-
-  .card__title {
-    font-size: 18px;
-  }
-
-  .card__body {
-    font-size: 15px;
-    padding: 12px 14px 14px;
-  }
-
-  .page-btn {
-    padding: 7px 12px;
-    font-size: 14px;
-  }
-}
-
 .autor { 
   font-size: 14px;
   color: #555;
