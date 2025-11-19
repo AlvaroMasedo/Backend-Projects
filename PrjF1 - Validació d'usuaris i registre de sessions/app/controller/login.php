@@ -17,6 +17,11 @@ $enviatMissatge = '';
 //Funció per Iniciar Sessió amb un Usuari
 function iniciarSesio(){
     global $conn;
+    // Iniciar sessió per fer persistents els intents i dades de reCAPTCHA
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -40,18 +45,53 @@ function iniciarSesio(){
         // Si la contrasenya es incorrecta dona error
         } else if (!$consultar->comprobarContrasenya($contrasenya_encriptada, $email)) {
             $errorContrasenya = '<p class="error">CONTRASENYA INCORRECTA, TORNA A PROVAR</p>';
+            // Incrementar i guardar el contador d'intents a la sessió
+            $contadorIntents++;
+            $_SESSION['contadorIntents'] = $contadorIntents;
 
+            // Si hem superat el nombre d'intents, validar reCAPTCHA
+            if ($contadorIntents >= 3) {
+                if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
+                    $enviatMissatge = '<p class="error">SIUSPLAU, COMPLETA EL RECAPTCHA.</p>';
+                } else {
+                    $key = "6LfP6hEsAAAAAE3pwc5I7cu_1OM3wW_PPT0DXyra"; // secret key
+                    $resposta = $_POST['g-recaptcha-response'];
+
+                    $url = "https://www.google.com/recaptcha/api/siteverify";
+                    $data = [
+                        'secret' => $key,
+                        'response' => $resposta
+                    ];
+
+                    $options = [
+                        'http' => [
+                            'method' => 'POST',
+                            'header' => 'Content-type: application/x-www-form-urlencoded\\r\\n',
+                            'content' => http_build_query($data)
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $resultat = @file_get_contents($url, false, $context);
+                    $resultatJson = $resultat ? json_decode($resultat, true) : null;
+
+                    if (empty($resultatJson) || empty($resultatJson['success'])) {
+                        $enviatMissatge = '<p class="error">FALLA AL VERIFICAR EL RECAPTCHA. SIUSPLAU, TORNA-HO A PROVAR.</p>';
+                    }
+                }
+            }
+        
         // Si tot és correcte, iniciar sesió
         } else {
             try {
                 $ok = $login->login($email, $contrasenya_encriptada);
 
                 if ($ok) {
-                     
-                    //Iniciem la sessió
-                    session_start();
 
-                    //Regenerem l'id de sessió per seguretat
+                    //Resetem el contador d'intents
+                    $contadorIntents = 0;
+                    $_SESSION['contadorIntents'] = 0;
+
+                    // La sessió ja està iniciada més amunt; regenerar id per seguretat
                     session_regenerate_id(true);
 
                     //Guardem les dades de l'usuari a la sessió

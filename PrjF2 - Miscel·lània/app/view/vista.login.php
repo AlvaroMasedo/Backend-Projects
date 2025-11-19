@@ -6,6 +6,10 @@ $sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] =
 if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); // Borrar cookie tras mostrar mensaje
 }
+
+// Contador d'intents per reCAPTCHA
+$contadorIntents = $contadorIntents ?? 0;
+
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -14,6 +18,9 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../resources/css/style.login.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
+
+    <!-- Google reCAPTCHA client script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <title>LogIn</title>        
 </head>
 <body>
@@ -48,6 +55,11 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
 
         <!-- Missatge d'èxit o error -->
         <?php echo $enviatMissatge ?? ''; ?>
+
+        <!-- Mostrar reCAPTCHA si s'han superat els intents permesos -->
+        <?php if($contadorIntents >= 3): ?>
+            <div class="g-recaptcha" data-sitekey="6LfP6hEsAAAAAF8UvGTJukRxIklH3jJg1BmfcCLX"></div>
+        <?php endif; ?>
 
         <!-- Preguntar a la BBDD si existeix l'email registrat per iniciar sesió -->
         <input type="submit" name="btn-enviar" value="INICIAR SESSIÓ">
