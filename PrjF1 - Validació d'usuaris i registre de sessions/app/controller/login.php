@@ -15,12 +15,13 @@ $errorNickname = $errorNom = $errorCognom = $errorEmail = $errorContrasenya = $e
 $enviatMissatge = '';
 
 //Funció per Iniciar Sessió amb un Usuari
-function iniciarSesio(){
+function iniciarSessio(){
     global $conn;
     // Iniciar sessió per fer persistents els intents i dades de reCAPTCHA
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -80,39 +81,70 @@ function iniciarSesio(){
                 }
             }
         
-        // Si tot és correcte, iniciar sesió
+        // Si tot és correcte, abans d'iniciar sessió comprovem reCAPTCHA si s'han superat els intents
         } else {
-            try {
-                $ok = $login->login($email, $contrasenya_encriptada);
+            // Si s'han superat intents, exigir reCAPTCHA encara que la contrasenya sigui correcta
+            if ($contadorIntents >= 3) {
+                if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
+                    $enviatMissatge = '<p class="error">SIUSPLAU, COMPLETA EL RECAPTCHA.</p>';
+                } else {
+                    $key = "6LfP6hEsAAAAAE3pwc5I7cu_1OM3wW_PPT0DXyra"; // secret key
+                    $resposta = $_POST['g-recaptcha-response'];
 
-                if ($ok) {
-
-                    //Resetem el contador d'intents
-                    $contadorIntents = 0;
-                    $_SESSION['contadorIntents'] = 0;
-
-                    // La sessió ja està iniciada més amunt; regenerar id per seguretat
-                    session_regenerate_id(true);
-
-                    //Guardem les dades de l'usuari a la sessió
-                    $_SESSION['usuari'] = [
-                        'nickname' => $ok['nickname'],
-                        'nom' => $ok['nom'],
-                        'cognom' => $ok['cognom'],
-                        'email' => $ok['email'],
-                        'administrador' => $ok['administrador']
+                    $url = "https://www.google.com/recaptcha/api/siteverify";
+                    $data = [
+                        'secret' => $key,
+                        'response' => $resposta
                     ];
 
-                    //Redirigir a la pàgina principal
-                    header('Location: ../../index.php');
-                    exit;
-                    
-                } else {
-                    $enviatMissatge = '<p class="error">ERROR A L\'INICIAR SESSIÓ.</p>';
+                    $options = [
+                        'http' => [
+                            'method' => 'POST',
+                            'header' => 'Content-type: application/x-www-form-urlencoded\r\n',
+                            'content' => http_build_query($data)
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $resultat = @file_get_contents($url, false, $context);
+                    $resultatJson = $resultat ? json_decode($resultat, true) : null;
+
+                    if (empty($resultatJson) || empty($resultatJson['success'])) {
+                        $enviatMissatge = '<p class="error">FALLA AL VERIFICAR EL RECAPTCHA. SIUSPLAU, TORNA-HO A PROVAR.</p>';
+                    }
                 }
-               
-            } catch (PDOException $e) {
-                throw new PDOException('Error a l\'iniciar sessió' . $e->getMessage());
+            }
+
+            // Si no hi ha missatge d'error (el reCAPTCHA s'ha passat o no era necessari), procedim a fer login
+            if (empty($enviatMissatge)) {
+                try {
+                    $ok = $login->login($email, $contrasenya_encriptada);
+
+                    if ($ok) {
+                        //Resetem el contador d'intents
+                        $contadorIntents = 0;
+                        $_SESSION['contadorIntents'] = 0;
+
+                        // La sessió ja està iniciada més amunt; regenerar id per seguretat
+                        session_regenerate_id(true);
+
+                        //Guardem les dades de l'usuari a la sessió
+                        $_SESSION['usuari'] = [
+                            'nickname' => $ok['nickname'],
+                            'nom' => $ok['nom'],
+                            'cognom' => $ok['cognom'],
+                            'email' => $ok['email'],
+                            'administrador' => $ok['administrador']
+                        ];
+
+                        //Redirigir a la pàgina principal
+                        header('Location: ../../index.php');
+                        exit;
+                    } else {
+                        $enviatMissatge = '<p class="error">ERROR A L\'INICIAR SESSIÓ.</p>';
+                    }
+                } catch (PDOException $e) {
+                    throw new PDOException('Error a l\'iniciar sessió' . $e->getMessage());
+                }
             }
         }
     }
@@ -123,7 +155,7 @@ function iniciarSesio(){
 
 //Metode per iniciar sessió
 if ($action === 'login'){
-    iniciarSesio();
+    iniciarSessio();
 }
 
 ?>
