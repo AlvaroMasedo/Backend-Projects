@@ -98,7 +98,7 @@ label {
 }
 
 form {
-	margin-top: 15px;
+	margin-top: 40px;
 	margin-left: 33.45%;
 	margin-bottom: 15px;
 	width: 600px;
@@ -255,4 +255,32 @@ p {
 
 .alert a.link:hover {
 	text-decoration: underline;
+}
+
+.login {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+.login li {
+	display: inline-block;
+	margin: 7px 12px 0 0;
+	padding: 1%;
+}
+
+.login li label,
+input[type="checkbox"] {
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	margin: 7px 12px 0 0;
+
+}
+
+.login li a {
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	color: red;
+	font-weight: bold;
+}
+
+.login li a:hover {
+	color: rgb(194, 0, 0);
 }

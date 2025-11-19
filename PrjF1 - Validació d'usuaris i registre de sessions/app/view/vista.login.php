@@ -53,6 +53,12 @@ $contadorIntents = $contadorIntents ?? 0;
         <input type="password" name="contrasenya" id="contrasenya" value="<?php echo htmlspecialchars($contrasenya ?? ''); ?>">
         <?php echo $errorContrasenya ?? ''; ?>
 
+        <ul class="login">
+            <li><label for="Recorda'm">Recorda'm</label><input type="checkbox" id="recorda" name="recorda"></li>
+            <li><a href="#">Has oblidat la contrasenya?</a></li>
+            <li><a href="../view/vista.signup.php">Crear nova compta</a></li>
+        </ul>
+
         <!-- Missatge d'èxit o error -->
         <?php echo $enviatMissatge ?? ''; ?>
 

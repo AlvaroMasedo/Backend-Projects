@@ -56,6 +56,8 @@
         <input type="password" name="repContrasenya" id="repContrasenya" value="<?php echo htmlspecialchars($repContrasenya ?? ''); ?>">
         <?php echo $errorRepContrasenya ?? ''; ?>
         
+        <a href="../view/vista.login.php">Ja tens una compta?</a>
+
         <!-- Missatge d'èxit o error -->
         <?php echo $enviatMissatge ?? ''; ?>
 
