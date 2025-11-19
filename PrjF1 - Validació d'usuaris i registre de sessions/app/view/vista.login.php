@@ -56,7 +56,7 @@ $contadorIntents = $contadorIntents ?? 0;
         <ul class="login">
             <li><label for="Recorda'm">Recorda'm</label><input type="checkbox" id="recorda" name="recorda"></li>
             <li><a href="#">Has oblidat la contrasenya?</a></li>
-            <li><a href="../view/vista.signup.php">Crear nova compta</a></li>
+            <li><a href="../view/vista.signup.php">Crear nou compte</a></li>
         </ul>
 
         <!-- Missatge d'èxit o error -->
