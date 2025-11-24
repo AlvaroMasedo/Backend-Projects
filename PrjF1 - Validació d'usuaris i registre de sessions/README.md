@@ -1,16 +1,8 @@
-# Credencials d'administrador (prova)
-
-- **Nickname:** `Administrador`
-- **Email (fictici):** `admin@gmail.com`
-- **Password:** `Administr@d0r`
-
-L'administrador pot eliminar altres usuaris. Tots els artícles associats al Nickname d'aquest usuari eliminat s'eliminaran automàticament, ja que sino tindrém articles amb Nicknames no associats a cap usuari. Si l'administrador l'elimina vol dir que alguna cosa malament ha fet i no existirà registre d'aquest usuari a la nostra Base de dades.
-
-# Pràctica: Validació d'usuaris i registre de sessions (Projecte F1)
+# PrjF1 - Validació d'usuaris i registre de sessions
 
 Aquest repositori conté una pràctica de backend en PHP que implementa gestió d'usuaris, autenticació per sessió i un CRUD bàsic d'articles amb permisos segons rol (administrador/usuari normal). Està pensat per executar-se en un entorn local com XAMPP o qualsevol servidor web amb PHP i una base de dades MySQL.
 
-## Contingut i resum del projecte
+## Contingut i resum de la fase del projecte
 
 - `index.php` — Pàgina principal que carrega articles públics o mostra opcions segons si l'usuari està autenticat.
 - `app/controller/articles.php` — Controlador central per a la lògica dels articles: càrrega, paginació i accions (afegir, modificar, eliminar).
@@ -152,3 +144,14 @@ Les vistes de formulari acostumen a cridar el controlador amb la ruta relativa `
 
 - `config/Pt04_Alvaro_Masedo.sql` — script amb l'estructura i dades inicials de la base de dades.
 
+# PrjF2 - Miscel·lània
+
+## Credencials d'administrador (prova)
+
+- **Nickname:** `Administrador`
+- **Email (fictici):** `admin@gmail.com`
+- **Password:** `Administr@d0r`
+
+L'administrador pot eliminar altres usuaris. Tots els artícles associats al Nickname d'aquest usuari eliminat s'eliminaran automàticament, ja que sino tindrém articles amb Nicknames no associats a cap usuari. Si l'administrador l'elimina vol dir que alguna cosa malament ha fet i no existirà registre d'aquest usuari a la nostra Base de dades.
+
+## Contingut i resum de la fase del projecte
