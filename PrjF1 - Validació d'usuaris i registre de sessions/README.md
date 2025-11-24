@@ -1,3 +1,11 @@
+# Credencials d'administrador (prova)
+
+- **Nickname:** `Administrador`
+- **Email (fictici):** `admin@gmail.com`
+- **Password:** `Administr@d0r`
+
+L'administrador pot eliminar altres usuaris. Tots els artícles associats al Nickname d'aquest usuari eliminat s'eliminaran automàticament, ja que sino tindrém articles amb Nicknames no associats a cap usuari. Si l'administrador l'elimina vol dir que alguna cosa malament ha fet i no existirà registre d'aquest usuari a la nostra Base de dades.
+
 # Pràctica: Validació d'usuaris i registre de sessions (Projecte F1)
 
 Aquest repositori conté una pràctica de backend en PHP que implementa gestió d'usuaris, autenticació per sessió i un CRUD bàsic d'articles amb permisos segons rol (administrador/usuari normal). Està pensat per executar-se en un entorn local com XAMPP o qualsevol servidor web amb PHP i una base de dades MySQL.
@@ -70,7 +78,7 @@ SOURCE path/to/config/Pt04_Alvaro_Masedo.sql;
 
 ## Fluix de l'aplicació (com funciona)
 
-1. L'usuari pot registrar-se i fer login. Quan inicia sessió, es guarda `$_SESSION['usuari']` amb informació com `nickname`, `administrador` (0/1), `nom`, `cognom`, `email`.
+1. L'usuari pot registrar-se i fer login. Quan inicia sessió, es guarda `$_SESSION['usuari']` amb informació com `nickname`, `administrador` (0/1), `nom`, `cognom`, `email`. 
 2. Quan s'accedeix a la pàgina d'articles, el controlador `app/controller/articles.php` carrega els articles segons el rol:
 	 - Si l'usuari és administrador (`administrador == 1`): es mostren tots els articles.
 	 - Si l'usuari és normal: es mostren només els articles creats pel seu `nickname`.
