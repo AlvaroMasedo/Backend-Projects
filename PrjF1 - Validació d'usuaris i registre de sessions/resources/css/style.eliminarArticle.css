@@ -25,16 +25,17 @@ h2 {
     src: url("../fonts/F1/Formula1-Wide_web_0.ttf") format("truetype");
 }
 
+.eliminar-article-container {
+	margin-top: 130px;
+}
+
 form {
-	margin-top: 3rem;
 	margin-left: 33.45%;
 	margin-bottom: 15px;
 	width: 600px;
 	padding: 16px;
 	background-color: #f7f4f1;
-	border: solid 1px black;
 	border-radius: 10px;
-	box-shadow: 1px 1px 20px rgb(153, 153, 153);
 }
 
 form p {

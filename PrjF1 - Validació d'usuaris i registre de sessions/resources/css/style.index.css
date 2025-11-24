@@ -130,7 +130,6 @@ p {
 
 .menu-usuari {
   position: relative;
-  display: inline-block;
 }
 
 .button-usuari {
@@ -156,7 +155,7 @@ p {
   display: none;
   position: absolute;
   top: 100%;
-  right: 0;
+  right: 1;
   left: auto;
   background-color: #f7f4f1;
   list-style: none;
