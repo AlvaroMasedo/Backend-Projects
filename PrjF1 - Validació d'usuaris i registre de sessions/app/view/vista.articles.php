@@ -38,7 +38,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <!-- Header amb navegació -->
     <header>
         <ul class="house-icon">
-            <li><a href="../../index.php"><b><img class="home" src="../../uploads/img/home.webp" alt="home"></b></a></li>
+            <li><a href="../../index.php"><b><img class="home" src="../../uploads/img/home.webp" alt="home" title="Inici"></b></a></li>
         </ul>
 
         <ul class="menu-right">

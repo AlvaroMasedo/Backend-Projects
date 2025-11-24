@@ -71,8 +71,7 @@ require_once __DIR__ . '/../controller/articles.php';
 
             <!-- Camp Cos de l'Article -->
             <label for="Cos">Cos de l'Article:</label>
-            <input type="large-text" id="Cos" name="Cos" rows="10" cols="50" value="<?= htmlspecialchars($cos ?? '') ?>">
-
+            <textarea id="Cos" name="Cos" rows="10" cols="50"><?= htmlspecialchars($cos ?? '') ?></textarea>
             <!-- Missatge d'èxit o error -->
             <?php echo $missatge ?? ''; ?>
 
