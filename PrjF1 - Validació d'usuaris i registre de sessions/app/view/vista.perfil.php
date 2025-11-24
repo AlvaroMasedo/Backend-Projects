@@ -50,25 +50,36 @@ require_once __DIR__ . '/../../includes/session_check.php';
             <?php endif; ?>
         </ul>
     </header>
-    <div class="perfil-container">
-        <h1>Perfil d'Usuari</h1>
-        <?php if (isset($_SESSION['usuari'])): ?>
-            <p class="perfil-p"><strong>Nickname:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?></p>
-            <p class="perfil-p"><strong>Nom:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['nom']); ?></p>
+        <div class="perfil-container">
+            <h1>Perfil d'Usuari</h1>
+            <div class="separador"></div>
+            <?php if (isset($_SESSION['usuari'])): ?>
+            <p class="perfil-p"><strong>Nickname:</strong></p>
+            <p><?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?></p>
+            <div class="separador_gran"></div>
             
-            <!-- Mostra el camp cognoms si està disponible -->
-            <p class="perfil-p"><strong>Cognom:</strong> 
-            <?php if (!empty($_SESSION['usuari']['cognom'])): ?>
-                <?php echo htmlspecialchars($_SESSION['usuari']['cognom']); ?></p>
-            <?php else: ?>
-                No proporcionat</p>
-            <?php endif; ?>
-            
-            <p class="perfil-p"><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['usuari']['email']); ?></p>
-        <?php else: ?>
-            <p>No hi ha cap usuari connectat.</p>
-        <?php endif; ?>
+            <p class="perfil-p"><strong>Nom:</strong></p>
+            <p><?php echo htmlspecialchars($_SESSION['usuari']['nom']); ?></p>
+            <div class="separador_gran"></div>
 
+            <!-- Mostra el camp cognoms si està disponible -->
+            <p class="perfil-p"><strong>Cognom:</strong></p>
+            <?php if (!empty($_SESSION['usuari']['cognom'])): ?> 
+               <p><?php echo htmlspecialchars($_SESSION['usuari']['cognom']); ?></p>
+            <?php else: ?>
+                <p>No proporcionat</p>
+            <?php endif; ?>
+            <div class="separador_gran"></div>
+                    
+            <p class="perfil-p"><strong>Email:</strong></p>
+            <p><?php echo htmlspecialchars($_SESSION['usuari']['email']); ?></p>
+            <div class="separador_gran"></div>
+
+            <p class="perfil-p"><strong>Contrasenya: </strong></p>
+            <p>*************</p>
+        <?php else: ?>
+           <p>No hi ha cap usuari connectat.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
