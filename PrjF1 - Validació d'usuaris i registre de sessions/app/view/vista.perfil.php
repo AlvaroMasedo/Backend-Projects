@@ -31,7 +31,7 @@ require_once __DIR__ . '/../../includes/session_check.php';
 <?php endif; ?>
     <header>
         <ul class="house-icon">
-            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home"></b></a></li>
+            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home" title="Inici"></b></a></li>
         </ul>
 
         <ul class="menu-right">

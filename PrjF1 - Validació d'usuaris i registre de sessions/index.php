@@ -42,8 +42,8 @@ require_once __DIR__ . '/app/controller/articles.php';
                     </ul>
                 </li>
             <?php else: ?>
-                <li><a class="button" href="app/view/vista.login.php"><b>Login</b></a></li>
-                <li><a class="button" href="app/view/vista.signup.php"><b>Sign Up</b></a></li>
+                <li><a class="button" href="app/view/vista.login.php" title="Iniciar sessió"><b>Login</b></a></li>
+                <li><a class="button" href="app/view/vista.signup.php" title="Registrar-se"><b>Sign Up</b></a></li>
             <?php endif; ?>
         </ul>
     </header>

@@ -12,8 +12,8 @@
 <body>
     <header>
         <ul>
-            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home"></b></a></li>
-            <li><a class="button" href="../view/vista.login.php"><b>Login</b></a></li>
+            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home" title="Inici"></b></a></li>
+            <li><a class="button" href="../view/vista.login.php" title="Iniciar sessió"><b>Login</b></a></li>
         </uL>
     </header>
     <h1>REGISTRAR-SE</h1>

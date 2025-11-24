@@ -36,8 +36,8 @@ $contadorIntents = $contadorIntents ?? 0;
     <?php endif; ?>
     <header>
         <ul>
-            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home"></b></a></li>
-            <li><a class="button" href="../view/vista.signup.php"><b>SignUp</b></a></li>
+            <li><a href="../../index.php"><b><img src="../../uploads/img/home.webp" alt="home" title="Inici"></b></a></li>
+            <li><a class="button" href="../view/vista.signup.php" title="Registrar-se"><b>SignUp</b></a></li>
         </uL>
     </header>
     <h1>INICIAR SESSIÓ</h1>

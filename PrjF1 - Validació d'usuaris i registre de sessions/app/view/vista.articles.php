@@ -52,8 +52,8 @@ require_once __DIR__ . '/../controller/articles.php';
                     </ul>
                 </li>
             <?php elseif (empty($ocultarBotons)): ?>
-                <li><a class="button" href="vista.login.php"><b>Login</b></a></li>
-                <li><a class="button" href="vista.signup.php"><b>Sign Up</b></a></li>
+                <li><a class="button" href="vista.login.php" title="Iniciar sessió"><b>Login</b></a></li>
+                <li><a class="button" href="vista.signup.php" title="Registrar-se"><b>Sign Up</b></a></li>
             <?php endif; ?>
         </ul>
     </header>
