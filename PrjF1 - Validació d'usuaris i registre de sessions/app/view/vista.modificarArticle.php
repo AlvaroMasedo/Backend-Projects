@@ -66,11 +66,14 @@ require_once __DIR__ . '/../controller/articles.php';
 
             <!-- Camp Nom de l'Article -->
             <label for="Nom">Nom de l'Article:</label>
+            <br>
             <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
             <?php echo $errorNom ?? ''; ?>
 
             <!-- Camp Cos de l'Article -->
+            <br>
             <label for="Cos">Cos de l'Article:</label>
+            <br>
             <textarea id="Cos" name="Cos" rows="10" cols="50"><?= htmlspecialchars($cos ?? '') ?></textarea>
             <!-- Missatge d'èxit o error -->
             <?php echo $missatge ?? ''; ?>

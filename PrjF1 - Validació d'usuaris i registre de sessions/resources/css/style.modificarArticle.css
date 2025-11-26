@@ -227,40 +227,44 @@ label {
 	color: rgb(0, 0, 0);
 }
 
-
 form label {
-	font-weight: bold;
-	display: inline-block;
-	margin-top: 30px;
+    font-family: 'Formula1-Bold', cursive;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    margin-top: 100px;
 }
 
 form input[type="text"] {
-	height: 40px;
-	width: 580px;
+	height: 60px;
+	width: 930px;
 	padding: 3px 10px;
 	border: 1px solid #000000;
 	border-radius: 10px;
 	background-color: #f6f6f6;
-	margin-top: 4px;
+	margin-top: 14px;
 	margin-bottom: 4px;
 	display: inline-block;
+    font-size: 17px;
+    margin-bottom: 30px;
 }
 
 form input[type="text"]:focus {
 	outline: none;
 	border-color: #3399ff;
 	box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
+
 }
 
 
 form textarea {
-    height: 80px;
-	width: 580px;
+    font-size: 17px;
+    height: 120;
+	width: 930px;
 	padding: 3px 10px;
 	border: 1px solid #000000;
 	border-radius: 10px;
 	background-color: #f6f6f6;
-	margin-top: 4px;
+	margin-top: 14px;
 	margin-bottom: 4px;
 	display: inline-block;
     resize: none; 
@@ -283,7 +287,7 @@ form input[type="submit"] {
 	color: #fff;
 	background-color: rgb(233, 40, 40);
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 13px;
+	font-size: 14px;
 }
 
 form input[type="submit"]:hover {
@@ -293,7 +297,7 @@ form input[type="submit"]:hover {
 }
 
 .cancel-button {
-    width: 93.8%;
+    width: 96.2%;
 	padding: 8px 16px;
 	margin-top: 32px;
 	border: 2px solid #ff3030;
@@ -302,7 +306,7 @@ form input[type="submit"]:hover {
 	color: #000000;
 	background-color: rgb(255, 255, 255);
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 13px;
+	font-size: 14px;
     text-align: center;
     text-decoration: none;
 }
@@ -316,15 +320,16 @@ form input[type="submit"]:hover {
 .modificar-article-container{
     background-color: #f7f4f1;
 	border-radius: 10px;
-    margin-top: 3rem;
-	margin-left: 33.45%;
+    margin-top: 2rem;
+	margin-left: 25%;
 	margin-bottom: 15px;
-	width: 600px;
+	width: 950px;
+    height: auto;
 	padding: 16px;
 }
 
 .button-eliminar {
-   width: 93.8%;
+   width: 96.2%;
 	padding: 8px 16px;
 	margin-top: 32px;
 	border: 2px solid #ff3030;
@@ -333,7 +338,7 @@ form input[type="submit"]:hover {
 	color: #ffffff;
 	background-color: rgb(233, 40, 40);
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 13px;
+	font-size: 14px;
     text-align: center;
     text-decoration: none;
 }
