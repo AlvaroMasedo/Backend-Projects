@@ -3,6 +3,10 @@ body {
 	margin: 0;
 }
 
+main{
+	min-height: 72.9vh;
+}
+
 header ul {
 	background-color: #333333;
 	list-style: none;
@@ -10,7 +14,7 @@ header ul {
 	display: flex;
 	height: 80px;
 	justify-content: space-between;
-	padding: 0 2%;
+	padding: 0 1%;
 }
 
 header ul li {
@@ -37,14 +41,12 @@ header ul li {
 }
 
 img {
-	height: 40px;
+	height: 30px;
 	transition: 0.3s;
 }
 
-
-
 img:hover {
-	height: 50px;
+	height: 32px;
 }
 
 

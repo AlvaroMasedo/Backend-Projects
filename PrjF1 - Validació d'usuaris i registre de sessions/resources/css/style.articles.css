@@ -29,7 +29,6 @@ header ul li {
     padding-left: 0;
 }
 
-
 .button {
     display: inline-block;
     text-decoration: none;
@@ -50,12 +49,12 @@ header ul li {
 }
 
 .home {
-    height: 40px;
+    height: 30px;
     transition: 0.3s;
 }
 
 .home:hover {
-    height: 50px;
+    height: 32px;
 }
 
 h1 {

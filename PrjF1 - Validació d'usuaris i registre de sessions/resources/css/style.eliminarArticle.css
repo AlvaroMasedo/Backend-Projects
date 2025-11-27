@@ -3,6 +3,10 @@ body {
     margin: 0;
 }
 
+main{
+	min-height: 70vh;
+}
+
 h2 {
     text-align: center;
     color: rgb(34, 34, 34);

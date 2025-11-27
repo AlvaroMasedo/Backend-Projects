@@ -50,12 +50,12 @@ header ul li {
 }
 
 img {
-    height: 40px;
+    height: 30px;
     transition: 0.3s;
 }
 
 img:hover {
-    height: 50px;
+    height: 32px;
 }
 
 h1 {
@@ -126,6 +126,9 @@ p {
     z-index: 1000;
 }
 
+main{
+    min-height: 78vh;
+}
 .alert {
     background-color: #f7f4f1;
     padding: 2rem;

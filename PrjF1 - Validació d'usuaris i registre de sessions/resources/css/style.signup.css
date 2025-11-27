@@ -17,6 +17,10 @@ header ul li {
 	padding: 1%;
 }
 
+main{
+	min-height: 72.9vh;
+}
+
 .button {
 	display: inline-block;
 	text-decoration: none;
@@ -37,14 +41,12 @@ header ul li {
 }
 
 img {
-	height: 40px;
+	height: 30px;
 	transition: 0.3s;
 }
 
-
-
 img:hover {
-	height: 50px;
+	height: 32px;
 }
 
 h1 {

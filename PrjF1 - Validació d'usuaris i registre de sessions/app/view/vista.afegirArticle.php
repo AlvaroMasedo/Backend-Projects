@@ -7,7 +7,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); //Eliminar cookie després de mostrar missatge
 }
 // Ara incloure session_check.php
-require_once __DIR__ . '/../../includes/session_check.php'; 
+require_once __DIR__ . '/../../includes/session_check.php';
 // Si no hi ha sessió volem ocultar els botons d'autenticació al header d'aquesta vista
 $ocultarBotons = !isset($_SESSION['usuari']);
 // Carregar controlador d'articles per obtenir $articles i paginació
@@ -15,6 +15,7 @@ require_once __DIR__ . '/../controller/articles.php';
 ?>
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,23 +23,25 @@ require_once __DIR__ . '/../controller/articles.php';
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
     <title>Perfil</title>
 </head>
+
 <body>
     <!--Si la sessió ha expirat, mostrar missatge-->
     <?php if ($sessionExpired): ?>
-    <div class="alert-overlay">
-        <div class="alert">
-            <p>S'ha tancat la sessió.</p>
-            <a class="button" href="vista.login.php">INICIAR SESSIÓ</a>
-            <br>
-            <a class="link" href="../../index.php">Navega com usuari anònim</a>
+        <div class="alert-overlay">
+            <div class="alert">
+                <p>S'ha tancat la sessió.</p>
+                <a class="button" href="vista.login.php">INICIAR SESSIÓ</a>
+                <br>
+                <a class="link" href="../../index.php">Navega com usuari anònim</a>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
     <!-- Header amb navegació -->
     <header>
         <ul class="house-icon">
-            <li><a href="../../index.php"><b><img class="home" src="../../uploads/img/home.webp" alt="home"></b></a></li>
+            <li><a href="../../index.php"><b><img class="home" src="../../uploads/img/logo.webp" alt="home"></b></a>
+            </li>
         </ul>
 
         <ul class="menu-right">
@@ -57,25 +60,30 @@ require_once __DIR__ . '/../controller/articles.php';
             <?php endif; ?>
         </ul>
     </header>
-                
-    <!-- Contingut principal de la pàgina d'afegir Articles -->
-    <form action="../controller/articles.php?action=afegir" method="post">
-        <!-- Formulari per afegir article -->
-        <!-- Camp Nom de l'Article -->
-        <label for="Nom">Nom de l'Article:</label>
-        <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
-        <?php echo $errorNom ?? ''; ?>
 
-        <!-- Camp Cos de l'Article -->
-        <label for="Cos">Cos de l'Article:</label>
-        <input type="large-text" id="Cos" name="Cos" rows="10" cols="50" value="<?php echo htmlspecialchars($cos ?? ''); ?>">
+    <main>
+        <!-- Contingut principal de la pàgina d'afegir Articles -->
+        <form action="../controller/articles.php?action=afegir" method="post">
+            <!-- Formulari per afegir article -->
+            <!-- Camp Nom de l'Article -->
+            <label for="Nom">Nom de l'Article:</label>
+            <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
+            <?php echo $errorNom ?? ''; ?>
 
-        <!-- Missatge d'èxit o error -->
-        <?php echo $missatge ?? ''; ?>
+            <!-- Camp Cos de l'Article -->
+            <label for="Cos">Cos de l'Article:</label>
+            <textarea id="Cos" name="Cos" rows="10" cols="50"><?php echo htmlspecialchars($cos ?? ''); ?></textarea>
+            <?php echo $errorCos ?? ''; ?>
+                            
+            <!-- Missatge d'èxit o error -->
+            <?php echo $missatge ?? ''; ?>
 
-        <!-- Botó d'enviament -->
-        <input type="submit" value="AFEGIR ARTICLE">
-        <a class="cancel-button" href="../view/vista.articles.php">TORNAR ENRERE</a>
-    </form>
+            <!-- Botó d'enviament -->
+            <input type="submit" value="AFEGIR ARTICLE">
+            <a class="cancel-button" href="../view/vista.articles.php">TORNAR ENRERE</a>
+        </form>
+    </main>
+    <?php include __DIR__ . '/vista.footer.php'; ?>
 </body>
+
 </html>
