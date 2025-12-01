@@ -18,6 +18,7 @@ require_once __DIR__ . '/app/controller/articles.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="resources/css/style.index.css">
     <link rel="stylesheet" href="resources/css/style.footer.css">
+    <link rel="stylesheet" href="resources/css/style.header.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
     <title>Artícles F1</title>
 </head>
@@ -35,25 +36,7 @@ require_once __DIR__ . '/app/controller/articles.php';
     <?php endif; ?>
 
     <!-- Header -->
-    <header>
-        <ul>
-            <li><a href="index.php"><img class="logo-img" src="uploads/img/logo.webp" alt="F1 logo" title="Inici"></a>
-            </li>
-            <?php if (isset($_SESSION['usuari'])): ?>
-                <li class="menu-usuari">
-                    <span class="button-usuari"><?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?> ▼</span>
-                    <ul class="desplegable-usuari">
-                        <li><a href="app/view/vista.perfil.php">Perfil</a></li>
-                        <li><a href="app/view/vista.articles.php">Artícles</a></li>
-                        <li><a href="includes/session_check.php?logout=1">Tancar sessió</a></li>
-                    </ul>
-                </li>
-            <?php else: ?>
-                <li><a class="button" href="app/view/vista.login.php" title="Iniciar sessió"><b>Login</b></a></li>
-                <li><a class="button" href="app/view/vista.signup.php" title="Registrar-se"><b>Sign Up</b></a></li>
-            <?php endif; ?>
-        </ul>
-    </header>
+    <?php include __DIR__ . '/app/view/vista.header.php'; ?>
     <main>
         <?php if (empty($articles)): ?>
             <div class="no-articles" style="padding:2rem; text-align:center;">

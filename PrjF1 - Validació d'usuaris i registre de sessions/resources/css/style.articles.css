@@ -3,32 +3,6 @@ body {
     margin: 0;
 }
 
-header {
-    background-color: #333333;
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2%;
-}
-
-header ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
-
-header ul li {
-    padding: 0%;
-}
-
-.house-icon {
-    margin: 0;
-    padding-left: 0;
-}
-
 .button {
     display: inline-block;
     text-decoration: none;
@@ -46,15 +20,6 @@ header ul li {
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     color: black;
-}
-
-.home {
-    height: 30px;
-    transition: 0.3s;
-}
-
-.home:hover {
-    height: 32px;
 }
 
 h1 {
@@ -147,64 +112,6 @@ p {
 
 .alert a.link:hover {
     text-decoration: underline;
-}
-
-.menu-usuari {
-    position: relative;
-    display: inline-block;
-}
-
-.button-usuari {
-    display: inline-block;
-    text-decoration: none;
-    color: white;
-    background-color: #ff0000;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    transition: 0.2s;
-    border: 1px solid red;
-}
-
-.button-usuari:hover {
-    cursor: pointer;
-    background-color: rgb(255, 255, 255);
-    color: black;
-}
-
-.desplegable-usuari {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: auto;
-    background-color: #f7f4f1;
-    list-style: none;
-    min-width: 160px;
-    height: auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    overflow: hidden;
-    z-index: 999;
-}
-
-.desplegable-usuari li a {
-    display: block;
-    padding: 10px 16px;
-    white-space: nowrap;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
-
-.desplegable-usuari li a:hover {
-    background-color: #ff0000;
-    color: white;
-}
-
-.menu-usuari:hover .desplegable-usuari {
-    display: block;
 }
 
 .no-session {

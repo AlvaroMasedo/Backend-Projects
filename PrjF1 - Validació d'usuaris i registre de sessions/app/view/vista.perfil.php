@@ -31,28 +31,8 @@ require_once __DIR__ . '/../../includes/session_check.php';
             </div>
         </div>
     <?php endif; ?>
-    <header>
-        <ul class="house-icon">
-            <li><a href="../../index.php"><b><img src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>
-            </li>
-        </ul>
-
-        <ul class="menu-right">
-            <?php if (isset($_SESSION['usuari'])): ?>
-                <li class="menu-usuari">
-                    <span class="button-usuari"><?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?> ▼</span>
-                    <ul class="desplegable-usuari">
-                        <li><a href="vista.perfil.php">Perfil</a></li>
-                        <li><a href="vista.articles.php">Artícles</a></li>
-                        <li><a href="../../includes/session_check.php?logout=1">Tancar sessió</a></li>
-                    </ul>
-                </li>
-            <?php else: ?>
-                <li><a class="button" href="vista.login.php"><b>Login</b></a></li>
-                <li><a class="button" href="vista.signup.php"><b>Sign Up</b></a></li>
-            <?php endif; ?>
-        </ul>
-    </header>
+    <!-- Header amb navegació -->
+    <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
         <div class="perfil-container">
