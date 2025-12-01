@@ -48,7 +48,7 @@ require_once __DIR__ . '/app/controller/articles.php';
 
             <!-- Secció de selecció de articles per pàgina -->
             <div class="articles">
-                <h3>Selecciona els artícles que vols veure per pàgina</h3>
+                <h3>Artícles per pàgina</h3>
 
                 <!-- Formulari per seleccionar nombre de articles -->
                 <form method="get">
