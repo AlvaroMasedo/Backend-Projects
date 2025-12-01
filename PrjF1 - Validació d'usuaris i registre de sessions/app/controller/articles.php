@@ -10,6 +10,7 @@ require_once __DIR__ . '/../../config/db_connection.php';
 // Assegurar que la sessió està iniciada i gestionar logout
 require_once __DIR__ . '/../../includes/session_check.php';
 require_once __DIR__ . '/../model/model.articles.php';
+require_once __DIR__ . '/../../lib/auth.php';
 
 // Obtenir l'acció a realitzar (si n'hi ha)
 $action = $_GET['action'] ?? '';
@@ -18,29 +19,19 @@ $action = $_GET['action'] ?? '';
 $pdoArticles = new PdoArticles($conn);
 
 // Identifiquem el script actual (per saber si som a la vista de modificació o eliminació)
-$currentScript = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
+$scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
 
 // Si s'ha cridat la vista de modificació amb un id, carreguem l'article perquè la vista
 // pugui pré-omplir els camps. Això ocorre quan l'usuari obre `vista.modificarArticle.php?id=...`.
-if ($currentScript === 'vista.modificarArticle.php' && isset($_GET['id'])) {
-	$idToEdit = (int) $_GET['id'];
-	$articleToEdit = $pdoArticles->obtenirPerId($idToEdit);
-	if ($articleToEdit !== null) {
-		// Permisos: si l'usuari està loguejat i és admin o és l'autor, deixem editar
-		$canEdit = false;
-		if (isset($_SESSION['usuari'])) {
-			$isAdmin = (int) ($_SESSION['usuari']['administrador'] ?? 0);
-			$nickname = $_SESSION['usuari']['nickname'] ?? null;
-			if ($isAdmin === 1 || $articleToEdit['autor'] === $nickname) {
-				$canEdit = true;
-			}
-		}
-
-		if ($canEdit) {
+if ($scriptActual === 'vista.modificarArticle.php' && isset($_GET['id'])) {
+	$idEditar = (int) $_GET['id'];
+	$articleAEditar = $pdoArticles->obtenirPerId($idEditar);
+	if ($articleAEditar !== null) {
+		if (pot_usuari_gestionar_article($articleAEditar)) {
 			// Variables que la vista utilitza per pré-omplir el formulari
-			$id = $articleToEdit['id'];
-			$nom = $articleToEdit['Nom'];
-			$cos = $articleToEdit['Cos'];
+			$id = $articleAEditar['id'];
+			$nom = $articleAEditar['Nom'];
+			$cos = $articleAEditar['Cos'];
 		} else {
 			$missatge = '<p class="error">No tens permisos per modificar aquest article o has d\'iniciar sessió.</p>';
 		}
@@ -51,41 +42,31 @@ if ($currentScript === 'vista.modificarArticle.php' && isset($_GET['id'])) {
 
 // Si s'ha cridat la vista d'eliminació amb un id, carreguem l'article perquè la vista
 // pugui pré-omplir el formulari d'eliminació i fer comprovacions de permisos.
-if ($currentScript === 'vista.eliminarArticle.php' && isset($_GET['id'])) {
-	$idToDelete = (int) $_GET['id'];
-	$articleToDelete = $pdoArticles->obtenirPerId($idToDelete);
-	if ($articleToDelete === null) {
+if ($scriptActual === 'vista.eliminarArticle.php' && isset($_GET['id'])) {
+	$idEliminar = (int) $_GET['id'];
+	$articleAEliminar = $pdoArticles->obtenirPerId($idEliminar);
+	if ($articleAEliminar === null) {
 		$missatge = '<p class="error">Article no trobat.</p>';
 	} else {
-		// comprovar permisos: admin o autor
-		$canDelete = false;
-		if (isset($_SESSION['usuari'])) {
-			$isAdmin = (int) ($_SESSION['usuari']['administrador'] ?? 0);
-			$nickname = $_SESSION['usuari']['nickname'] ?? null;
-			if ($isAdmin === 1 || $articleToDelete['autor'] === $nickname) {
-				$canDelete = true;
-			}
-		}
-		if (! $canDelete) {
+		if (! pot_usuari_gestionar_article($articleAEliminar)) {
 			$missatge = '<p class="error">No tens permisos per eliminar aquest article.</p>';
 		} else {
-			$id = $articleToDelete['id'];
+			$id = $articleAEliminar['id'];
 		}
 	}
 }
 
 // Paginació senzilla 
-$autor = $_SESSION['usuari']['nickname'] ?? null;
+$autor = nickname_usuari_actual();
 
 // Comptar tots els articles
 $totalArticles = $pdoArticles->contarArticles();
 
-// Identifiquem el script actual per comportaments per defecte
-$currentScript = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
+$scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
 $perPageRaw = $_GET['per_page'] ?? null;
 
 // Si estem a la vista d'articles i l'usuari està loguejat, per defecte volem mostrar TOTS
-if ($perPageRaw === null && $currentScript === 'vista.articles.php' && isset($_SESSION['usuari'])) {
+if ($perPageRaw === null && $scriptActual === 'vista.articles.php' && isset($_SESSION['usuari'])) {
 	$perPageRaw = 'all';
 }
 
@@ -135,13 +116,8 @@ $nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl;
 
 // Afegir articles 
 if ($action === 'afegir'){
-
 	// Assegurar que l'usuari està loguejat abans d'afegir un article
-	if ($autor === null) {
-		// Redirigir a la pàgina d'inici de sessió
-		header('Location: ../view/vista.login.php');
-		exit;
-	}
+	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Obtenir dades del formulari
@@ -178,11 +154,7 @@ if ($action === 'afegir'){
 // Modificar articles
 if ($action === "modificar"){
 	// Assegurar que l'usuari està loguejat abans de modificar un article
-	if ($autor === null) {
-		// Redirigir a la pàgina d'inici de sessió
-		header('Location: ../view/vista.login.php');
-		exit;
-	}
+	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
 	if($_SERVER['REQUEST_METHOD'] === 'POST'){
 		//Obtenir dades del formulari
@@ -220,11 +192,7 @@ if ($action === "modificar"){
 //Eliminar articles
 if ($action === 'eliminar'){
 	// Assegurar que l'usuari està loguejat abans d'eliminar un article
-	if ($autor === null) {
-		// Redirigir a la pàgina d'inici de sessió
-		header('Location: ../view/vista.login.php');
-		exit;
-	}
+	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
 	if($_SERVER['REQUEST_METHOD'] === 'POST'){
 		//Obtenir id de l'article a eliminar
