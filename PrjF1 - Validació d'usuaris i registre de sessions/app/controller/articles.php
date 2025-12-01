@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../config/db_connection.php';
 
 // Assegurar que la sessió està iniciada i gestionar logout
 require_once __DIR__ . '/../../includes/session_check.php';
-require_once __DIR__ . '/../model/pdo.articles.php';
+require_once __DIR__ . '/../model/model.articles.php';
 
 // Obtenir l'acció a realitzar (si n'hi ha)
 $action = $_GET['action'] ?? '';

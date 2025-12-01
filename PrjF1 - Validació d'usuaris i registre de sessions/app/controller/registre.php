@@ -3,8 +3,8 @@ declare(strict_types=1);
 //Alvaro Masedo Pérez
 
 require __DIR__ .'/../../config/db_connection.php';
-require __DIR__ .'/../model/pdo.registrarUser.php';
-require __DIR__ .'/../model/pdo.consultarUser.php';
+require __DIR__ .'/../model/model.registrarUser.php';
+require __DIR__ .'/../model/model.consultarUser.php';
 
 //Obtenir l'acció des de la URL
 $action = $_GET['action'] ?? '';
