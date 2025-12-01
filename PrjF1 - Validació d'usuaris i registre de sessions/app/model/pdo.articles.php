@@ -86,4 +86,36 @@ class PdoArticles{
             ':id' => $id
         ]);
     }
+
+     /**
+     * Retorna el nombre total d'articles
+     * @param string|null $autor
+     * @return int
+     */
+    public function contarArticles(): int {
+        $sql = "SELECT COUNT(*) FROM articles";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $count = (int) $stmt->fetchColumn();
+        return $count;
+    }
+
+    /**
+     * Retorna un llistat paginat d'articles amb LIMIT/OFFSET
+     * @param int $offset
+     * @param string|null $autor
+     * @return array<int,array<string,mixed>>
+     */
+    public function obtenirPaginat(int $limit, int $offset): array {
+        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos FROM articles ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->conn->prepare($sql);
+
+        // Bind numèrics amb PDO::PARAM_INT
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result ?: [];
+    }
+
 }

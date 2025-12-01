@@ -74,45 +74,21 @@ if ($currentScript === 'vista.eliminarArticle.php' && isset($_GET['id'])) {
 	}
 }
 
-// Si l'usuari està loguejat, determinem si és administrador
-$allArticles = [];
-if (isset($_SESSION['usuari'])) {
-	$isAdmin = (int) ($_SESSION['usuari']['administrador'] ?? 0);
-	if ($isAdmin === 1) {
-		// Usuari admin: tots els articles
-		$allArticles = $pdoArticles->obtenirTots();
-	} else {
-		// Usuari normal: només els seus articles (si tenim nickname)
-		$nickname = $_SESSION['usuari']['nickname'] ?? null;
-		if ($nickname !== null) {
-			$allArticles = $pdoArticles->obtenirPerNickname($nickname);
-		} else {
-			// No tenim nickname; segurament no hauria de passar, ja que si no estás logejat no pots modificar articles
-			$allArticles = [];
-		}
-	}
-} else {
-	// Usuari anònim: mostrar tots els articles només si som a la pàgina principal
-	$currentScript = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
-	if ($currentScript === 'index.php') {
-		$allArticles = $pdoArticles->obtenirTots();
-	} else {
-		$allArticles = [];
-	}
-}
+// Paginació senzilla 
+$autor = $_SESSION['usuari']['nickname'] ?? null;
 
-// Nombre total d'articles segons la selecció/privil·legis
-$totalArticles = count($allArticles);
+// Comptar tots els articles
+$totalArticles = $pdoArticles->contarArticles();
 
-// Identifiquem el script actual (per saber si som a la vista d'articles o a l'index)
+// Identifiquem el script actual per comportaments per defecte
 $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
-
 $perPageRaw = $_GET['per_page'] ?? null;
+
 // Si estem a la vista d'articles i l'usuari està loguejat, per defecte volem mostrar TOTS
-// els articles assignats (no paginar) a menys que s'especifiqui explícitament per_page
 if ($perPageRaw === null && $currentScript === 'vista.articles.php' && isset($_SESSION['usuari'])) {
 	$perPageRaw = 'all';
 }
+
 if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)) {
 	// Mostrar tots els articles
 	$articlesPerPagina = $totalArticles > 0 ? $totalArticles : 1;
@@ -141,12 +117,12 @@ if ($paginaActual > $totalPagines) {
 	$paginaActual = $totalPagines;
 }
 
-// Obtenir slice d'articles a mostrar
+// Obtenir articles amb SQL LIMIT/OFFSET (sense filtrar)
 if ($perPageMode === 'all') {
-	$articles = $allArticles;
+	$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, 0);
 } else {
 	$offset = ($paginaActual - 1) * $articlesPerPagina;
-	$articles = array_slice($allArticles, $offset, $articlesPerPagina);
+	$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset);
 }
 
 // URLs per a controls de paginació (mantenint per_page)
@@ -156,9 +132,6 @@ $nextPage = min($totalPagines, $paginaActual + 1);
 $perPageForUrl = $_GET['per_page'] ?? (string)$articlesPerPagina;
 $prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl;
 $nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl;
-
-
-$autor = $_SESSION['usuari']['nickname'] ?? null;
 
 // Afegir articles 
 if ($action === 'afegir'){
