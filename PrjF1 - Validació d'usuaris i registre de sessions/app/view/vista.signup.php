@@ -29,7 +29,7 @@
             <?php echo $errorNom ?? ''; ?>
 
             <!-- Segon camp del formulari (Cognom)-->
-            <label for="Cognom">Cognom: (Opcional) </label>
+            <label for="cognom">Cognom: (Opcional) </label>
             <input type="text" id="cognom" name="cognom" value="<?php echo htmlspecialchars($cognom ?? ''); ?>">
             <?php echo $errorCognom ?? ''; ?>
 

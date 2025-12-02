@@ -21,17 +21,20 @@ header ul li {
   display: inline-block;
   text-decoration: none;
   color: white;
-  background-color: #ff0f0f;
+  font-weight: 800;
+  background-color: #D41616;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   transition: all 0.3s ease;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   transition: 0.3s;
+  border: 1px solid red;
 }
 
 .button:hover {
-  background-color: #c70000;
-  transform: 100%;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: black;
 }
 
 img {

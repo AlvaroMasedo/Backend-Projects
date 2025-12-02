@@ -25,42 +25,24 @@ header ul li.push-right {
   height: 32px;
 }
 
-.button {
-  display: inline-block;
-  text-decoration: none;
-  color: white;
-  background-color: #ff0f0f;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  transition: 0.3s;
-  border: 1px solid red;
-}
-
 .button-usuari {
   display: inline-block;
   text-decoration: none;
   color: white;
-  background-color: #ff0f0f;
+  font-weight: 800;
+  background-color: #D41616;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   transition: all 0.3s ease;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   transition: 0.3s;
-  border: 1px solid red;
+  border: 1px solid #ee1f1f;
 }
 
 .button-usuari:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     color: black;
-}
-
-.button:hover {
-  cursor: pointer;
-  background-color: rgb(255, 255, 255);
-  color: black;
 }
 
 .menu-usuari {
@@ -103,7 +85,7 @@ header ul li.push-right {
 }
 
 .desplegable-usuari li a:hover {
-  background-color: #ff0000;
+  background-color: #D41616;
   color: #fff;
 }
 

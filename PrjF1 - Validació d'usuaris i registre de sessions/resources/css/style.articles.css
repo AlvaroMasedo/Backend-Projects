@@ -7,7 +7,8 @@ body {
     display: inline-block;
     text-decoration: none;
     color: white;
-    background-color: #ff0f0f;
+    font-weight: 800;
+    background-color: #D41616;
     padding: 0.5rem 1rem;
     border-radius: 20px;
     transition: all 0.3s ease;
@@ -103,7 +104,8 @@ p {
     display: block;
     margin-top: 1rem;
     text-align: center;
-    color: #ff0000;
+    font-weight: 800;
+    color: #D41616;
     text-decoration: none;
     font-weight: bold;
     transition: 0.3s;
@@ -191,12 +193,6 @@ p {
     height: 34px;
     padding-top: 8%;
     padding-left: 8%;
-} 
-
-.succes{
-    color: green;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size: 170%;
 }
 
 .afegir-article-div {

@@ -11,7 +11,8 @@ main {
     display: inline-block;
     text-decoration: none;
     color: white;
-    background-color: #ff0f0f;
+    font-weight: 800;
+    background-color: #D41616;
     padding: 0.5rem 1rem;
     border-radius: 20px;
     transition: all 0.3s ease;
@@ -107,9 +108,9 @@ p {
     display: block;
     margin-top: 1rem;
     text-align: center;
-    color: #ff0000;
+    color: #D41616;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 800;
     transition: 0.3s;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -118,23 +119,24 @@ p {
     text-decoration: underline;
 }
 
-.success{
+.success {
     color: green;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size:120%;
+    font-size: 120%;
 }
 
 .error {
-	color: red;
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	margin: 0px;
-	margin-bottom: 10px;
+    color: #D41616;
+    font-weight: 800;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 0px;
+    margin-bottom: 10px;
     font-size: 120%;
 }
 
 label {
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	color: rgb(0, 0, 0);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(0, 0, 0);
 }
 
 form label {
@@ -145,38 +147,38 @@ form label {
 }
 
 form input[type="text"] {
-	height: 60px;
-	width: 930px;
-	padding: 3px 10px;
-	border: 1px solid #000000;
-	border-radius: 10px;
-	background-color: #f6f6f6;
-	margin-top: 14px;
-	margin-bottom: 4px;
-	display: inline-block;
+    height: 60px;
+    width: 930px;
+    padding: 3px 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: inline-block;
     font-size: 17px;
     margin-bottom: 30px;
 }
 
 form input[type="text"]:focus {
-	outline: none;
-	border-color: #3399ff;
-	box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
+    outline: none;
+    border-color: #3399ff;
+    box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
 }
 
 
 form textarea {
     font-size: 17px;
     height: 120;
-	width: 930px;
-	padding: 3px 10px;
-	border: 1px solid #000000;
-	border-radius: 10px;
-	background-color: #f6f6f6;
-	margin-top: 14px;
-	margin-bottom: 4px;
-	display: inline-block;
-    resize: none; 
+    width: 930px;
+    padding: 3px 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: inline-block;
+    resize: none;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
@@ -187,73 +189,76 @@ form textarea:focus {
 }
 
 form input[type="submit"] {
-	width: 100%;
-	padding: 8px 16px;
-	margin-top: 32px;
-	border: 2px solid #ff3030;
-	border-radius: 5px;
-	display: block;
-	color: #fff;
-	background-color: rgb(233, 40, 40);
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 14px;
+    width: 100%;
+    padding: 8px 16px;
+    margin-top: 32px;
+    border: 2px solid #ff3030;
+    border-radius: 5px;
+    display: block;
+    color: #fff;
+    background-color: #D41616;
+    font-weight: 800;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
 }
 
 form input[type="submit"]:hover {
-	cursor: pointer;
-	background-color: rgb(255, 255, 255);
-	color: black;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
 }
 
 .cancel-button {
     width: 96.2%;
-	padding: 8px 16px;
-	margin-top: 32px;
-	border: 2px solid #ff3030;
-	border-radius: 5px;
-	display: block;
-	color: #000000;
-	background-color: rgb(255, 255, 255);
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 14px;
+    padding: 8px 16px;
+    margin-top: 32px;
+    border: 2px solid #ff3030;
+    border-radius: 5px;
+    display: block;
+    color: #000000;
+    background-color: rgb(255, 255, 255);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
     text-align: center;
     text-decoration: none;
 }
 
 .cancel-button:hover {
     cursor: pointer;
-	background-color: rgb(233, 40, 40);
+    background-color: #D41616;
+    font-weight: 800;
     color: rgb(255, 255, 255);
 }
 
-.modificar-article-container{
+.modificar-article-container {
     background-color: #f7f4f1;
-	border-radius: 10px;
+    border-radius: 10px;
     margin-top: 2rem;
-	margin-left: 25%;
-	margin-bottom: 15px;
-	width: 950px;
+    margin-left: 25%;
+    margin-bottom: 15px;
+    width: 950px;
     height: auto;
-	padding: 16px;
+    padding: 16px;
 }
 
 .button-eliminar {
-   width: 96.2%;
-	padding: 8px 16px;
-	margin-top: 32px;
-	border: 2px solid #ff3030;
-	border-radius: 5px;
-	display: block;
-	color: #ffffff;
-	background-color: rgb(233, 40, 40);
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	font-size: 14px;
+    width: 96.2%;
+    padding: 8px 16px;
+    margin-top: 32px;
+    border: 2px solid #ff3030;
+    border-radius: 5px;
+    display: block;
+    color: #ffffff;
+    background-color: #D41616;
+    font-weight: 800;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
     text-align: center;
     text-decoration: none;
 }
 
 .button-eliminar:hover {
     cursor: pointer;
-	background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
 }
