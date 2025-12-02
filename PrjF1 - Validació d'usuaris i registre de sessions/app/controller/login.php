@@ -5,6 +5,7 @@ declare(strict_types=1);
 require __DIR__ .'/../../config/db_connection.php';
 require __DIR__ .'/../model/model.consultarUser.php';
 require __DIR__ .'/../model/model.loginUser.php';
+require __DIR__ . '/../../lib/recaptcha.php';
 
 //Obtenir l'acció des de la URL
 $action = $_GET['action'] ?? '';
@@ -55,27 +56,8 @@ function iniciarSessio(){
                 if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
                     $enviatMissatge = '<p class="error">SIUSPLAU, COMPLETA EL RECAPTCHA.</p>';
                 } else {
-                    $key = "6LfP6hEsAAAAAE3pwc5I7cu_1OM3wW_PPT0DXyra"; // secret key
                     $resposta = $_POST['g-recaptcha-response'];
-
-                    $url = "https://www.google.com/recaptcha/api/siteverify";
-                    $data = [
-                        'secret' => $key,
-                        'response' => $resposta
-                    ];
-
-                    $options = [
-                        'http' => [
-                            'method' => 'POST',
-                            'header' => 'Content-type: application/x-www-form-urlencoded\\r\\n',
-                            'content' => http_build_query($data)
-                        ]
-                    ];
-                    $context = stream_context_create($options);
-                    $resultat = @file_get_contents($url, false, $context);
-                    $resultatJson = $resultat ? json_decode($resultat, true) : null;
-
-                    if (empty($resultatJson) || empty($resultatJson['success'])) {
+                    if (!verificar_recaptcha($resposta)) {
                         $enviatMissatge = '<p class="error">FALLA AL VERIFICAR EL RECAPTCHA. SIUSPLAU, TORNA-HO A PROVAR.</p>';
                     }
                 }
@@ -88,27 +70,8 @@ function iniciarSessio(){
                 if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
                     $enviatMissatge = '<p class="error">SIUSPLAU, COMPLETA EL RECAPTCHA.</p>';
                 } else {
-                    $key = "6LfP6hEsAAAAAE3pwc5I7cu_1OM3wW_PPT0DXyra"; // secret key
                     $resposta = $_POST['g-recaptcha-response'];
-
-                    $url = "https://www.google.com/recaptcha/api/siteverify";
-                    $data = [
-                        'secret' => $key,
-                        'response' => $resposta
-                    ];
-
-                    $options = [
-                        'http' => [
-                            'method' => 'POST',
-                            'header' => 'Content-type: application/x-www-form-urlencoded\r\n',
-                            'content' => http_build_query($data)
-                        ]
-                    ];
-                    $context = stream_context_create($options);
-                    $resultat = @file_get_contents($url, false, $context);
-                    $resultatJson = $resultat ? json_decode($resultat, true) : null;
-
-                    if (empty($resultatJson) || empty($resultatJson['success'])) {
+                    if (!verificar_recaptcha($resposta)) {
                         $enviatMissatge = '<p class="error">FALLA AL VERIFICAR EL RECAPTCHA. SIUSPLAU, TORNA-HO A PROVAR.</p>';
                     }
                 }

@@ -20,8 +20,8 @@ $contadorIntents = $contadorIntents ?? 0;
     <link rel="stylesheet" href="../../resources/css/style.login.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
 
-    <!-- Google reCAPTCHA client script -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Google reCAPTCHA client script (centralitzat) -->
+    <?php require_once __DIR__ . '/../../lib/recaptcha.php'; imprimir_recaptcha_script(); ?>
     <title>LogIn</title>
 </head>
 
@@ -70,9 +70,7 @@ $contadorIntents = $contadorIntents ?? 0;
             <?php echo $enviatMissatge ?? ''; ?>
 
             <!-- Mostrar reCAPTCHA si s'han superat els intents permesos -->
-            <?php if ($contadorIntents >= 3): ?>
-                <div class="g-recaptcha" data-sitekey="6LfP6hEsAAAAAF8UvGTJukRxIklH3jJg1BmfcCLX"></div>
-            <?php endif; ?>
+            <?php mostrar_recaptcha_si_es_necessita($contadorIntents); ?>
 
             <!-- Preguntar a la BBDD si existeix l'email registrat per iniciar sesió -->
             <input type="submit" name="btn-enviar" value="INICIAR SESSIÓ">
