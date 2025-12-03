@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-
+//Álvaro Masedo Pérez
 // Clau pública (site key) i privada (secret).
 if (!defined('RECAPTCHA_SITE_KEY')) {
     define('RECAPTCHA_SITE_KEY', '6LfP6hEsAAAAAF8UvGTJukRxIklH3jJg1BmfcCLX');
