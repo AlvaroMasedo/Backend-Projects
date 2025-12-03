@@ -6,6 +6,7 @@ $sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] =
 if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); //Eliminar cookie després de mostrar missatge
 }
+
 // Ara incloure session_check.php
 require_once __DIR__ . '/includes/session_check.php';
 require_once __DIR__ . '/app/controller/articles.php';
