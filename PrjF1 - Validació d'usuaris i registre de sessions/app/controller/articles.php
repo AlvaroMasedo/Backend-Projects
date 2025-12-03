@@ -70,13 +70,14 @@ if ($perPageRaw === null && $scriptActual === 'vista.articles.php' && isset($_SE
 	$perPageRaw = 'all';
 }
 
+// Determinar nombre d'articles per pàgina a index.php
 if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)) {
 	// Mostrar tots els articles
 	$articlesPerPagina = $totalArticles > 0 ? $totalArticles : 1;
 	$perPageMode = 'all';
 } else {
 	// Valor numèric (o default)
-	$articlesPerPagina = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 4;
+	$articlesPerPagina = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 8;
 	if ($articlesPerPagina < 1) {
 		$articlesPerPagina = 1;
 	}
@@ -88,23 +89,15 @@ if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)
 
 $paginaActual = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// Calcul pagines (si per_page == all, tindrem 1 pàgina)
+// Calcul pagines 
 $totalPagines = ($articlesPerPagina > 0) ? (int)ceil($totalArticles / $articlesPerPagina) : 1;
-if ($perPageMode === 'all') {
-	$totalPagines = 1;
-	$paginaActual = 1;
-}
 if ($paginaActual > $totalPagines) {
 	$paginaActual = $totalPagines;
 }
 
 // Obtenir articles amb SQL LIMIT/OFFSET (sense filtrar)
-if ($perPageMode === 'all') {
-	$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, 0);
-} else {
-	$offset = ($paginaActual - 1) * $articlesPerPagina;
-	$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset);
-}
+$offset = ($paginaActual - 1) * $articlesPerPagina;
+$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset);
 
 // URLs per a controls de paginació (mantenint per_page)
 $baseUrl = 'index.php';
