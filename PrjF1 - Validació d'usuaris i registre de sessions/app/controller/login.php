@@ -38,7 +38,7 @@ function iniciarSessio(){
 
         // Si qualsevol camp està buit donarà error
         if (empty($email) || empty($contrasenya)) {        
-            $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+            $enviatMissatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
 
         // Si hi ha 1 email o més, dona error
         } else if (!$consultar->existeixEmail($email)) {

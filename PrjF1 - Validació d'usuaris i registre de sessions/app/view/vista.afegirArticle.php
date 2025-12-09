@@ -43,14 +43,16 @@ require_once __DIR__ . '/../controller/articles.php';
     <main>
         <!-- Contingut principal de la pàgina d'afegir Articles -->
         <form action="../controller/articles.php?action=afegir" method="post">
+            <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
+
             <!-- Formulari per afegir article -->
             <!-- Camp Nom de l'Article -->
-            <label for="Nom">Nom de l'Article:</label>
+            <label for="Nom">Nom de l'Article:</label><p class="requirit"> *</p>
             <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
             <?php echo $errorNom ?? ''; ?>
 
             <!-- Camp Cos de l'Article -->
-            <label for="Cos">Cos de l'Article:</label>
+            <label for="Cos">Cos de l'Article:</label><p class="requirit"> *</p>
             <textarea id="Cos" name="Cos" rows="10" cols="50"><?php echo htmlspecialchars($cos ?? ''); ?></textarea>
             <?php echo $errorCos ?? ''; ?>
                             

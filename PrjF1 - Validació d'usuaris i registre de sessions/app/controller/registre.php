@@ -34,7 +34,7 @@ function registrarUsuari(){
     
         // Si qualsevol camp està buit donarà error
         if (empty($nickname) || empty($nom) || empty($email) || empty($contrasenya) || empty($repContrasenya)) {        
-            $enviatMissatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+            $enviatMissatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
 
         // Si el nom no té concordança amb el regex donarà error        
         } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,25}$/u', $nom)) {

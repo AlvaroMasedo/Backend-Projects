@@ -122,7 +122,7 @@ if ($action === 'afegir'){
 
     
         if ( empty($nom) || empty($cos)) {        
-            $missatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+            $missatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
         } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
             $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
         } else {
@@ -159,7 +159,7 @@ if ($action === "modificar"){
 		$modificar = new PdoArticles($conn);
 
 		if ( empty($nom) || empty($cos)) {        
-			$missatge = '<p class="error">TOTS ELS CAMPS SÓN OBLIGATORIS.</p>';
+			$missatge = '<p class="error">TOTS ELS CAMPS AMB UNN * SÓN OBLIGATORIS.</p>';
 		} else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
 			$errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
 		} else {

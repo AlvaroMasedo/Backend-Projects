@@ -47,15 +47,16 @@ $contadorIntents = $contadorIntents ?? 0;
         <h1>INICIAR SESSIÓ</h1>
         <div class="separador"></div>
         <form method="POST" action="../controller/login.php?action=login">
-            
+            <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>    
+
             <!-- Primer camp del formulari (email)-->
-            <label for="email">Email: </label>
+            <label for="email">Email: </label><p class="requirit"> *</p>
             <input type="email" id="email" name="email" placeholder="correu@exemple.com"
                 value="<?php echo htmlspecialchars($email ?? ''); ?>">
             <?php echo $errorEmail ?? ''; ?>
 
             <!-- Segon camp del formulari (Contrasenya)-->
-            <label for="contrasenya">Contrasenya: </label>
+            <label for="contrasenya">Contrasenya: </label><p class="requirit"> *</p>
             <input type="password" name="contrasenya" id="contrasenya"
                 value="<?php echo htmlspecialchars($contrasenya ?? ''); ?>">
             <?php echo $errorContrasenya ?? ''; ?>

@@ -234,3 +234,10 @@ a {
 a:hover {
 	color: #940606;
 }
+
+.requirit{
+	color: #D41616;
+	font-weight: 800;
+	font-size: 20px;
+	display: inline;
+}

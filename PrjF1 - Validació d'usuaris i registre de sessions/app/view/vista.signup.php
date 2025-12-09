@@ -23,29 +23,31 @@
         <h1>REGISTRAR-SE</h1>
         <div class="separador"></div>
         <form method="POST" action="../controller/registre.php?action=registre">
+            <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
+
             <!-- Primer camp del formulari (Nom)-->
-            <label for="nom">Nom: </label>
+            <label for="nom">Nom:</label><p class="requirit"> *</p>
             <input type="text" name="nom" id="nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
             <?php echo $errorNom ?? ''; ?>
 
             <!-- Segon camp del formulari (Cognom)-->
-            <label for="cognom">Cognom: (Opcional) </label>
+            <label for="cognom">Cognom:  </label>
             <input type="text" id="cognom" name="cognom" value="<?php echo htmlspecialchars($cognom ?? ''); ?>">
             <?php echo $errorCognom ?? ''; ?>
 
             <!-- Tercer camp del formulari (NickName)-->
-            <label for="nickname">Nickname: </label>
-            <input type="text" name="nickname" id="nickname" value="<?php echo htmlspecialchars($nickname ?? ''); ?>">
+            <label for="nickname">Nickname: </label><p class="requirit"> *</p>
+            <input type="text" name="nickname" id="nickname" value="<?php echo htmlspecialchars($nickname ?? ''); ?>"> 
             <?php echo $errorNickname ?? ''; ?>
 
             <!-- Quart camp del formulari (email)-->
-            <label for="email">Email: </label>
+            <label for="email">Email: </label><p class="requirit"> *</p>
             <input type="email" id="email" name="email" placeholder="correu@exemple.com"
                 value="<?php echo htmlspecialchars($email ?? ''); ?>">
             <?php echo $errorEmail ?? ''; ?>
 
             <!-- Cinqué camp del formulari (Contrasenya)-->
-            <label for="contrasenya">Contrasenya: </label>
+            <label for="contrasenya">Contrasenya: </label><p class="requirit"> *</p>
             <input type="password" name="contrasenya" id="contrasenya"
                 value="<?php echo htmlspecialchars($contrasenya ?? ''); ?>">
             <?php echo $errorContrasenya ?? ''; ?>
@@ -58,7 +60,7 @@
             </ul>
 
             <!-- Sisé camp del formulari (Repetir Contrasenya)-->
-            <label for="repContrasenya">Repeteix la Contrasenya: </label>
+            <label for="repContrasenya">Repeteix la Contrasenya: </label><p class="requirit"> *</p>
             <input type="password" name="repContrasenya" id="repContrasenya"
                 value="<?php echo htmlspecialchars($repContrasenya ?? ''); ?>">
             <?php echo $errorRepContrasenya ?? ''; ?>

@@ -44,18 +44,20 @@ require_once __DIR__ . '/../controller/articles.php';
         <!-- Contingut principal de la pàgina de modificació d'Articles -->
         <div class="modificar-article-container">
             <form action="../controller/articles.php?action=modificar" method="post">
+                <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
+
                 <!-- Camp ocult amb l'id de l'article -->
                 <input type="hidden" name="id" value="<?= htmlspecialchars($id ?? '') ?>">
 
                 <!-- Camp Nom de l'Article -->
-                <label for="Nom">Nom de l'Article:</label>
+                <label for="Nom">Nom de l'Article:</label><p class="requirit"> *</p>
                 <br>
                 <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>">
                 <?php echo $errorNom ?? ''; ?>
 
                 <!-- Camp Cos de l'Article -->
                 <br>
-                <label for="Cos">Cos de l'Article:</label>
+                <label for="Cos">Cos de l'Article:</label><p class="requirit"> *</p>
                 <br>
                 <textarea id="Cos" name="Cos" rows="10" cols="50"><?= htmlspecialchars($cos ?? '') ?></textarea>
                 <!-- Missatge d'èxit o error -->
