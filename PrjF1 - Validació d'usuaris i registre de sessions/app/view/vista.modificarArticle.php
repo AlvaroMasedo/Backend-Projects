@@ -21,7 +21,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../resources/css/style.modificarArticle.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
-    <title>Perfil</title>
+    <title>Modificar Article</title>
 </head>
 
 <body>
