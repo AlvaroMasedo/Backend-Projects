@@ -40,21 +40,6 @@ if ($scriptActual === 'vista.modificarArticle.php' && isset($_GET['id'])) {
 	}
 }
 
-// Si s'ha cridat la vista d'eliminació amb un id, carreguem l'article perquè la vista
-// pugui pré-omplir el formulari d'eliminació i fer comprovacions de permisos.
-if ($scriptActual === 'vista.eliminarArticle.php' && isset($_GET['id'])) {
-	$idEliminar = (int) $_GET['id'];
-	$articleAEliminar = $pdoArticles->obtenirPerId($idEliminar);
-	if ($articleAEliminar === null) {
-		$missatge = '<p class="error">Article no trobat.</p>';
-	} else {
-		if (! pot_usuari_gestionar_article($articleAEliminar)) {
-			$missatge = '<p class="error">No tens permisos per eliminar aquest article.</p>';
-		} else {
-			$id = $articleAEliminar['id'];
-		}
-	}
-}
 
 // Paginació senzilla 
 $autor = nickname_usuari_actual();
@@ -189,29 +174,37 @@ if ($action === "modificar"){
 	exit;
 }
 
-//Eliminar articles
+//Eliminar articles (només autor o admin). Endpoint directe via GET amb confirm al client.
 if ($action === 'eliminar'){
 	// Assegurar que l'usuari està loguejat abans d'eliminar un article
 	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
-	if($_SERVER['REQUEST_METHOD'] === 'POST'){
-		//Obtenir id de l'article a eliminar
-		$id = (int)($_POST['id'] ?? 0);
+	$id = (int)($_GET['id'] ?? 0);
+	if ($id <= 0) {
+		header('Location: ../view/vista.articles.php?error=invalid');
+		exit;
+	}
 
-		//Instanciar el model i eliminar
-		$eliminar = new PdoArticles($conn);
-		try{
-			$ok = $eliminar->eliminar((string)$id);
+	$article = $pdoArticles->obtenirPerId($id);
+	if ($article === null) {
+		header('Location: ../view/vista.articles.php?error=notfound');
+		exit;
+	}
 
-			if ($ok) {
-				//Redirigir a la vista d'articles després d'eliminar
-				header('Location: ../view/vista.articles.php');
-				exit;
-			} else {
-				$missatge = '<p class="error">ERROR EN ELIMINAR L\'ARTICLE.</p>';
-			} 
-		} catch (PDOException $e) {
-			throw new PDOException('Error a l\'eliminació de l\'article: ' . $e->getMessage());
+	if (!pot_usuari_gestionar_article($article)) {
+		header('Location: ../view/vista.articles.php?error=forbidden');
+		exit;
+	}
+
+	try{
+		$ok = $pdoArticles->eliminar((string)$id);
+		if ($ok) {
+			header('Location: ../view/vista.articles.php?deleted=1');
+			exit;
 		}
+		header('Location: ../view/vista.articles.php?error=delete');
+		exit;
+	} catch (PDOException $e) {
+		throw new PDOException('Error a l\'eliminació de l\'article: ' . $e->getMessage());
 	}
 }

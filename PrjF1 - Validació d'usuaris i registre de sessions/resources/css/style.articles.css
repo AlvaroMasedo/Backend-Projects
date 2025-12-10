@@ -195,6 +195,20 @@ p {
     padding-left: 8%;
 }
 
+.eliminar-icon {
+    width: 34px;
+    height: 34px;
+    padding-top: 8%;
+    padding-left: 8%;
+    padding-bottom: 12%;
+    background-color: rgb(240, 38, 38);
+    border-radius: 6px;
+}
+
+.eliminar-icon:hover {
+    background-color: rgb(180, 20, 20);
+}
+
 .afegir-article-div {
     margin-top: 1.5rem;
     margin-left: 2rem;

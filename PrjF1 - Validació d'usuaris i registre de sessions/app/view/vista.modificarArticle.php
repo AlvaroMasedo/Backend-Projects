@@ -67,8 +67,6 @@ require_once __DIR__ . '/../controller/articles.php';
                 <input type="submit" value="MODIFICAR ARTICLE">
             </form>
 
-            <a href="vista.eliminarArticle.php?id=<?= urlencode($id ?? '') ?>" class="button-eliminar">ELIMINAR
-                ARTICLE</a>
             <a class="cancel-button" href="../view/vista.articles.php">TORNAR ENRERE</a>
         </div>
     </main>

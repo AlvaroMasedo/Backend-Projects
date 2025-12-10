@@ -76,6 +76,9 @@ require_once __DIR__ . '/../controller/articles.php';
                                 <a href="vista.modificarArticle.php?id=<?= urlencode($a['id']) ?>" class="modificar-btn"
                                     title="Modificar"><img class="modificar-icon" src="../../uploads/img/modificar.png"
                                         alt="Modificar"></a>
+                                <a href="../controller/articles.php?action=eliminar&id=<?= urlencode($a['id']) ?>" class="eliminar-btn"
+                                    title="Eliminar" onclick="return confirm('Vols eliminar aquest article?');"><img class="eliminar-icon" src="../../uploads/img/eliminar.png"
+                                        alt="Eliminar"></a>
                             </div>
                         </article>
                     <?php endforeach; ?>
