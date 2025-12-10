@@ -89,31 +89,45 @@ class PdoArticles{
 
      /**
      * Retorna el nombre total d'articles
-     * @param string|null $autor
+     * @param string|null $autor Filtra per autor si es proporciona
      * @return int
      */
-    public function contarArticles(): int {
-        $sql = "SELECT COUNT(*) FROM articles";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
+    public function contarArticles(?string $autor = null): int {
+        if ($autor === null) {
+            $sql = "SELECT COUNT(*) FROM articles";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+        } else {
+            $sql = "SELECT COUNT(*) FROM articles WHERE autor = :autor";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':autor' => $autor]);
+        }
         $count = (int) $stmt->fetchColumn();
         return $count;
     }
 
     /**
      * Retorna un llistat paginat d'articles amb LIMIT/OFFSET
+     * @param int $limit
      * @param int $offset
-     * @param string|null $autor
+     * @param string|null $autor Filtra per autor si es proporciona
      * @return array<int,array<string,mixed>>
      */
-    public function obtenirPaginat(int $limit, int $offset): array {
-        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos FROM articles ORDER BY id DESC LIMIT :limit OFFSET :offset";
-        $stmt = $this->conn->prepare($sql);
-
-        // Bind numèrics amb PDO::PARAM_INT
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+    public function obtenirPaginat(int $limit, int $offset, ?string $autor = null): array {
+        if ($autor === null) {
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos FROM articles ORDER BY id DESC LIMIT :limit OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos FROM articles WHERE autor = :autor ORDER BY id DESC LIMIT :limit OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindValue(':autor', $autor);
+            $stmt->execute();
+        }
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result ?: [];
     }

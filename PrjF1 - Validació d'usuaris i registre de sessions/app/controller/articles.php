@@ -59,8 +59,15 @@ if ($scriptActual === 'vista.eliminarArticle.php' && isset($_GET['id'])) {
 // Paginació senzilla 
 $autor = nickname_usuari_actual();
 
-// Comptar tots els articles
-$totalArticles = $pdoArticles->contarArticles();
+// Si l'usuari no és admin, només veurà els seus articles
+// Si és admin, veurà tots els articles
+$autorFilter = null;
+if ($autor !== null && !usuari_es_admin()) {
+    $autorFilter = $autor;
+}
+
+// Comptar articles (filtrando per autor si no es admin)
+$totalArticles = $pdoArticles->contarArticles($autorFilter);
 
 $scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
 $perPageRaw = $_GET['per_page'] ?? null;
@@ -95,9 +102,9 @@ if ($paginaActual > $totalPagines) {
 	$paginaActual = $totalPagines;
 }
 
-// Obtenir articles amb SQL LIMIT/OFFSET (sense filtrar)
+// Obtenir articles amb SQL LIMIT/OFFSET (filtrant per autor si no es admin)
 $offset = ($paginaActual - 1) * $articlesPerPagina;
-$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset);
+$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter);
 
 // URLs per a controls de paginació (mantenint per_page)
 $baseUrl = 'index.php';
