@@ -21,7 +21,8 @@ $contadorIntents = $contadorIntents ?? 0;
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
 
     <!-- Google reCAPTCHA client script (centralitzat) -->
-    <?php require_once __DIR__ . '/../../lib/recaptcha.php'; imprimir_recaptcha_script(); ?>
+    <?php require_once __DIR__ . '/../../lib/recaptcha.php';
+    imprimir_recaptcha_script(); ?>
     <title>LogIn</title>
 </head>
 
@@ -49,19 +50,24 @@ $contadorIntents = $contadorIntents ?? 0;
         <form method="POST" action="../controller/login.php?action=login">
 
             <!-- Primer camp del formulari (email)-->
-            <label for="email">Email: </label><p class="requirit"> *</p>
+            <label for="email">Email: </label>
+            <p class="requirit"> *</p>
             <input type="email" id="email" name="email" placeholder="correu@exemple.com"
                 value="<?php echo htmlspecialchars($email ?? ''); ?>">
             <?php echo $errorEmail ?? ''; ?>
 
             <!-- Segon camp del formulari (Contrasenya)-->
-            <label for="contrasenya">Contrasenya: </label><p class="requirit"> *</p>
+            <label for="contrasenya">Contrasenya: </label>
+            <p class="requirit"> *</p>
             <input type="password" name="contrasenya" id="contrasenya"
                 value="<?php echo htmlspecialchars($contrasenya ?? ''); ?>">
             <?php echo $errorContrasenya ?? ''; ?>
 
             <ul class="login">
-                <li><label for="Recorda'm">Recorda'm</label><input type="checkbox" id="recorda" name="recorda"></li>
+                <li>
+                    <label for="Recorda'm">Recorda'm</label>
+                    <input type="checkbox" id="recorda" name="recorda">
+                </li>
                 <li><a href="#">Has oblidat la contrasenya?</a></li>
                 <li><a href="../view/vista.signup.php">Crear nou compte</a></li>
             </ul>
