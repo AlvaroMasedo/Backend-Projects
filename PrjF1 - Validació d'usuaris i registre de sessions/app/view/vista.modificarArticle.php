@@ -44,7 +44,6 @@ require_once __DIR__ . '/../controller/articles.php';
         <!-- Contingut principal de la pàgina de modificació d'Articles -->
         <div class="modificar-article-container">
             <form action="../controller/articles.php?action=modificar" method="post">
-                <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
 
                 <!-- Camp ocult amb l'id de l'article -->
                 <input type="hidden" name="id" value="<?= htmlspecialchars($id ?? '') ?>">

@@ -23,7 +23,6 @@
         <h1>REGISTRAR-SE</h1>
         <div class="separador"></div>
         <form method="POST" action="../controller/registre.php?action=registre">
-            <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
 
             <!-- Primer camp del formulari (Nom)-->
             <label for="nom">Nom:</label><p class="requirit"> *</p>

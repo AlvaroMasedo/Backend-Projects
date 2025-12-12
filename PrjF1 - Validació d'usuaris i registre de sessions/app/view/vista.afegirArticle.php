@@ -43,7 +43,6 @@ require_once __DIR__ . '/../controller/articles.php';
     <main>
         <!-- Contingut principal de la pàgina d'afegir Articles -->
         <form action="../controller/articles.php?action=afegir" method="post">
-            <p class="requirit">Tots els camps amb un * són obligatoris.</p><br>
 
             <!-- Formulari per afegir article -->
             <!-- Camp Nom de l'Article -->
