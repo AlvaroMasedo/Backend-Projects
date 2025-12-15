@@ -17,8 +17,12 @@ $enviatMissatge = '';
 
 //Funció per Iniciar Sessió amb un Usuari
 function iniciarSessio(){
-    global $conn;
-    // Iniciar sessió per fer persistents els intents i dades de reCAPTCHA
+
+    global $conn;  
+    // Instanciar el model
+    $controlarUsers = new ModelUsers($conn);
+
+    // Iniciar sessió per fer persistents els intents i dadesº de reCAPTCHA
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
@@ -32,20 +36,16 @@ function iniciarSessio(){
         $contrasenya = trim($_POST['contrasenya'] ?? '');
         $contrasenya_encriptada = hash('sha256', $contrasenya);
 
-        // Instanciar els models i afegir
-        $login = new PdoLogin($conn);
-        $consultar = new PdoConsultarUser($conn);
-
         // Si qualsevol camp està buit donarà error
         if (empty($email) || empty($contrasenya)) {        
             $enviatMissatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
 
         // Si hi ha 1 email o més, dona error
-        } else if (!$consultar->existeixEmail($email)) {
+        } else if (!$controlarUsers->existeixEmail($email)) {
             $errorEmail = '<p class="error">NO HI HA CAP COMPTA REGISTRADA AMB AQUEST EMAIL</p>';
 
         // Si la contrasenya es incorrecta dona error
-        } else if (!$consultar->comprobarContrasenya($contrasenya_encriptada, $email)) {
+        } else if (!$controlarUsers->comprobarContrasenya($contrasenya_encriptada, $email)) {
             $errorContrasenya = '<p class="error">CONTRASENYA INCORRECTA, TORNA A PROVAR</p>';
             // Incrementar i guardar el contador d'intents a la sessió
             $contadorIntents++;
@@ -80,7 +80,7 @@ function iniciarSessio(){
             // Si no hi ha missatge d'error (el reCAPTCHA s'ha passat o no era necessari), procedim a fer login
             if (empty($enviatMissatge)) {
                 try {
-                    $ok = $login->login($email, $contrasenya_encriptada);
+                    $ok = $controlarUsers->login($email, $contrasenya_encriptada);
 
                     if ($ok) {
                         //Resetem el contador d'intents

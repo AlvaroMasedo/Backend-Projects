@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../lib/auth.php';
 $action = $_GET['action'] ?? '';
 
 // Decidir quins articles carregar segons si l'usuari és administrador o no
-$pdoArticles = new PdoArticles($conn);
+$pdoArticles = new ModelArticles($conn);
 
 // Identifiquem el script actual (per saber si som a la vista de modificació o eliminació)
 $scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
@@ -110,7 +110,7 @@ if ($action === 'afegir'){
         $cos = trim($_POST['Cos'] ?? '');
 
         // Instanciar el model i afegir
-        $afegir = new PdoArticles($conn);
+        $afegir = new ModelArticles($conn);
 
     
         if ( empty($nom) || empty($cos)) {        
@@ -148,7 +148,7 @@ if ($action === "modificar"){
 		$cos = trim($_POST['Cos'] ?? '');
 
 		//Instanciar el model i modificar
-		$modificar = new PdoArticles($conn);
+		$modificar = new ModelArticles($conn);
 
 		if ( empty($nom) || empty($cos)) {        
 			$missatge = '<p class="error">TOTS ELS CAMPS AMB UNN * SÓN OBLIGATORIS.</p>';

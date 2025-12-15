@@ -15,10 +15,15 @@ $nickname = $nom = $cognom = $email = $contrasenya = $repContrasenya = '';
 $errorNickname = $errorNom = $errorCognom = $errorEmail = $errorContrasenya = $errorRepContrasenya = '';
 $enviatMissatge = '';
 
+
+
 //Funció per registrar un Usuari
 function registrarUsuari()
 {
     global $conn;
+    // Instanciar el model
+    $controlarUsers = new ModelUsers($conn);
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Obtenir dades del formulari
         $nickname = trim($_POST['nickname'] ?? '');
@@ -29,10 +34,6 @@ function registrarUsuari()
         $repContrasenya = trim($_POST['repContrasenya'] ?? '');
         $contrasenya_encriptada = hash('sha256', $contrasenya);
         $administrador = 0;
-
-        // Instanciar els models i afegir
-        $registrar = new PdoRegistrar($conn);
-        $consultar = new PdoConsultarUser($conn);
 
         // Si qualsevol camp està buit donarà error
         if (empty($nickname) || empty($nom) || empty($email) || empty($contrasenya) || empty($repContrasenya)) {
@@ -59,11 +60,11 @@ function registrarUsuari()
             $errorRepContrasenya = '<p class="error">LES CONTRASENYES NO COINCIDEIXEN.</p>';
 
             // Si hi ha 1 email o més, dona error
-        } else if ($consultar->existeixEmail($email)) {
+        } else if ($controlarUsers->existeixEmail($email)) {
             $errorEmail = '<p class="error">JA HI HA UNA COMPTA AMB AQUEST EMAIL.</p>';
 
             // Si el nickname ja existeix dona error
-        } else if ($consultar->existeixNickname($nickname)) {
+        } else if ($controlarUsers->existeixNickname($nickname)) {
             $errorNickname = '<p class="error">JA HI HA UNA COMPTA AMB AQUEST NICKNAME.</p>';
 
             // Si tot és correcte, guardar dades en sessió i redirigir a comprobar informació
@@ -71,7 +72,7 @@ function registrarUsuari()
             // Guardar les dades en sessió per mostrar-les a la pàgina de confirmació
             session_start();
             session_regenerate_id(true);
-            
+
             $_SESSION['dades_registre'] = [
                 'nickname' => $nickname,
                 'nom' => $nom,
@@ -80,7 +81,7 @@ function registrarUsuari()
                 'contrasenya' => $contrasenya_encriptada,
                 'administrador' => $administrador
             ];
-            
+
             // Redirigir a la pàgina de confirmació
             header('Location: ../view/vista.comprobarInfo.php');
             exit;
@@ -93,15 +94,17 @@ function registrarUsuari()
 function confirmarRegistre()
 {
     global $conn;
-    
+    // Instanciar el model
+    $controlarUsers = new ModelUsers($conn);
+
     session_start();
-    
+
     // Comprovar que hi hagi dades de registre a la sessió
     if (!isset($_SESSION['dades_registre'])) {
         header('Location: ../view/vista.signup.php');
         exit;
     }
-    
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Obtenir dades de la sessió
         $dades = $_SESSION['dades_registre'];
@@ -112,16 +115,13 @@ function confirmarRegistre()
         $contrasenya_encriptada = $dades['contrasenya'];
         $administrador = $dades['administrador'];
 
-        // Instanciar el model per registrar
-        $registrar = new PdoRegistrar($conn);
-
         try {
-            $ok = $registrar->registrar($nickname, $nom, $cognom, $email, $contrasenya_encriptada, $administrador);
+            $ok = $controlarUsers->registrar($nickname, $nom, $cognom, $email, $contrasenya_encriptada, $administrador);
 
             if ($ok) {
                 // Eliminar les dades temporals de registre
                 unset($_SESSION['dades_registre']);
-                
+
                 // Guardar dades de l'usuari a la sessió
                 $_SESSION['usuari'] = [
                     'nickname' => $nickname,
@@ -143,7 +143,7 @@ function confirmarRegistre()
             throw new PDOException('Error a l\'afegir l\'usuari: ' . $e->getMessage());
         }
     }
-    
+
     // Mostrar la vista de confirmació
     require __DIR__ . '/../view/vista.comprobarInfo.php';
     exit;
