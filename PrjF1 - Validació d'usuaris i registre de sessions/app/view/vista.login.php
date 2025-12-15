@@ -63,23 +63,29 @@ $contadorIntents = $contadorIntents ?? 0;
                 value="<?php echo htmlspecialchars($contrasenya ?? ''); ?>">
             <?php echo $errorContrasenya ?? ''; ?>
 
+            <!-- Missatge d'èxit o error -->
+            <?php echo $enviatMissatge ?? ''; ?>
+
+            <!-- Mostrar reCAPTCHA si s'han superat els intents permesos -->
+            <div>
+                <?php mostrar_recaptcha_si_es_necessita($contadorIntents); ?>
+            </div>
+
             <ul class="login">
                 <li>
                     <label for="Recorda'm">Recorda'm</label>
                     <input type="checkbox" id="recorda" name="recorda">
                 </li>
                 <li><a href="#">Has oblidat la contrasenya?</a></li>
-                <li><a href="../view/vista.signup.php">Crear nou compte</a></li>
             </ul>
 
-            <!-- Missatge d'èxit o error -->
-            <?php echo $enviatMissatge ?? ''; ?>
 
-            <!-- Mostrar reCAPTCHA si s'han superat els intents permesos -->
-            <?php mostrar_recaptcha_si_es_necessita($contadorIntents); ?>
+
+
 
             <!-- Preguntar a la BBDD si existeix l'email registrat per iniciar sesió -->
             <input type="submit" name="btn-enviar" value="INICIAR SESSIÓ">
+            <p>No tens un compte? <a class="link" href="../view/vista.signup.php">Registrar-se</a></p>
         </form>
     </main>
     <?php include __DIR__ . '/vista.footer.php'; ?>
