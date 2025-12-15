@@ -3,8 +3,7 @@ declare(strict_types=1);
 //Alvaro Masedo Pérez
 
 require __DIR__ .'/../../config/db_connection.php';
-require __DIR__ .'/../model/model.consultarUser.php';
-require __DIR__ .'/../model/model.loginUser.php';
+require __DIR__ .'/../model/model.usuari.php';
 require __DIR__ . '/../../lib/recaptcha.php';
 
 //Obtenir l'acció des de la URL
@@ -47,6 +46,7 @@ function iniciarSessio(){
         // Si la contrasenya es incorrecta dona error
         } else if (!$controlarUsers->comprobarContrasenya($contrasenya_encriptada, $email)) {
             $errorContrasenya = '<p class="error">CONTRASENYA INCORRECTA, TORNA A PROVAR</p>';
+            $contrasenya = '';
             // Incrementar i guardar el contador d'intents a la sessió
             $contadorIntents++;
             $_SESSION['contadorIntents'] = $contadorIntents;
