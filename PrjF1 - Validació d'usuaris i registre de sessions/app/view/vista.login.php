@@ -39,7 +39,7 @@ $contadorIntents = $contadorIntents ?? 0;
     <?php endif; ?>
     <header>
         <ul>
-            <li><a href="../../index.php"><b><img src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>
+            <li><a href="../../index.php"><b><img class="logo-img" src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>
             </li>
             <li><a class="button" href="../view/vista.signup.php" title="Registrar-se"><b>SignUp</b></a></li>
         </uL>
@@ -67,7 +67,7 @@ $contadorIntents = $contadorIntents ?? 0;
             <?php echo $enviatMissatge ?? ''; ?>
 
             <!-- Mostrar reCAPTCHA si s'han superat els intents permesos -->
-            <div>
+            <div class="recaptcha">
                 <?php mostrar_recaptcha_si_es_necessita($contadorIntents); ?>
             </div>
 
@@ -79,13 +79,28 @@ $contadorIntents = $contadorIntents ?? 0;
                 <li><a href="#">Has oblidat la contrasenya?</a></li>
             </ul>
 
-
-
-
-
             <!-- Preguntar a la BBDD si existeix l'email registrat per iniciar sesió -->
             <input type="submit" name="btn-enviar" value="INICIAR SESSIÓ">
             <p>No tens un compte? <a class="link" href="../view/vista.signup.php">Registrar-se</a></p>
+            <div class="separator">
+                <span>o</span>
+            </div>
+
+            <!-- Iniciar sessió amb Google o Apple -->
+            <div class="social-login">
+                <div class="google-btn">
+                    <img class="social-img" src="../../uploads/img/googleLogo.ico" alt="Logo de Google">
+                    <a href="#">
+                        Inicia sessió amb Google
+                    </a>
+                </div>
+                <div class="apple-btn">
+                    <img class="social-img" src="../../uploads/img/appleLogo.ico" alt="Logo d'Apple">
+                    <a href="#">
+                        Inicia sessió amb Apple
+                    </a>
+                </div>
+            </div>
         </form>
     </main>
     <?php include __DIR__ . '/vista.footer.php'; ?>

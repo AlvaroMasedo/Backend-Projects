@@ -3,8 +3,8 @@ body {
 	margin: 0;
 }
 
-main{
-	min-height: 72.9vh;
+main {
+	min-height: 98.9vh;
 }
 
 header ul {
@@ -22,31 +22,31 @@ header ul li {
 }
 
 .button {
-    display: inline-block;
-    text-decoration: none;
-    color: white;
-    font-weight: 800;
-    background-color: #D41616;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    transition: 0.3s;
-    border: 1px solid red;
+	display: inline-block;
+	text-decoration: none;
+	color: white;
+	font-weight: 800;
+	background-color: #D41616;
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	transition: all 0.3s ease;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	transition: 0.3s;
+	border: 1px solid red;
 }
 
 .button:hover {
-    cursor: pointer;
-    background-color: rgb(255, 255, 255);
-    color: black;
+	cursor: pointer;
+	background-color: rgb(255, 255, 255);
+	color: black;
 }
 
-img {
+.logo-img {
 	height: 30px;
 	transition: 0.3s;
 }
 
-img:hover {
+.logo-img:hover {
 	height: 32px;
 }
 
@@ -103,7 +103,6 @@ label {
 form {
 	margin-top: 40px;
 	margin-left: 33.45%;
-	margin-bottom: 15px;
 	width: 600px;
 	padding: 16px;
 	background-color: #f7f4f1;
@@ -284,26 +283,108 @@ input[type="checkbox"] {
 }
 
 .login li a:hover {
-	color:#990c0c;
+	color: #990c0c;
 }
 
-.requirit{
+.requirit {
 	color: #D41616;
 	font-weight: 800;
 	font-size: 20px;
 	display: inline;
 }
 
-.link{
+.link {
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 	color: #D41616;
 	font-weight: 800;
 }
-.link:hover{
-	color:#990c0c;
+
+.link:hover {
+	color: #990c0c;
 }
 
-p{
+p {
 	text-align: center;
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.separator {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 10px 0;
+}
+
+.separator::before,
+.separator::after {
+	content: "";
+	flex: 1;
+	border-bottom: 1px solid #000;
+}
+
+.separator span {
+	padding: 0 10px;
+	font-size: 14px;
+}
+
+.social-login {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+}
+
+.google-btn,
+.apple-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+
+	padding: 2.5%;
+	width: 290px;
+
+	border-radius: 100px;
+	font-size: 15px;
+
+	box-shadow: #0000002f 0px 10px 10px;
+}
+
+
+.google-btn {
+	background-color: #fff;
+	color: #000;
+	border: 2px solid #636363;
+}
+
+.apple-btn {
+	background-color: #000;
+	color: #fff;
+	border: 2px solid #000;
+}
+
+.google-btn a,
+.apple-btn a {
+	text-decoration: none;
+	color: inherit;
+	font-weight: 800;
+	font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+}
+
+.google-btn:hover,
+.apple-btn:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+.social-img {
+	height: 20px;
+	display: block;
+}
+
+.recaptcha {
+	margin-top: 15px;
+	margin-left: 25%;
 }
