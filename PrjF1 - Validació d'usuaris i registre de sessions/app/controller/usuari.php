@@ -2,23 +2,25 @@
 
 declare(strict_types=1);
 //Álvaro Masedo Pérez
-//Controlador per gestionar la modificació de usuaris
+//Controlador per gestionar usuaris: modificació de perfil i administració
 
-//Carregar connexió a la BD i model
+//Carregar connexió a la BD i models
 require_once __DIR__ . '/../../config/db_connection.php';
-
-// Assegurar que la sessió està iniciada i gestionar logout
 require_once __DIR__ . '/../../includes/session_check.php';
 require_once __DIR__ . '/../model/model.usuari.php';
+require_once __DIR__ . '/../model/model.articles.php';
 require_once __DIR__ . '/../../lib/auth.php';
 
 // Obtenir l'acció a realitzar (si n'hi ha)
 $action = $_GET['action'] ?? '';
 
-// Decidir quins articles carregar segons si l'usuari és administrador o no
+// Instanciar models
 $pdoUsers = new ModelUsers($conn);
+$pdoArticles = new ModelArticles($conn);
 
-// Modificar perfil d'usuari
+// ============================================================================
+// ACCIÓ: modificar perfil de l'usuari actual
+// ============================================================================
 if ($action === 'modificar') {
     // Assegurar que l'usuari està loguejat
     requerir_inici_sessio_o_redirigir('../view/vista.login.php');
@@ -29,9 +31,6 @@ if ($action === 'modificar') {
         $nickname_nou = trim($_POST['nickname'] ?? '');
         $nom = trim($_POST['nom'] ?? '');
         $cognom = trim($_POST['cognom'] ?? '');
-
-        // Instanciar el model
-        $modificar = new ModelUsers($conn);
 
         // Validacions
         if (empty($nickname_nou) || empty($nom)) {
@@ -78,7 +77,7 @@ if ($action === 'modificar') {
             // Si no hay error en la foto, proceder con la modificación
             if (!isset($errorFoto)) {
                 try {
-                    $ok = $modificar->modificar($nickname_actual, $nickname_nou, $nom, $cognom, $imatge_perfil);
+                    $ok = $pdoUsers->modificar($nickname_actual, $nickname_nou, $nom, $cognom, $imatge_perfil);
 
                     if ($ok) {
                         // Actualitzar la sessió amb les noves dades
@@ -105,3 +104,82 @@ if ($action === 'modificar') {
     require __DIR__ . '/../view/vista.modificarPerfil.php';
     exit;
 }
+
+// ============================================================================
+// ACCIÓ: llistar usuaris (només admin)
+// ============================================================================
+if ($action === 'llistar' || empty($action)) {
+    // Verificar que l'usuari sigui administrador
+    if (!isset($_SESSION['usuari']) || $_SESSION['usuari']['administrador'] != 1) {
+        header('Location: ../../index.php');
+        exit;
+    }
+
+    // Obtenir tots els usuaris per mostrar a la vista
+    $usuaris = $pdoUsers->obtenirTots();
+
+    require __DIR__ . '/../view/vista.usuaris.php';
+    exit;
+}
+
+// ============================================================================
+// ACCIÓ: eliminar usuari (només admin)
+// ============================================================================
+if ($action === 'eliminar') {
+    // Assegurar que l'usuari està loguejat i és admin
+    requerir_inici_sessio_o_redirigir('../view/vista.login.php');
+    
+    if (!usuari_es_admin()) {
+        header('Location: ../view/vista.usuaris.php?error=forbidden');
+        exit;
+    }
+
+    $nickname = $_GET['nickname'] ?? '';
+    
+    if (empty($nickname)) {
+        header('Location: ../view/vista.usuaris.php?error=invalid');
+        exit;
+    }
+
+    // No permitir que el admin s'elimini a si mateix
+    if ($nickname === $_SESSION['usuari']['nickname']) {
+        header('Location: ../view/vista.usuaris.php?error=self_delete');
+        exit;
+    }
+
+    try {
+        // 1. Obtenir la informació de l'usuari per saber si té foto de perfil
+        $usuari = $pdoUsers->obtenirPerNickname($nickname);
+        
+        if ($usuari === null) {
+            header('Location: ../view/vista.usuaris.php?error=notfound');
+            exit;
+        }
+
+        // 2. Eliminar la foto de perfil si existeix
+        if (!empty($usuari['imatge_perfil'])) {
+            $rutaFoto = __DIR__ . '/../../uploads/img/fotos_perfil/' . $usuari['imatge_perfil'];
+            if (file_exists($rutaFoto)) {
+                unlink($rutaFoto);
+            }
+        }
+
+        // 3. Eliminar tots els articles de l'usuari
+        $pdoArticles->eliminarPerAutor($nickname);
+
+        // 4. Eliminar l'usuari de la BD
+        $ok = $pdoUsers->eliminar($nickname);
+
+        if ($ok) {
+            header('Location: ../view/vista.usuaris.php?deleted=1');
+            exit;
+        } else {
+            header('Location: ../view/vista.usuaris.php?error=delete');
+            exit;
+        }
+    } catch (PDOException $e) {
+        throw new PDOException('Error a l\'eliminació de l\'usuari: ' . $e->getMessage());
+    }
+}
+
+?>

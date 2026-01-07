@@ -40,6 +40,28 @@ class ModelUsers
         return $usuario ?: null;
     }
 
+    /* Mètode per obtenir tots els usuaris
+     * Retorna un array amb tots els usuaris
+     */
+    public function obtenirTots(): array
+    {
+        $sql = "SELECT nickname, nom, cognom, email, administrador, imatge_perfil FROM usuaris ORDER BY nickname ASC";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* Mètode per obtenir un usuari per nickname
+     * Retorna un array amb les dades de l'usuari o null si no existeix
+     */
+    public function obtenirPerNickname(string $nickname): ?array
+    {
+        $sql = "SELECT * FROM usuaris WHERE nickname = :nickname LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':nickname' => $nickname]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $usuario ?: null;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////                                   INSERTS                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +125,15 @@ class ModelUsers
     /////////                                   DELETES                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
+    /* Mètode per eliminar un usuari per nickname
+     * Retorna true si s'ha eliminat correctament, false en cas contrari
+     */
+    public function eliminar(string $nickname): bool
+    {
+        $sql = "DELETE FROM usuaris WHERE nickname = :nickname";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':nickname' => $nickname]);
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////

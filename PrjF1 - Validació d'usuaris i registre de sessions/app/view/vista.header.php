@@ -24,6 +24,9 @@
                     <ul class="desplegable-usuari">
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.perfil.php">Perfil</a></li>
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.articles.php">Artícles</a></li>
+                        <?php if (isset($_SESSION['usuari']['administrador']) && $_SESSION['usuari']['administrador'] == 1): ?>
+                            <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.usuaris.php">Usuaris</a></li>
+                        <?php endif; ?>
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/includes/session_check.php?logout=1">Tancar sessió</a></li>
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/includes/session_check.php?logout=1&forget_device=1">Tancar sessió i oblidar dispositiu</a></li>
                     </ul>

@@ -169,6 +169,16 @@ class ModelArticles
         ]);
     }
 
+    // Mètode per eliminar tots els articles d'un autor
+    public function eliminarPerAutor(string $autor): bool
+    {
+        $sql = "DELETE FROM articles WHERE autor = :autor";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':autor' => $autor
+        ]);
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////                                   COUNTSS                                 //////////
