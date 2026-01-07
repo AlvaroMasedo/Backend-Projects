@@ -49,22 +49,48 @@ require_once __DIR__ . '/app/controller/articles.php';
 
             <!-- Secció de selecció de articles per pàgina -->
             <div class="articles">
-                <h3>Artícles per pàgina</h3>
+                <div>
+                    <h3>Artícles per pàgina: </h3>
 
-                <!-- Formulari per seleccionar nombre de articles -->
-                <form method="get">
-                    <!-- Selector amb opcions de 1 al 10 -->
-                    <select name="per_page" id="articles" onchange="this.form.submit()">
-                        <?php for ($i = 1; $i <= 10; $i++): ?>
-                            <!-- Opció seleccionada segons el valor actual -->
-                            <option value="<?= $i ?>" <?= ($i === $articlesPerPagina ? 'selected' : '') ?>>
-                                <?= $i ?>
+                    <!-- Formulari per seleccionar nombre de articles -->
+                    <form method="get">
+                        <!-- Selector amb opcions de 1 al 10 -->
+                        <select name="per_page" id="articles" onchange="this.form.submit()">
+                            <?php for ($i = 1; $i <= 10; $i++): ?>
+                                <!-- Opció seleccionada segons el valor actual -->
+                                <option value="<?= $i ?>" <?= ($i === $articlesPerPagina ? 'selected' : '') ?>>
+                                    <?= $i ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                        <!-- Camp ocult per mantenir la pàgina 1 quan es canvia el nombre d'articles -->
+                        <input type="hidden" name="page" value="1">
+                        <input type="hidden" name="ordenar" value="<?= $ordreActual ?>">
+                    </form>
+                </div>
+
+                <div>
+                    <h3>Ordenar segons: </h3>
+
+                    <!-- Formulari per seleccionar ordre dels articles -->
+                    <form method="get">
+                        <!-- Selector amb opcions d'ordre -->
+                        <select name="ordenar" id="ordenar" onchange="this.form.submit()">
+                            <option value="recent" <?= ($ordreActual === 'recent' ? 'selected' : '') ?>>Més recents
                             </option>
-                        <?php endfor; ?>
-                    </select>
-                    <!-- Camp ocult per mantenir la pàgina 1 quan es canvia el nombre d'articles -->
-                    <input type="hidden" name="page" value="1">
-                </form>
+                            <option value="antic" <?= ($ordreActual === 'antic' ? 'selected' : '') ?>>Més antics
+                            </option>
+                            <option value="asc" <?= ($ordreActual === 'asc' ? 'selected' : '') ?>>Alfabeticament (ASC)
+                            </option>
+                            <option value="desc" <?= ($ordreActual === 'desc' ? 'selected' : '') ?>>Alfabeticament (DESC)
+                            </option>
+                        </select>
+                        
+                        <!-- Camp ocult per mantenir la pàgina actual quan es canvia l'ordre -->
+                        <input type="hidden" name="page" value="<?= $paginaActual ?>">
+                        <input type="hidden" name="per_page" value="<?= $articlesPerPagina ?>">
+                    </form>
+                </div>
             </div>
 
             <!-- Quadrícula d'articles -->
@@ -80,6 +106,7 @@ require_once __DIR__ . '/app/controller/articles.php';
                         <div class="card__body">
                             <p><?= nl2br(htmlspecialchars($a['Cos'])) ?></p>
                             <p class="autor">Autor: <?= htmlspecialchars($a['autor']) ?> </p>
+                            <p class="autor">Última modificació: <?= htmlspecialchars(date('d/m/Y', strtotime($a['data_publicacio']))) ?></p>
                         </div>
                     </article>
                 <?php endforeach; ?>

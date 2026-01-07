@@ -81,6 +81,13 @@ if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)
 
 $paginaActual = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
+// Obtenir ordre dels articles
+$ordreActual = $_GET['ordenar'] ?? 'recent';
+$ordresPermesos = ['recent', 'antic', 'asc', 'desc'];
+if (!in_array($ordreActual, $ordresPermesos)) {
+    $ordreActual = 'recent';
+}
+
 // Calcul pagines 
 $totalPagines = ($articlesPerPagina > 0) ? (int)ceil($totalArticles / $articlesPerPagina) : 1;
 if ($paginaActual > $totalPagines) {
@@ -89,15 +96,15 @@ if ($paginaActual > $totalPagines) {
 
 // Obtenir articles amb SQL LIMIT/OFFSET (filtrant per autor si no es admin)
 $offset = ($paginaActual - 1) * $articlesPerPagina;
-$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter);
+$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter, $ordreActual);
 
-// URLs per a controls de paginació (mantenint per_page)
+// URLs per a controls de paginació (mantenint per_page i ordre)
 $baseUrl = 'index.php';
 $prevPage = max(1, $paginaActual - 1);
 $nextPage = min($totalPagines, $paginaActual + 1);
 $perPageForUrl = $_GET['per_page'] ?? (string)$articlesPerPagina;
-$prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl;
-$nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl;
+$prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual;
+$nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual;
 
 // Afegir articles 
 if ($action === 'afegir'){

@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS articles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     autor VARCHAR(25) NOT NULL,
     nom_article VARCHAR(25) NOT NULL,
-    cos TEXT NOT NULL
+    cos TEXT NOT NULL,
+    data_publicacio DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS usuaris (
     cognom VARCHAR (25),
     email VARCHAR(100) NOT NULL UNIQUE,
     contrasenya VARCHAR (255) NOT NULL,
-    administrador TINYINT(1) NOT NULL
+    administrador TINYINT(1) NOT NULL,
+    imatge_perfil VARCHAR(255)
 );
 
