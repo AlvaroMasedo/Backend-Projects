@@ -65,6 +65,38 @@ class ModelUsers
     /////////                                   UPDATES                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Modifica un usuari per Nickname
+     * @param string $nickname_actual Nickname actual de l'usuari
+     * @param string $nickname_nou Nou nickname
+     * @param string $nom Nou nom
+     * @param string|null $cognom Nou cognom (opcional)
+     * @param string|null $imatge_perfil Nova ruta de la imatge de perfil (opcional)
+     * @return bool
+     */
+    public function modificar(string $nickname_actual, string $nickname_nou, string $nom, ?string $cognom = null, ?string $imatge_perfil = null): bool
+    {
+        if ($imatge_perfil !== null) {
+            $sql = "UPDATE usuaris SET nickname = :nickname_nou, nom = :nom, cognom = :cognom, imatge_perfil = :imatge WHERE nickname = :nickname_actual";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([
+                ':nickname_nou' => $nickname_nou,
+                ':nom' => $nom,
+                ':cognom' => $cognom,
+                ':imatge' => $imatge_perfil,
+                ':nickname_actual' => $nickname_actual
+            ]);
+        } else {
+            $sql = "UPDATE usuaris SET nickname = :nickname_nou, nom = :nom, cognom = :cognom WHERE nickname = :nickname_actual";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([
+                ':nickname_nou' => $nickname_nou,
+                ':nom' => $nom,
+                ':cognom' => $cognom,
+                ':nickname_actual' => $nickname_actual
+            ]);
+        }
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////

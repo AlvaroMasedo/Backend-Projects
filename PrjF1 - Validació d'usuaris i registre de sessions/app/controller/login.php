@@ -96,7 +96,8 @@ function iniciarSessio(){
                             'nom' => $ok['nom'],
                             'cognom' => $ok['cognom'],
                             'email' => $ok['email'],
-                            'administrador' => $ok['administrador']
+                            'administrador' => $ok['administrador'],
+                            'imatge_perfil' => $ok['imatge_perfil']
                         ];
 
                         //Redirigir a la pàgina principal

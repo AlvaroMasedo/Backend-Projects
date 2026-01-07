@@ -31,14 +31,28 @@ require_once __DIR__ . '/../../includes/session_check.php';
             </div>
         </div>
     <?php endif; ?>
+
     <!-- Header amb navegació -->
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
         <div class="perfil-container">
-            <h1>Perfil d'Usuari</h1>
+            <div class="modificarPerfil">
+                <a href="vista.modificarPerfil.php" class="button">Modificar Perfil</a>
+                <h1>Perfil d'Usuari</h1>
+            </div>
             <div class="separador"></div>
+            
+            <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+                <p class="success">Perfil modificat correctament!</p>
+            <?php endif; ?>
+            
             <?php if (isset($_SESSION['usuari'])): ?>
+                <?php if (empty($_SESSION['usuari']['imatge_perfil'])): ?>
+                    <img src="../../uploads/img/fotos_perfil/foto_predeterminada/null.png" alt="Imatge de perfil" class="perfil-imatge">
+                <?php else: ?>
+                    <img src="../../uploads/img/fotos_perfil/<?php echo htmlspecialchars($_SESSION['usuari']['imatge_perfil']); ?>" alt="Imatge de perfil" class="perfil-imatge">
+                <?php endif; ?>
                 <p class="perfil-p"><strong>Nickname:</strong></p>
                 <p><?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?></p>
                 <div class="separador_gran"></div>
