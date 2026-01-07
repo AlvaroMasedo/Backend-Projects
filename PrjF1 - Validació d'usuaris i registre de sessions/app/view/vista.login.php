@@ -47,6 +47,23 @@ $contadorIntents = $contadorIntents ?? 0;
     <main>
         <h1>INICIAR SESSIÓ</h1>
         <div class="separador"></div>
+        
+        <!-- Mostrar missatge si s'ha recordat el dispositiu -->
+        <?php if (isset($recordarChecked) && $recordarChecked): ?>
+            <p class="info-recorda" style="color: #4CAF50; background-color: #e8f5e9; padding: 10px; border-radius: 5px; border-left: 4px solid #4CAF50; text-align: center; margin-bottom: 20px;">
+                Dispositiu recordat. Pots iniciar sessió automàticament o introduir la contrasenya.
+            </p>
+            
+            <!-- Botó d'inici de sessió automàtic -->
+            <form method="POST" action="../controller/login.php?action=auto_login" style="margin-bottom: 20px;">
+                <input type="submit" value="INICIAR SESSIÓ AUTOMÀTICAMENT" style="background-color: #4CAF50; border-color: #4CAF50;">
+            </form>
+            
+            <div class="separator" style="margin: 20px 0;">
+                <span>o introdueix la contrasenya</span>
+            </div>
+        <?php endif; ?>
+        
         <form method="POST" action="../controller/login.php?action=login">
 
             <!-- Primer camp del formulari (email)-->
@@ -73,8 +90,8 @@ $contadorIntents = $contadorIntents ?? 0;
 
             <ul class="login">
                 <li>
-                    <label for="Recorda'm">Recorda'm</label>
-                    <input type="checkbox" id="recorda" name="recorda">
+                    <label for="recorda">Recorda'm</label>
+                    <input type="checkbox" id="recorda" name="recorda" <?php echo (isset($recordarChecked) && $recordarChecked) ? 'checked' : ''; ?>>
                 </li>
                 <li><a href="#">Has oblidat la contrasenya?</a></li>
             </ul>

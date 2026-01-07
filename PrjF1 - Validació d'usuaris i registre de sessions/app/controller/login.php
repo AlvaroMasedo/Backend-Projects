@@ -13,11 +13,12 @@ $action = $_GET['action'] ?? '';
 $nickname = $nom = $cognom = $email = $contrasenya = $repContrasenya = '';
 $errorNickname = $errorNom = $errorCognom = $errorEmail = $errorContrasenya = $errorRepContrasenya = '';
 $enviatMissatge = '';
+$recordarChecked = false;
 
 //Funció per Iniciar Sessió amb un Usuari
 function iniciarSessio(){
 
-    global $conn;  
+    global $conn, $email, $recordarChecked;  
     // Instanciar el model
     $controlarUsers = new ModelUsers($conn);
 
@@ -27,6 +28,19 @@ function iniciarSessio(){
     }
 
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
+
+    // Comprovar si hi ha token de "recorda'm" vàlid (per pré-omplir el formulari)
+    if (isset($_COOKIE['remember_token']) && isset($_COOKIE['remember_user'])) {
+        try {
+            $usuari = $controlarUsers->obtenirPerToken($_COOKIE['remember_token']);
+            if ($usuari !== null && $usuari['nickname'] === $_COOKIE['remember_user']) {
+                $email = $usuari['email'];
+                $recordarChecked = true;
+            }
+        } catch (Exception $e) {
+            // Si falla, continuem sense pré-omplir
+        }
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -100,6 +114,19 @@ function iniciarSessio(){
                             'imatge_perfil' => $ok['imatge_perfil']
                         ];
 
+                        // Si l'usuari ha marcat "recorda'm", crear un token persistent
+                        if (isset($_POST['recorda']) && $_POST['recorda'] === 'on') {
+                            $token = bin2hex(random_bytes(32)); // Token aleatori i segur
+                            $expires = time() + (30 * 24 * 60 * 60); // 30 dies
+                            
+                            // Guardar token a la BD
+                            $controlarUsers->guardarRememberToken($ok['nickname'], $token, $expires);
+                            
+                            // Guardar token a cookie (segura i httponly)
+                            setcookie('remember_token', $token, $expires, '/', '', true, true);
+                            setcookie('remember_user', $ok['nickname'], $expires, '/', '', true, true);
+                        }
+
                         //Redirigir a la pàgina principal
                         header('Location: ../../index.php');
                         exit;
@@ -117,9 +144,66 @@ function iniciarSessio(){
 }
 
 
+//Funció per iniciar sessió automàticament amb token de "recorda'm"
+function autoLogin(){
+    global $conn;
+    
+    // Instanciar el model
+    $controlarUsers = new ModelUsers($conn);
+    
+    // Iniciar sessió
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Comprovar si hi ha token de "recorda'm" vàlid
+    if (isset($_COOKIE['remember_token']) && isset($_COOKIE['remember_user'])) {
+        try {
+            $usuari = $controlarUsers->obtenirPerToken($_COOKIE['remember_token']);
+            
+            if ($usuari !== null && $usuari['nickname'] === $_COOKIE['remember_user']) {
+                // Token vàlid, restaurar sessió
+                session_regenerate_id(true);
+                
+                $_SESSION['usuari'] = [
+                    'nickname' => $usuari['nickname'],
+                    'nom' => $usuari['nom'],
+                    'cognom' => $usuari['cognom'],
+                    'email' => $usuari['email'],
+                    'administrador' => $usuari['administrador'],
+                    'imatge_perfil' => $usuari['imatge_perfil']
+                ];
+                
+                // Renovar el token (extendre 30 dies més)
+                $token = bin2hex(random_bytes(32));
+                $expires = time() + (30 * 24 * 60 * 60);
+                $controlarUsers->guardarRememberToken($usuari['nickname'], $token, $expires);
+                setcookie('remember_token', $token, $expires, '/', '', true, true);
+                setcookie('remember_user', $usuari['nickname'], $expires, '/', '', true, true);
+                
+                // Redirigir a la pàgina principal
+                header('Location: ../../index.php');
+                exit;
+            }
+        } catch (Exception $e) {
+            // Si falla, redirigir a login amb error
+        }
+    }
+    
+    // Si no hi ha token vàlid, redirigir al login
+    header('Location: ../view/vista.login.php');
+    exit;
+}
+
+
 //Metode per iniciar sessió
 if ($action === 'login'){
     iniciarSessio();
+}
+
+//Metode per iniciar sessió automàtica
+if ($action === 'auto_login'){
+    autoLogin();
 }
 
 ?>

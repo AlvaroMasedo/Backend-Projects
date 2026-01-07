@@ -148,4 +148,49 @@ class ModelUsers
         return $count > 0;
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    /////////                         REMEMBER ME TOKENS                               //////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    /* Mètode per guardar un token de "recorda'm" per a un usuari
+     * Retorna true si s'ha guardat correctament, false en cas contrari
+     */
+    public function guardarRememberToken(string $nickname, string $token, int $expires): bool
+    {
+        $sql = "UPDATE usuaris SET remember_token = :token, remember_expires = :expires WHERE nickname = :nickname";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':token' => $token,
+            ':expires' => $expires,
+            ':nickname' => $nickname
+        ]);
+    }
+
+    /* Mètode per obtenir usuari per token de "recorda'm"
+     * Retorna l'array de l'usuari si el token és vàlid, null en cas contrari
+     */
+    public function obtenirPerToken(string $token): ?array
+    {
+        // Comprovar que el token existeix i no ha expirat
+        $sql = "SELECT * FROM usuaris WHERE remember_token = :token AND remember_expires > :now LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':token' => $token,
+            ':now' => time()
+        ]);
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $usuario ?: null;
+    }
+
+    /* Mètode per eliminar el token de "recorda'm" d'un usuari
+     * Retorna true si s'ha eliminat correctament, false en cas contrari
+     */
+    public function eliminarRememberToken(string $nickname): bool
+    {
+        $sql = "UPDATE usuaris SET remember_token = NULL, remember_expires = NULL WHERE nickname = :nickname";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':nickname' => $nickname]);
+    }
+
 }

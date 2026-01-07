@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS usuaris (
     email VARCHAR(100) NOT NULL UNIQUE,
     contrasenya VARCHAR (255) NOT NULL,
     administrador TINYINT(1) NOT NULL,
-    imatge_perfil VARCHAR(255)
+    imatge_perfil VARCHAR(255),
+    remember_token VARCHAR(255) DEFAULT NULL,
+    remember_expires INT DEFAULT NULL
 );
 
