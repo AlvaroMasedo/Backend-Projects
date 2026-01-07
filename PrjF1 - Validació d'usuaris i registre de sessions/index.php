@@ -41,9 +41,15 @@ require_once __DIR__ . '/app/controller/articles.php';
     <main>
         <?php if (empty($articles)): ?>
             <div class="no-articles" style="padding:2rem; text-align:center;">
-                <h3>No hi ha cap article per mostrar</h3>
-                <p>Si vols, pots veure la llista d'articles o crear-ne de nous.</p>
-                <a class="button" href="app/view/vista.articles.php">Veure articles</a>
+                <?php if ($esBusqueda): ?>
+                    <h3>No s'han trobat articles per a "<?= htmlspecialchars($busquedaTerm) ?>"</h3>
+                    <p>Prova amb altres paraules clau.</p>
+                    <a class="button" href="index.php">Veure tots els articles</a>
+                <?php else: ?>
+                    <h3>No hi ha cap article per mostrar</h3>
+                    <p>Si vols, pots veure la llista d'articles o crear-ne de nous.</p>
+                    <a class="button" href="app/view/vista.articles.php">Veure articles</a>
+                <?php endif; ?>
             </div>
         <?php else: ?>
 
@@ -66,6 +72,9 @@ require_once __DIR__ . '/app/controller/articles.php';
                         <!-- Camp ocult per mantenir la pàgina 1 quan es canvia el nombre d'articles -->
                         <input type="hidden" name="page" value="1">
                         <input type="hidden" name="ordenar" value="<?= $ordreActual ?>">
+                        <?php if ($esBusqueda): ?>
+                            <input type="hidden" name="q" value="<?= htmlspecialchars($busquedaTerm) ?>">
+                        <?php endif; ?>
                     </form>
                 </div>
 
@@ -89,6 +98,9 @@ require_once __DIR__ . '/app/controller/articles.php';
                         <!-- Camp ocult per mantenir la pàgina actual quan es canvia l'ordre -->
                         <input type="hidden" name="page" value="<?= $paginaActual ?>">
                         <input type="hidden" name="per_page" value="<?= $articlesPerPagina ?>">
+                        <?php if ($esBusqueda): ?>
+                            <input type="hidden" name="q" value="<?= htmlspecialchars($busquedaTerm) ?>">
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>

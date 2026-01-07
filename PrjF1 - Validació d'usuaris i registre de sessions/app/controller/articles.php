@@ -54,6 +54,15 @@ if ($autor !== null && !usuari_es_admin()) {
 // Comptar articles (filtrando per autor si no es admin)
 $totalArticles = $pdoArticles->contarArticles($autorFilter);
 
+// Obtenir paràmetre de búsqueda si existeix
+$busquedaTerm = trim($_GET['q'] ?? '');
+$esBusqueda = !empty($busquedaTerm);
+
+// Si hi ha búsqueda, actualitzar el total de articles
+if ($esBusqueda) {
+    $totalArticles = $pdoArticles->contarBusqueda($busquedaTerm, $autorFilter);
+}
+
 $scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
 $perPageRaw = $_GET['per_page'] ?? null;
 
@@ -96,15 +105,20 @@ if ($paginaActual > $totalPagines) {
 
 // Obtenir articles amb SQL LIMIT/OFFSET (filtrant per autor si no es admin)
 $offset = ($paginaActual - 1) * $articlesPerPagina;
-$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter, $ordreActual);
+if ($esBusqueda) {
+    $articles = $pdoArticles->buscar($busquedaTerm, $articlesPerPagina, $offset, $autorFilter, $ordreActual);
+} else {
+    $articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter, $ordreActual);
+}
 
 // URLs per a controls de paginació (mantenint per_page i ordre)
 $baseUrl = 'index.php';
 $prevPage = max(1, $paginaActual - 1);
 $nextPage = min($totalPagines, $paginaActual + 1);
 $perPageForUrl = $_GET['per_page'] ?? (string)$articlesPerPagina;
-$prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual;
-$nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual;
+$busquedaParam = $esBusqueda ? '&q=' . urlencode($busquedaTerm) : '';
+$prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual . $busquedaParam;
+$nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual . $busquedaParam;
 
 // Afegir articles 
 if ($action === 'afegir'){

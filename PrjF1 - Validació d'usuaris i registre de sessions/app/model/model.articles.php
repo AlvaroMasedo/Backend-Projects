@@ -116,6 +116,70 @@ class ModelArticles
         return $result ?: [];
     }
 
+    /**
+     * Busca articles per nom amb paginació
+     * @param string $busqueda Terme de búsqueda
+     * @param int $limit
+     * @param int $offset
+     * @param string|null $autor Filtra per autor si es proporciona
+     * @param string $ordre Ordre dels articles
+     * @return array<int,array<string,mixed>>
+     */
+    public function buscar(string $busqueda, int $limit, int $offset, ?string $autor = null, string $ordre = 'recent'): array
+    {
+        // Determinar ORDER BY segons el tipus d'ordre
+        $orderBy = match($ordre) {
+            'antic' => 'ORDER BY data_publicacio ASC',
+            'asc' => 'ORDER BY nom_article ASC',
+            'desc' => 'ORDER BY nom_article DESC',
+            default => 'ORDER BY data_publicacio DESC', // 'recent' per defecte
+        };
+
+        $busqueda = '%' . $busqueda . '%';
+
+        if ($autor === null) {
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE nom_article LIKE :busqueda {$orderBy} LIMIT :limit OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':busqueda', $busqueda);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE nom_article LIKE :busqueda AND autor = :autor {$orderBy} LIMIT :limit OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':busqueda', $busqueda);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindValue(':autor', $autor);
+            $stmt->execute();
+        }
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result ?: [];
+    }
+
+    /**
+     * Cuenta el total d'articles que coincideixen amb la búsqueda
+     * @param string $busqueda Terme de búsqueda
+     * @param string|null $autor Filtra per autor si es proporciona
+     * @return int
+     */
+    public function contarBusqueda(string $busqueda, ?string $autor = null): int
+    {
+        $busqueda = '%' . $busqueda . '%';
+
+        if ($autor === null) {
+            $sql = "SELECT COUNT(*) FROM articles WHERE nom_article LIKE :busqueda";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':busqueda' => $busqueda]);
+        } else {
+            $sql = "SELECT COUNT(*) FROM articles WHERE nom_article LIKE :busqueda AND autor = :autor";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':busqueda' => $busqueda, ':autor' => $autor]);
+        }
+        $count = (int) $stmt->fetchColumn();
+        return $count;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////                                   INSERTS                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
