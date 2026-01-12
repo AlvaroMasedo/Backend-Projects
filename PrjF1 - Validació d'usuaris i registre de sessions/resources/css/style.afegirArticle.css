@@ -4,7 +4,7 @@ body {
 }
 
 main {
-    min-height: 72vh;
+    min-height: 77vh;
 }
 
 .house-icon {
@@ -137,7 +137,7 @@ h3 {
     font-size: 120%;
 }
 
-form {
+.form-afegir {
     background-color: #f7f4f1;
     border-radius: 10px;
     margin-top: 2rem;
@@ -148,13 +148,13 @@ form {
     padding: 16px;
 }
 
-form label {
+.form-afegir label {
     font-family: 'Formula1-Bold', cursive;
     color: rgb(0, 0, 0);
     font-size: 20px;
 }
 
-form input[type="text"] {
+.form-afegir input[type="text"] {
     height: 60px;
     width: 930px;
     padding: 3px 10px;
@@ -168,14 +168,14 @@ form input[type="text"] {
     margin-bottom: 30px;
 }
 
-form input[type="text"]:focus {
+.form-afegir input[type="text"]:focus {
     outline: none;
     border-color: #3399ff;
     box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
 }
 
 
-form input[type="email"] {
+.form-afegir input[type="email"] {
     height: 40px;
     width: 580px;
     padding: 3px 10px;
@@ -187,7 +187,7 @@ form input[type="email"] {
     display: inline-block;
 }
 
-form textarea {
+.form-afegir textarea {
     font-size: 17px;
     height: 120;
     width: 930px;
@@ -202,13 +202,13 @@ form textarea {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-form textarea:focus {
+.form-afegir textarea:focus {
     outline: none;
     border-color: #3399ff;
     box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
 }
 
-form input[type="submit"] {
+.form-afegir input[type="submit"] {
     width: 100%;
     padding: 8px 16px;
     margin-top: 32px;
@@ -222,7 +222,7 @@ form input[type="submit"] {
     font-size: 14px;
 }
 
-form input[type="submit"]:hover {
+.form-afegir input[type="submit"]:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     color: black;

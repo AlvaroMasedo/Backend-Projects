@@ -93,7 +93,6 @@ header ul li.push-right {
   display: block;
 }
 
-/* Esttils per a la barra de cerca */
 .search-bar {
   flex-grow: 1;
   max-width: 400px;

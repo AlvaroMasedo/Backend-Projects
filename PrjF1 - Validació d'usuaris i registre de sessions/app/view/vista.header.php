@@ -20,7 +20,7 @@
 
             <!-- Barra de búsqueda -->
             <li class="search-bar">
-                <form method="get" action="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/index.php" class="search-form">
+                <form class="search-form" method="get" action="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/index.php">
                     <input type="text" name="q" placeholder="Buscar articles..." class="search-input" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
                     <button type="submit" class="search-btn">Buscar</button>
                 </form>

@@ -43,7 +43,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <main>
         <h1>Afegir Article</h1>
         <!-- Contingut principal de la pàgina d'afegir Articles -->
-        <form action="../controller/articles.php?action=afegir" method="post">
+        <form class="form-afegir" action="../controller/articles.php?action=afegir" method="post">
 
             <!-- Formulari per afegir article -->
             <!-- Camp Nom de l'Article -->
