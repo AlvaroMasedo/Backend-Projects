@@ -24,10 +24,10 @@ if (isset($_GET['logout']) && $_GET['logout'] == '1') {
         // Eliminar cookies
         setcookie('remember_token', '', time() - 3600, '/');
         setcookie('remember_user', '', time() - 3600, '/');
+    } else {
+        // Logout normal: mantenir el token pero prevenir auto-login per 5 minuts
+        setcookie('prevent_auto_login', '1', time() + 300, '/');
     }
-    
-    // Establir cookie temporal per evitar auto-login immediat
-    setcookie('just_logged_out', '1', time() + 2, '/');
     
     session_unset();
     session_destroy();
@@ -41,7 +41,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == '1') {
 if (!isset($_SESSION['usuari']) && 
     isset($_COOKIE['remember_token']) && 
     isset($_COOKIE['remember_user']) && 
-    !isset($_COOKIE['just_logged_out'])) {
+    !isset($_COOKIE['prevent_auto_login'])) {
     
     require_once __DIR__ . '/../config/db_connection.php';
     require_once __DIR__ . '/../app/model/model.usuari.php';
@@ -68,10 +68,5 @@ if (!isset($_SESSION['usuari']) &&
     } catch (Exception $e) {
         // Si falla, només continuem sense restaurar sessió
     }
-}
-
-// Limpiar cookie temporal just_logged_out si existeix
-if (isset($_COOKIE['just_logged_out'])) {
-    setcookie('just_logged_out', '', time() - 3600, '/');
 }
 ?>
