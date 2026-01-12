@@ -7,11 +7,11 @@ main {
   min-height: 73.7vh;
 }
 
-.F1-title{
+.F1-title {
   display: block;
-  margin: 2rem auto 2rem auto;
-  height: auto; 
-  max-width: 500px;
+  margin: 2rem auto 3rem auto;
+  height: auto;
+  max-width: 460px;
 }
 
 .button {
@@ -127,13 +127,26 @@ p {
   text-decoration: underline;
 }
 
+.message-success {
+  color: #00a800;
+  background-color: #e6ffe6;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px auto;
+  font-weight: bold;
+  border-left: 4px solid #00a800;
+  text-align: center;
+  max-width: 800px;
+  font-family: 'Formula1-Bold', cursive;
+}
+
 .no-articles {
   margin-top: 5rem;
 }
 
 .articles {
   text-align: center;
-  margin: 1% 10.2%;
+  margin: 0.3% 10.2%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -151,7 +164,8 @@ p {
   align-items: center;
 }
 
-#articles, #ordenar {
+#articles,
+#ordenar {
   appearance: none;
   display: inline-block;
   width: 220px;

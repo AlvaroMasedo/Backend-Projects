@@ -130,8 +130,8 @@ function confirmarRegistre()
                     'administrador' => $administrador
                 ];
 
-                // Redirigir a la pàgina d'Inici
-                header('Location: ../../index.php');
+                // Redirigir a la pàgina d'Inici amb missatge d'èxit
+                header('Location: ../../index.php?registered=1');
                 exit;
             } else {
                 $enviatMissatge = '<p class="error">ERROR AL REGISTRAR-SE.</p>';

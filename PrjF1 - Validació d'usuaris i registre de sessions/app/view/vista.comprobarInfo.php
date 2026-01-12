@@ -20,56 +20,61 @@ $email = htmlspecialchars($dades['email']);
 
 <head>
     <meta charset="UTF-8">
-    <title>Comprobar Informació</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirma la teva informació</title>
     <link rel="stylesheet" href="../../resources/css/style.comprobarInfo.css">
-
+    <link rel="stylesheet" href="../../resources/css/style.header.css">
 </head>
 
 <body>
     <?php include __DIR__ . '/../view/vista.header.php'; ?>
+    
     <main>
-        <h1>CONFIRMA LES TEVES DADES</h1>
-        <div class="separador"></div>
-        <h2>Revisa que la informació sigui correcta abans de registrar-te:</h2>
-        <div class="dades-container">
-            <!-- Primer camp del formulari (Nom)-->
-            <div class="camp">
-                <label>Nom:</label>
-                <span><?php echo $nom; ?></span>
+        <div class="confirm-wrapper">
+            <div class="section-title">
+                <h1>CONFIRMA LES TEVES DADES</h1>
             </div>
+            <div class="separador"></div>
 
-            <!-- Segon camp del formulari (Cognom)-->
-            <div class="camp">
-                <label>Cognom:</label>
-                <span><?php echo $cognom ? $cognom : '(No especificat)'; ?></span>
-            </div>
+            <div class="confirm-layout">
+                <h2>Revisa que la informació sigui correcta</h2>
+                
+                <div class="info-grid">
+                    <!-- Nom -->
+                    <div class="info-item">
+                        <span class="info-label">Nom Complet</span>
+                        <p class="info-value"><?php echo $nom . ' ' . ($cognom ?: ''); ?></p>
+                    </div>
 
-            <!-- Tercer camp del formulari (NickName)-->
-            <div class="camp">
-                <label>Nickname:</label>
-                <span><?php echo $nickname; ?></span>
-            </div>
+                    <!-- Nickname -->
+                    <div class="info-item">
+                        <span class="info-label">Nickname</span>
+                        <p class="info-value"><?php echo $nickname; ?></p>
+                    </div>
 
-            <!-- Quart camp del formulari (email)-->
-            <div class="camp">
-                <label>Email:</label>
-                <span><?php echo $email; ?></span>
-            </div>
+                    <!-- Email -->
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <p class="info-value"><?php echo $email; ?></p>
+                    </div>
 
-            <!-- Cinqué camp del formulari (Contrasenya)-->
-            <div class="camp">
-                <label>Contrasenya:</label>
-                <span>••••••••••••</span>
-            </div>
+                    <!-- Contrasenya -->
+                    <div class="info-item">
+                        <span class="info-label">Contrasenya</span>
+                        <p class="info-value">••••••••••••••••</p>
+                    </div>
+                </div>
 
-            <!-- Confirmar i enviar cap a la base de dades-->
-            <div class="botones">
-                <form method="POST" action="../controller/registre.php?action=confirmar" >
-                    <input class="button" type="submit" name="btn-confirmar" value="CONFIRMAR I REGISTRAR-SE">
-                </form>
-                <br>
-                <a class="button" href="../view/vista.signup.php">TORNAR ENRRERE</a>
+                <!-- Botones de acción -->
+                <div class="action-box">
+                    <p>Tot sembla correcte?</p>
+                    
+                    <form method="POST" action="../controller/registre.php?action=confirmar" class="action-form">
+                        <button type="submit" class="btn-primary">CONFIRMAR I REGISTRAR-SE</button>
+                    </form>
+                    
+                    <a href="../view/vista.signup.php" class="btn-secondary">Corregir Dades</a>
+                </div>
             </div>
         </div>
     </main>

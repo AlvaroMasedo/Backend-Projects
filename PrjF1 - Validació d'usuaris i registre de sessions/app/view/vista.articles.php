@@ -44,6 +44,25 @@ require_once __DIR__ . '/../controller/articles.php';
         <h1>Articles</h1>
         <!-- Contingut principal de la pàgina d'articles -->
         <div class="articles-container">
+            <!-- Missatges d'èxit i error -->
+            <?php if (isset($_GET['added']) && $_GET['added'] == '1'): ?>
+                <div class="message-success">
+                    Article afegit correctament.
+                </div>
+            <?php elseif (isset($_GET['modified']) && $_GET['modified'] == '1'): ?>
+                <div class="message-success">
+                    Article modificat correctament.
+                </div>
+            <?php elseif (isset($_GET['deleted']) && $_GET['deleted'] == '1'): ?>
+                <div class="message-success">
+                    Article eliminat correctament.
+                </div>
+            <?php elseif (isset($_GET['error'])): ?>
+                <div class="message-error">
+                    Error: No s'ha pogut completar l'operació.
+                </div>
+            <?php endif; ?>
+
             <!-- Enllaç per obrir vista de creació d'articles -->
             <div class="afegir-article-div">
                 <a href="vista.afegirArticle.php" class="button">AFEGIR ARTÍCLE</a>
@@ -51,7 +70,7 @@ require_once __DIR__ . '/../controller/articles.php';
 
             <!-- Si no hi ha sessió, mostrar missatge d'inici de sessió -->
             <?php if (!isset($_SESSION['usuari'])): ?>
-                <div class="no-session" style="padding:2rem; text-align:center;">
+                <div class="no-session">
                     <h3>Has d'iniciar sessió per veure els articles.</h3>
                     <p>Accedeix amb el teu compte per veure i gestionar els articles.</p>
                     <a class="button" href="vista.login.php">Iniciar sessió</a>
@@ -59,7 +78,7 @@ require_once __DIR__ . '/../controller/articles.php';
             <?php else: ?>
                 <!-- Si hi ha sessió, mostrar els articles amb opcions de modificació/eliminació -->
                 <?php if (empty($articles)): ?>
-                    <div class="no-articles" style="padding:2rem; text-align:center;">
+                    <div class="no-articles">
                         <h3>No hi ha cap article per mostrar</h3>
                     </div>
                 <?php endif; ?>

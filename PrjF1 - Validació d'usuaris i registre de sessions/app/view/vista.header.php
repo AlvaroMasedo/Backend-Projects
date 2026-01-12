@@ -42,11 +42,11 @@
             <?php else: ?>
                 <li class="push-right">
                     <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.login.php" 
-                        title="Iniciar sessió"><b>Login</b></a>
+                        title="Iniciar sessió"><b>Iniciar Sessió</b></a>
                 </li>
                 <li>
                     <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.signup.php" 
-                        title="Registrar-se"><b>Sign Up</b></a>
+                        title="Registrar-se"><b>Registrar-se</b></a>
                 </li>
             <?php endif; ?>
         </ul>

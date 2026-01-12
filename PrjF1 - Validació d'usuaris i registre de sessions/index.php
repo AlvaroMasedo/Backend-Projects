@@ -41,6 +41,22 @@ require_once __DIR__ . '/app/controller/articles.php';
 
     <main>
         <img class="F1-title" src="uploads/img/Formula1.png" alt="Formula1-logo">
+        
+        <!-- Missatge de registre exitoso -->
+        <?php if (isset($_GET['registered']) && $_GET['registered'] == '1'): ?>
+            <div class="message-success">
+                Registre completat amb èxit. Benvingut/da!
+            </div>
+            <script>
+                // Eliminar el parámetro de la URL després de mostrar el mensaje
+                if (window.history.replaceState) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('registered');
+                    window.history.replaceState({}, document.title, url);
+                }
+            </script>
+        <?php endif; ?>
+        
         <?php if (empty($articles)): ?>
             <div class="no-articles" style="padding:2rem; text-align:center;">
                 <?php if ($esBusqueda): ?>

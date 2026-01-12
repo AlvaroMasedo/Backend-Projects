@@ -51,17 +51,17 @@ require_once __DIR__ . '/../controller/usuari.php';
         <div class="articles-container">
             <!-- Mostrar missatges de success/error -->
             <?php if (isset($_GET['deleted']) && $_GET['deleted'] == '1'): ?>
-                <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px auto; max-width: 800px; text-align: center; border-left: 4px solid #28a745;">
+                <div class="message-success">
                     <strong>✓</strong> Usuari eliminat correctament (incloent articles i foto de perfil).
                 </div>
             <?php elseif (isset($_GET['error'])): ?>
-                <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px auto; max-width: 800px; text-align: center; border-left: 4px solid #dc3545;">
+                <div class="message-error">
                     <strong>✗</strong> Error en eliminar l'usuari.
                 </div>
             <?php endif; ?>
 
             <?php if (empty($usuaris)): ?>
-                <div class="no-articles" style="padding:2rem; text-align:center;">
+                <div class="no-articles">
                     <h3>No hi ha cap usuari per mostrar</h3>
                 </div>
             <?php else: ?>

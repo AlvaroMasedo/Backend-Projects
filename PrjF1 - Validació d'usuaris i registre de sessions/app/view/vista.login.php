@@ -41,7 +41,7 @@ $contadorIntents = $contadorIntents ?? 0;
         <ul>
             <li><a href="../../index.php"><b><img class="logo-img" src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>
             </li>
-            <li><a class="button" href="../view/vista.signup.php" title="Registrar-se"><b>SignUp</b></a></li>
+            <li><a class="button" href="../view/vista.signup.php" title="Registrar-se"><b>Registrar-se</b></a></li>
         </uL>
     </header>
     <main>
@@ -50,16 +50,16 @@ $contadorIntents = $contadorIntents ?? 0;
         
         <!-- Mostrar missatge si s'ha recordat el dispositiu -->
         <?php if (isset($recordarChecked) && $recordarChecked): ?>
-            <p class="info-recorda" style="color: #4CAF50; background-color: #e8f5e9; padding: 10px; border-radius: 5px; border-left: 4px solid #4CAF50; text-align: center; margin-bottom: 20px;">
+            <p class="info-recorda">
                 Dispositiu recordat. Pots iniciar sessió automàticament o introduir la contrasenya.
             </p>
             
             <!-- Botó d'inici de sessió automàtic -->
-            <form method="POST" action="../controller/login.php?action=auto_login" style="margin-bottom: 20px;">
-                <input type="submit" value="INICIAR SESSIÓ AUTOMÀTICAMENT" style="background-color: #4CAF50; border-color: #4CAF50;">
+            <form method="POST" action="../controller/login.php?action=auto_login" class="auto-login-form">
+                <input type="submit" value="INICIAR SESSIÓ AUTOMÀTICAMENT">
             </form>
             
-            <div class="separator" style="margin: 20px 0;">
+            <div class="separator">
                 <span>o introdueix la contrasenya</span>
             </div>
         <?php endif; ?>

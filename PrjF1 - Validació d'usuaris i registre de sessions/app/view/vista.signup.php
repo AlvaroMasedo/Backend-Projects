@@ -16,7 +16,7 @@
         <ul>
             <li><a href="../../index.php"><b><img src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>
             </li>
-            <li><a class="button" href="../view/vista.login.php" title="Iniciar sessió"><b>Login</b></a></li>
+            <li><a class="button" href="../view/vista.login.php" title="Iniciar sessió"><b>Iniciar Sessió</b></a></li>
         </uL>
     </header>
     <main>

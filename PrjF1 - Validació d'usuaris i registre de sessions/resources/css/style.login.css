@@ -153,6 +153,35 @@ form input[type="email"]:focus {
 	box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
 }
 
+.info-recorda {
+	color: #4CAF50;
+	background-color: #e8f5e9;
+	padding: 10px;
+	border-radius: 5px;
+	border-left: 4px solid #4CAF50;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.auto-login-form {
+	margin-bottom: 20px;
+}
+
+.auto-login-form input[type="submit"] {
+	background-color: #4CAF50;
+	border-color: #4CAF50;
+}
+
+.separator {
+	margin: 20px 0;
+}
+
+.separator span {
+	background-color: #f7f4f1;
+	padding: 0 10px;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 form input[type="password"] {
 	height: 40px;
 	width: 580px;
@@ -199,10 +228,13 @@ form input[type="submit"]:hover {
 
 .error {
 	color: #D41616;
-	font-weight: 800;
+	background-color: #ffe6e6;
+	padding: 10px;
+	border-radius: 5px;
+	margin: 5px 0;
+	font-weight: bold;
+	border-left: 4px solid #D41616;
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-	margin-top: 2%;
-	margin-bottom: 0%;
 }
 
 .success {
