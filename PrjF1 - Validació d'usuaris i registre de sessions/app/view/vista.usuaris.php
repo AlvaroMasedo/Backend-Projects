@@ -46,6 +46,7 @@ require_once __DIR__ . '/../controller/usuari.php';
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
+        <h1>Usuaris</h1>
         <!-- Contingut principal de la pàgina d'usuaris -->
         <div class="articles-container">
             <!-- Mostrar missatges de success/error -->

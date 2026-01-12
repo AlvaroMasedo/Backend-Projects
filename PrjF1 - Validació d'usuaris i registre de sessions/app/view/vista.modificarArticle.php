@@ -41,6 +41,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
+        <h1>Modificar Article</h1>
         <!-- Contingut principal de la pàgina de modificació d'Articles -->
         <div class="modificar-article-container">
             <form action="../controller/articles.php?action=modificar" method="post">

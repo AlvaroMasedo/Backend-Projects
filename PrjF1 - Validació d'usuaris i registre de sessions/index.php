@@ -38,7 +38,9 @@ require_once __DIR__ . '/app/controller/articles.php';
 
     <!-- Header -->
     <?php include __DIR__ . '/app/view/vista.header.php'; ?>
+
     <main>
+        <img class="F1-title" src="uploads/img/Formula1.png" alt="Formula1-logo">
         <?php if (empty($articles)): ?>
             <div class="no-articles" style="padding:2rem; text-align:center;">
                 <?php if ($esBusqueda): ?>

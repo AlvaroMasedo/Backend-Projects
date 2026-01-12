@@ -41,6 +41,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
+        <h1>Afegir Article</h1>
         <!-- Contingut principal de la pàgina d'afegir Articles -->
         <form action="../controller/articles.php?action=afegir" method="post">
 

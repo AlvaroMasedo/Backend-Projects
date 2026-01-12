@@ -41,6 +41,7 @@ require_once __DIR__ . '/../controller/articles.php';
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
+        <h1>Articles</h1>
         <!-- Contingut principal de la pàgina d'articles -->
         <div class="articles-container">
             <!-- Enllaç per obrir vista de creació d'articles -->
