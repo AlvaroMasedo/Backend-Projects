@@ -143,7 +143,7 @@ p{
     display: block;
 }
 
-form input[type="submit"] {
+.form-modificarUsuari input[type="submit"] {
     width: 100%;
     padding: 8px 16px;
     margin-top: 32px;
@@ -157,7 +157,7 @@ form input[type="submit"] {
     font-size: 14px;
 }
 
-form input[type="submit"]:hover {
+.form-modificarUsuari input[type="submit"]:hover {
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     color: black;
@@ -185,7 +185,7 @@ form input[type="submit"]:hover {
     color: rgb(255, 255, 255);
 }
 
-form input[type="text"] {
+.form-modificarUsuari input[type="text"] {
     height: 55px;
     width: 850px;
     padding: 3px 10px;
@@ -199,7 +199,7 @@ form input[type="text"] {
     margin-bottom: 30px;
 }
 
-form input[type="text"]:focus {
+.form-modificarUsuari input[type="text"]:focus {
     outline: none;
     border-color: #3399ff;
     box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
@@ -218,7 +218,7 @@ form input[type="text"]:focus {
     font-size: 18px;
 }
 
-form input[type="file"] {
+.form-modificarUsuari input[type="file"] {
     margin-top: 1%;
     width: 850px;
     padding: 10px;
@@ -229,7 +229,7 @@ form input[type="file"] {
     cursor: pointer;
 }
 
-form input[type="file"]:hover {
+.form-modificarUsuari input[type="file"]:hover {
     border-color: #D41616;
     background-color: #fff;
 }

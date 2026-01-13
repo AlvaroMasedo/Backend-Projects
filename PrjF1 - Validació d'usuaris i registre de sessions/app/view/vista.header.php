@@ -26,12 +26,17 @@
                 </form>
             </li>
 
+            <li class="push-right">
+                <a class="button-usuari" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.articles.php">Articles</a>
+            </li>
+
+
             <?php if (isset($_SESSION['usuari'])): ?>
-                <li class="menu-usuari push-right">
+                <li class="menu-usuari">
                     <span class="button-usuari"><?php echo htmlspecialchars($_SESSION['usuari']['nickname']); ?> ▼</span>
                     <ul class="desplegable-usuari">
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.perfil.php">Perfil</a></li>
-                        <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.articles.php">Artícles</a></li>
+                        <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.articles.php">Articles</a></li>
                         <?php if (isset($_SESSION['usuari']['administrador']) && $_SESSION['usuari']['administrador'] == 1): ?>
                             <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.usuaris.php">Usuaris</a></li>
                         <?php endif; ?>
@@ -40,12 +45,12 @@
                     </ul>
                 </li>
             <?php else: ?>
-                <li class="push-right">
-                    <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.login.php" 
+                <li class="menu-usuari">
+                    <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.login.php"
                         title="Iniciar sessió"><b>Iniciar Sessió</b></a>
                 </li>
                 <li>
-                    <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.signup.php" 
+                    <a class="button" href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.signup.php"
                         title="Registrar-se"><b>Registrar-se</b></a>
                 </li>
             <?php endif; ?>

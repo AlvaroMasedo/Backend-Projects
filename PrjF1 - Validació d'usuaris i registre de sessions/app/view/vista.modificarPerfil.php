@@ -44,7 +44,7 @@ require_once __DIR__ . '/../../includes/session_check.php';
                 <?php echo $missatge; ?>
             <?php endif; ?>
 
-            <form action="../controller/usuari.php?action=modificar" method="post" enctype="multipart/form-data">
+            <form class="form-modificarUsuari" action="../controller/usuari.php?action=modificar" method="post" enctype="multipart/form-data">
                 <?php if (isset($_SESSION['usuari'])): ?>
 
                     <!-- Mostrar imatge de perfil -->

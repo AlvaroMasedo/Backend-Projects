@@ -43,7 +43,7 @@ h2 {
 
 h3 {
     text-align: center;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-family: 'Formula1-Bold', cursive;
     font-size: 20px;
 }
@@ -147,8 +147,13 @@ p {
 .no-session {
     padding: 2rem;
     text-align: center;
-    margin-top: 15rem;
-    color: white;
+    margin-top: 5rem;
+    color: rgb(0, 0, 0);
+    background-color: white;
+    margin-left: 33%;
+    margin-right: 33%;
+    border: solid 2px #D41616;
+    border-radius: 10px;
 }
 
 .no-articles {
