@@ -15,14 +15,14 @@ header ul li.push-right {
 }
 
 .logo-img {
-  height: 30px;
+  height: 45px;
   margin-top: 10px;
   transition: 0.3s;
 }
 
 .logo-img:hover {
   cursor: pointer;
-  height: 32px;
+  height: 47px;
 }
 
 .button-usuari {

@@ -23,7 +23,7 @@ $contadorIntents = $contadorIntents ?? 0;
     <!-- Google reCAPTCHA client script (centralitzat) -->
     <?php require_once __DIR__ . '/../../lib/recaptcha.php';
     imprimir_recaptcha_script(); ?>
-    <title>LogIn</title>
+    <title>Iniciar Sessió</title>
 </head>
 
 <body>

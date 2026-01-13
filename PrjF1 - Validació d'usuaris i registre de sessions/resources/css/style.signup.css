@@ -42,12 +42,12 @@ main{
 }
 
 img {
-	height: 30px;
+	height: 45px;
 	transition: 0.3s;
 }
 
 img:hover {
-	height: 32px;
+	height: 47px;
 }
 
 h1 {

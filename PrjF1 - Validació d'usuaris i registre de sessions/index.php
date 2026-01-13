@@ -40,7 +40,7 @@ require_once __DIR__ . '/app/controller/articles.php';
     <?php include __DIR__ . '/app/view/vista.header.php'; ?>
 
     <main>
-        <img class="F1-title" src="uploads/img/Formula1.png" alt="Formula1-logo">
+        <img class="F1-title" src="uploads/img/Formula1.webp" alt="Formula1-logo">
         
         <!-- Missatge de registre exitoso -->
         <?php if (isset($_GET['registered']) && $_GET['registered'] == '1'): ?>

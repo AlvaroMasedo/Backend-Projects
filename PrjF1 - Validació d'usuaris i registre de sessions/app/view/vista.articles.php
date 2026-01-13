@@ -92,6 +92,7 @@ require_once __DIR__ . '/../controller/articles.php';
                                 <p class="card__author">Autor: <?= htmlspecialchars($a['autor']) ?></p>
                             </div>
                             <div class="card__actions">
+                                <p>Modificar / Eliminar</p>
                                 <!-- Botó de modificar: obrim la vista de modificació passant l'id -->
                                 <a href="vista.modificarArticle.php?id=<?= urlencode($a['id']) ?>" class="modificar-btn"
                                     title="Modificar"><img class="modificar-icon" src="../../uploads/img/modificar.png"
