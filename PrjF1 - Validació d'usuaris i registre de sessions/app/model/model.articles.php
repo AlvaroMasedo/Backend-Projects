@@ -25,7 +25,7 @@ class ModelArticles
      */
     public function obtenirTots(): array
     {
-        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles";
+        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +39,7 @@ class ModelArticles
      */
     public function obtenirPerNickname(string $nickname): array
     {
-        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE autor = :autor";
+        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles WHERE autor = :autor";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':autor' => $nickname]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -53,7 +53,7 @@ class ModelArticles
      */
     public function obtenirPerId(int $id): ?array
     {
-        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE id = :id LIMIT 1";
+        $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -92,20 +92,20 @@ class ModelArticles
     {
         // Determinar ORDER BY segons el tipus d'ordre
         $orderBy = match($ordre) {
-            'antic' => 'ORDER BY data_publicacio ASC',
+            'antic' => 'ORDER BY ultima_modificacio ASC',
             'asc' => 'ORDER BY nom_article ASC',
             'desc' => 'ORDER BY nom_article DESC',
-            default => 'ORDER BY data_publicacio DESC', // 'recent' per defecte
+            default => 'ORDER BY ultima_modificacio DESC', // 'recent' per defecte
         };
 
         if ($autor === null) {
-            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles {$orderBy} LIMIT :limit OFFSET :offset";
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles {$orderBy} LIMIT :limit OFFSET :offset";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE autor = :autor {$orderBy} LIMIT :limit OFFSET :offset";
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles WHERE autor = :autor {$orderBy} LIMIT :limit OFFSET :offset";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -129,23 +129,23 @@ class ModelArticles
     {
         // Determinar ORDER BY segons el tipus d'ordre
         $orderBy = match($ordre) {
-            'antic' => 'ORDER BY data_publicacio ASC',
+            'antic' => 'ORDER BY ultima_modificacio ASC',
             'asc' => 'ORDER BY nom_article ASC',
             'desc' => 'ORDER BY nom_article DESC',
-            default => 'ORDER BY data_publicacio DESC', // 'recent' per defecte
+            default => 'ORDER BY ultima_modificacio DESC', // 'recent' per defecte
         };
 
         $busqueda = '%' . $busqueda . '%';
 
         if ($autor === null) {
-            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE nom_article LIKE :busqueda {$orderBy} LIMIT :limit OFFSET :offset";
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles WHERE nom_article LIKE :busqueda {$orderBy} LIMIT :limit OFFSET :offset";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':busqueda', $busqueda);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, data_publicacio FROM articles WHERE nom_article LIKE :busqueda AND autor = :autor {$orderBy} LIMIT :limit OFFSET :offset";
+            $sql = "SELECT id, autor, nom_article AS Nom, cos AS Cos, ultima_modificacio FROM articles WHERE nom_article LIKE :busqueda AND autor = :autor {$orderBy} LIMIT :limit OFFSET :offset";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':busqueda', $busqueda);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -209,7 +209,7 @@ class ModelArticles
      */
     public function modificar(int $id, string $nom, string $cos): bool
     {
-        $sql = "UPDATE articles SET nom_article = :nom, cos = :cos, data_publicacio = :data WHERE id = :id";
+        $sql = "UPDATE articles SET nom_article = :nom, cos = :cos, ultima_modificacio = :data WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':nom' => $nom,

@@ -136,7 +136,7 @@ require_once __DIR__ . '/app/controller/articles.php';
                         <div class="card__body">
                             <p><?= nl2br(htmlspecialchars($a['Cos'])) ?></p>
                             <p class="autor">Autor: <?= htmlspecialchars($a['autor']) ?> </p>
-                            <p class="autor">Última modificació: <?= htmlspecialchars(date('d/m/Y', strtotime($a['data_publicacio']))) ?></p>
+                            <p class="autor">Última modificació: <?= htmlspecialchars(date('d/m/Y', strtotime($a['ultima_modificacio']))) ?></p>
                         </div>
                     </article>
                 <?php endforeach; ?>
