@@ -29,6 +29,13 @@ function iniciarSessio(){
 
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 
+    // Cargar credencials guardadas de Remember Me si existen
+    $rememberMe = $controlarUsers->obtenirRememberMe();
+    if ($rememberMe !== null) {
+        $email = $rememberMe['email'];
+        $contrasenya = $rememberMe['contrasenya'];
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         //Obtenir dades del formulari
@@ -117,6 +124,11 @@ function iniciarSessio(){
                             'imatge_perfil' => $ok['imatge_perfil']
                         ];
 
+                        // Si l'usuari ha marcat "recorda'm", guardar les credencials
+                        if (isset($_POST['recorda']) && $_POST['recorda'] === 'on') {
+                            $controlarUsers->guardarRememberMe($email, $contrasenya);
+                        }
+
                         //Redirigir a la pàgina principal
                         header('Location: ../../index.php');
                         exit;
@@ -137,5 +149,3 @@ function iniciarSessio(){
 if ($action === 'login'){
     iniciarSessio();
 }
-
-?>

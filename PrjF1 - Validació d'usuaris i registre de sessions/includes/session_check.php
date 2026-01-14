@@ -7,6 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Tancar sessió manualment
 if (isset($_GET['logout']) && $_GET['logout'] == '1') {
+    // NO eliminamos la cookie de Remember Me, solo cerramos la sesión
     session_unset();
     session_destroy();
     setcookie('session_expired', '1', time() + 60, '/');

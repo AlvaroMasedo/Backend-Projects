@@ -179,5 +179,65 @@ class ModelUsers
         return $count > 0;
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    /////////                         REMEMBER ME CREDENTIALS                          //////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    /* Mètode per encriptar les credencials per a Remember Me
+     * Utilitza AES-256-CBC per encriptar de forma segura
+     */
+    private function encriptarCredencials(string $email, string $contrasenya): string
+    {
+        $key = hash('sha256', 'remember_me_secret_key_' . $_SERVER['HTTP_HOST'], true);
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $dades = json_encode(['email' => $email, 'contrasenya' => $contrasenya]);
+        $encriptada = openssl_encrypt($dades, 'aes-256-cbc', $key, 0, $iv);
+        return base64_encode($iv . $encriptada);
+    }
+
+    /* Mètode per desencriptar les credencials de Remember Me
+     */
+    private function desencriptarCredencials(string $dades): ?array
+    {
+        try {
+            $key = hash('sha256', 'remember_me_secret_key_' . $_SERVER['HTTP_HOST'], true);
+            $dadesDecode = base64_decode($dades);
+            $ivLength = openssl_cipher_iv_length('aes-256-cbc');
+            $iv = substr($dadesDecode, 0, $ivLength);
+            $encriptada = substr($dadesDecode, $ivLength);
+            $desencriptada = openssl_decrypt($encriptada, 'aes-256-cbc', $key, 0, $iv);
+            return json_decode($desencriptada, true);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /* Mètode per guardar credencials de Remember Me en una cookie
+     */
+    public function guardarRememberMe(string $email, string $contrasenya): void
+    {
+        $dades = $this->encriptarCredencials($email, $contrasenya);
+        $expires = time() + (30 * 24 * 60 * 60); // 30 dias
+        setcookie('remember_credentials', $dades, $expires, '/', '', false, true);
+    }
+
+    /* Mètode per obtenir credencials de Remember Me
+     */
+    public function obtenirRememberMe(): ?array
+    {
+        if (!isset($_COOKIE['remember_credentials'])) {
+            return null;
+        }
+        return $this->desencriptarCredencials($_COOKIE['remember_credentials']);
+    }
+
+    /* Mètode per eliminar les credencials de Remember Me
+     */
+    public function eliminarRememberMe(): void
+    {
+        setcookie('remember_credentials', '', time() - 3600, '/');
+    }
+
 }
+
 
