@@ -23,6 +23,9 @@ function registrarUsuari()
     // Instanciar el model
     $controlarUsers = new ModelUsers($conn);
 
+    // Iniciar la sessió al principi
+    session_start();
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Obtenir dades del formulari
         $nickname = trim($_POST['nickname'] ?? '');
@@ -69,7 +72,6 @@ function registrarUsuari()
             // Si tot és correcte, guardar dades en sessió i redirigir a comprobar informació
         } else {
             // Guardar les dades en sessió per mostrar-les a la pàgina de confirmació
-            session_start();
             session_regenerate_id(true);
 
             $_SESSION['dades_registre'] = [
@@ -79,6 +81,16 @@ function registrarUsuari()
                 'email' => $email,
                 'contrasenya' => $contrasenya_encriptada,
                 'administrador' => $administrador
+            ];
+
+            // Guardar les dades sense encriptar per mostrar-les al formulari si torna enrere
+            $_SESSION['form_data'] = [
+                'nickname' => $nickname,
+                'nom' => $nom,
+                'cognom' => $cognom,
+                'email' => $email,
+                'contrasenya' => $contrasenya,
+                'repContrasenya' => $repContrasenya
             ];
 
             // Redirigir a la pàgina de confirmació
@@ -120,6 +132,7 @@ function confirmarRegistre()
             if ($ok) {
                 // Eliminar les dades temporals de registre
                 unset($_SESSION['dades_registre']);
+                unset($_SESSION['form_data']);
 
                 // Guardar dades de l'usuari a la sessió
                 $_SESSION['usuari'] = [

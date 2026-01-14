@@ -12,6 +12,17 @@
 </head>
 
 <body>
+    <?php
+    // Verificar si hi ha dades prèvies del formulari per omplir els camps
+    session_start();
+    $formData = $_SESSION['form_data'] ?? [];
+    $nom = $formData['nom'] ?? '';
+    $cognom = $formData['cognom'] ?? '';
+    $nickname = $formData['nickname'] ?? '';
+    $email = $formData['email'] ?? '';
+    $contrasenya = $formData['contrasenya'] ?? '';
+    $repContrasenya = $formData['repContrasenya'] ?? '';
+    ?>
     <header>
         <ul>
             <li><a href="../../index.php"><b><img src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a>

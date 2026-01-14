@@ -7,8 +7,11 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); // Borrar cookie tras mostrar mensaje
 }
 
-// Contador d'intents per reCAPTCHA
-$contadorIntents = $contadorIntents ?? 0;
+// Inicializar contadorIntents si no existe (por si se accede directamente a la vista)
+if (!isset($contadorIntents)) {
+    session_start();
+    $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
+}
 
 ?>
 <!DOCTYPE html>
@@ -48,22 +51,6 @@ $contadorIntents = $contadorIntents ?? 0;
         <h1>INICIAR SESSIÓ</h1>
         <div class="separador"></div>
         
-        <!-- Mostrar missatge si s'ha recordat el dispositiu -->
-        <?php if (isset($recordarChecked) && $recordarChecked): ?>
-            <p class="info-recorda">
-                Dispositiu recordat. Pots iniciar sessió automàticament o introduir la contrasenya.
-            </p>
-            
-            <!-- Botó d'inici de sessió automàtic -->
-            <form method="POST" action="../controller/login.php?action=auto_login" class="auto-login-form">
-                <input type="submit" value="INICIAR SESSIÓ AUTOMÀTICAMENT">
-            </form>
-            
-            <div class="separator">
-                <span>o introdueix la contrasenya</span>
-            </div>
-        <?php endif; ?>
-        
         <form method="POST" action="../controller/login.php?action=login">
 
             <!-- Primer camp del formulari (email)-->
@@ -91,7 +78,7 @@ $contadorIntents = $contadorIntents ?? 0;
             <ul class="login">
                 <li>
                     <label for="recorda">Recorda'm</label>
-                    <input type="checkbox" id="recorda" name="recorda" <?php echo (isset($recordarChecked) && $recordarChecked) ? 'checked' : ''; ?>>
+                    <input type="checkbox" id="recorda" name="recorda">
                 </li>
                 <li><a href="#">Has oblidat la contrasenya?</a></li>
             </ul>

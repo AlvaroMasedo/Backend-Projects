@@ -141,6 +141,7 @@ p {
     max-width: 800px;
     text-align: center;
     border-left: 4px solid #dc3545;
+    font-family: "Formula1-Bold", cursive;  
 }
 
 .no-session {

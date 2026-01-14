@@ -11,7 +11,7 @@
         <div class="footer-content">
             <p class="footer-text">2025 Projecete Final BackEnd.</p>
             <p class="footer-text">Desenvolupat per Álvaro Masedo Pérez.</p>
-            <img src="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/uploads/img/logo.webp" alt="F1 logo" class="footer-logo">
+            <img src="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/uploads/img/logoFooter.webp" alt="F1 logo" class="footer-logo">
         </div>
     </footer>
 </body>

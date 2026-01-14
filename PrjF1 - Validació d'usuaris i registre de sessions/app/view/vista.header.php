@@ -41,7 +41,6 @@
                             <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/app/view/vista.usuaris.php">Usuaris</a></li>
                         <?php endif; ?>
                         <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/includes/session_check.php?logout=1">Tancar sessió</a></li>
-                        <li><a href="/Pràctiques/Backend/PrjF1 - Validació d'usuaris i registre de sessions/includes/session_check.php?logout=1&forget_device=1">Tancar sessió i oblidar dispositiu</a></li>
                     </ul>
                 </li>
             <?php else: ?>
