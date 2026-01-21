@@ -180,62 +180,66 @@ class ModelUsers
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
-    /////////                         REMEMBER ME CREDENTIALS                          //////////
+    /////////                         REMEMBER ME CON TOKENS                           //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    /* Mètode per encriptar les credencials per a Remember Me
-     * Utilitza AES-256-CBC per encriptar de forma segura
+    /* Mètode per generar un token aleatori segur
      */
-    private function encriptarCredencials(string $email, string $contrasenya): string
+    private function generarToken(): string
     {
-        $key = hash('sha256', 'remember_me_secret_key_' . $_SERVER['HTTP_HOST'], true);
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $dades = json_encode(['email' => $email, 'contrasenya' => $contrasenya]);
-        $encriptada = openssl_encrypt($dades, 'aes-256-cbc', $key, 0, $iv);
-        return base64_encode($iv . $encriptada);
+        return bin2hex(random_bytes(32)); // Token de 64 caràcters hexadecimals
     }
 
-    /* Mètode per desencriptar les credencials de Remember Me
+    /* Mètode per guardar token de Remember Me en la base de dades
+     * @param string $nickname Nickname de l'usuari
+     * @return string Token generat
      */
-    private function desencriptarCredencials(string $dades): ?array
+    public function guardarRememberMe(string $nickname): string
     {
-        try {
-            $key = hash('sha256', 'remember_me_secret_key_' . $_SERVER['HTTP_HOST'], true);
-            $dadesDecode = base64_decode($dades);
-            $ivLength = openssl_cipher_iv_length('aes-256-cbc');
-            $iv = substr($dadesDecode, 0, $ivLength);
-            $encriptada = substr($dadesDecode, $ivLength);
-            $desencriptada = openssl_decrypt($encriptada, 'aes-256-cbc', $key, 0, $iv);
-            return json_decode($desencriptada, true);
-        } catch (Exception $e) {
-            return null;
+        $token = $this->generarToken();
+        $expiry = date('Y-m-d H:i:s', strtotime('+30 days')); // Token valid 30 dies
+        
+        $sql = "UPDATE usuaris SET remember_token = :token, remember_expiry = :expiry WHERE nickname = :nickname";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':token' => $token,
+            ':expiry' => $expiry,
+            ':nickname' => $nickname
+        ]);
+        
+        // Guardar token en cookie (NO les credencials)
+        setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true);
+        
+        return $token;
+    }
+
+    /* Mètode per verificar i obtenir usuari per token de Remember Me
+     * @param string $token Token de la cookie
+     * @return array|null Dades de l'usuari o null si el token no és vàlid
+     */
+    public function obtenirUsuariPerToken(string $token): ?array
+    {
+        $sql = "SELECT * FROM usuaris WHERE remember_token = :token AND remember_expiry > NOW() LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':token' => $token]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $usuario ?: null;
+    }
+
+    /* Mètode per eliminar token de Remember Me
+     * @param string $nickname Nickname de l'usuari
+     */
+    public function eliminarRememberMe(string $nickname = null): void
+    {
+        // Eliminar cookie
+        setcookie('remember_token', '', time() - 3600, '/');
+        
+        // Si tenim nickname, eliminar token de la BBDD
+        if ($nickname !== null) {
+            $sql = "UPDATE usuaris SET remember_token = NULL, remember_expiry = NULL WHERE nickname = :nickname";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':nickname' => $nickname]);
         }
-    }
-
-    /* Mètode per guardar credencials de Remember Me en una cookie
-     */
-    public function guardarRememberMe(string $email, string $contrasenya): void
-    {
-        $dades = $this->encriptarCredencials($email, $contrasenya);
-        $expires = time() + (30 * 24 * 60 * 60); // 30 dias
-        setcookie('remember_credentials', $dades, $expires, '/', '', false, true);
-    }
-
-    /* Mètode per obtenir credencials de Remember Me
-     */
-    public function obtenirRememberMe(): ?array
-    {
-        if (!isset($_COOKIE['remember_credentials'])) {
-            return null;
-        }
-        return $this->desencriptarCredencials($_COOKIE['remember_credentials']);
-    }
-
-    /* Mètode per eliminar les credencials de Remember Me
-     */
-    public function eliminarRememberMe(): void
-    {
-        setcookie('remember_credentials', '', time() - 3600, '/');
     }
 
 }

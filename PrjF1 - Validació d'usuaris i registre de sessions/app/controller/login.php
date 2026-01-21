@@ -22,19 +22,14 @@ function iniciarSessio(){
     // Instanciar el model
     $controlarUsers = new ModelUsers($conn);
 
-    // Iniciar sessió per fer persistents els intents i dadesº de reCAPTCHA
+    // Iniciar sessió per fer persistents els intents i dades de reCAPTCHA
     if (session_status() === PHP_SESSION_NONE) {
+        // Configurar cookie de sessió per a que expiri al tancar el navegador
+        ini_set('session.cookie_lifetime', '0');
         session_start();
     }
 
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
-
-    // Cargar credencials guardadas de Remember Me si existen
-    $rememberMe = $controlarUsers->obtenirRememberMe();
-    if ($rememberMe !== null) {
-        $email = $rememberMe['email'];
-        $contrasenya = $rememberMe['contrasenya'];
-    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -123,11 +118,25 @@ function iniciarSessio(){
                             'administrador' => $ok['administrador'],
                             'imatge_perfil' => $ok['imatge_perfil']
                         ];
+                        $_SESSION['session_created'] = time();
 
-                        // Si l'usuari ha marcat "recorda'm", guardar les credencials
+                        // Si l'usuari ha marcat "recorda'm", generar i guardar token
                         if (isset($_POST['recorda']) && $_POST['recorda'] === 'on') {
-                            $controlarUsers->guardarRememberMe($email, $contrasenya);
+                            $controlarUsers->guardarRememberMe($ok['nickname']);
+                            $_SESSION['remember_me'] = 1; // 1 = té Remember Me
+                            // Eliminar identificador de sessió de navegador anterior
+                            setcookie('browser_instance', '', time() - 3600, '/');
+                        } else {
+                            $_SESSION['remember_me'] = 0; // 0 = NO té Remember Me
+                            // Generar identificador de sessió de navegador (cookie de sessió)
+                            $browserInstance = bin2hex(random_bytes(16));
+                            $_SESSION['browser_instance'] = $browserInstance;
+                            setcookie('browser_instance', $browserInstance, 0, '/', '', false, true);
                         }
+                        
+                        // DEBUG: Verificar que s'ha establert
+                        error_log("DEBUG LOGIN: remember_me = " . $_SESSION['remember_me']);
+                        error_log("DEBUG LOGIN: recorda POST = " . (isset($_POST['recorda']) ? $_POST['recorda'] : 'no set'));
 
                         //Redirigir a la pàgina principal
                         header('Location: ../../index.php');

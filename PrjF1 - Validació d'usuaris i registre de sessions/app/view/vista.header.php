@@ -6,6 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../resources/css/style.header.css">
+    <script>
+        // Si NO hi ha cookie remember_token, mata la sessió quan es detecti una nova sessió de navegador.
+        (function () {
+            var hasRemember = document.cookie.indexOf('remember_token=') !== -1;
+            var markerKey = 'sessionAliveMarker';
+            if (!sessionStorage.getItem(markerKey)) {
+                sessionStorage.setItem(markerKey, '1');
+                if (!hasRemember) {
+                    var url = '/Pràctiques/Backend/PrjF1 - Validació d\'usuaris i registre de sessions/includes/close_on_new_session.php';
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(url);
+                    } else {
+                        fetch(url, { method: 'POST', keepalive: true });
+                    }
+                }
+            }
+        })();
+    </script>
 </head>
 
 <body>
