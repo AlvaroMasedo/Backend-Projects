@@ -229,7 +229,7 @@ class ModelUsers
     /* Mètode per eliminar token de Remember Me
      * @param string $nickname Nickname de l'usuari
      */
-    public function eliminarRememberMe(string $nickname = null): void
+    public function eliminarRememberMe(?string $nickname = null): void
     {
         // Eliminar cookie
         setcookie('remember_token', '', time() - 3600, '/');
