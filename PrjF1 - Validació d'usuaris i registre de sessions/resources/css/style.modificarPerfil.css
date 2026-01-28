@@ -257,3 +257,33 @@ p{
     font-weight: bold;
     border-left: 4px solid #00a800;
 }
+
+.custom-file-div {
+    height: 55px;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    border: 2px dashed #000000;
+    border-radius: 10px;
+}   
+
+.custom-file-upload {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Formula1-Bold', cursive;
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    background-color: #D41616;
+    border: 0px;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+.custom-file-upload:hover {
+    background-color: #790707;
+}
+
+.custom-file-span {
+    font-family: 'Formula1-Regular', cursive;
+    color: #000000;
+    font-size: 13px;
+}

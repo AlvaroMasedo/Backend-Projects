@@ -62,7 +62,13 @@ require_once __DIR__ . '/../../includes/session_check.php';
                     <!-- Canviar imatge de perfil -->
                     <div class="upload-container">
                         <p class="perfil-p"><strong>Modificar Foto de perfil:</strong></p>
-                        <input type="file" name="foto_perfil" id="foto_perfil" accept="image/jpeg,image/png,image/gif,image/webp">
+                        <input type="file" name="foto_perfil" id="foto_perfil" accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+                            <div class="custom-file-div">
+                                <label for="foto_perfil" class="custom-file-upload">
+                                    Seleccionar Foto
+                                </label>
+                                <span id="file-chosen" class="custom-file-span">Cap fitxer seleccionat</span>
+                            </div>
                     </div>
                     <?php echo $errorFoto ?? ''; ?>
                     <div class="separador_gran"></div>
@@ -103,6 +109,14 @@ require_once __DIR__ . '/../../includes/session_check.php';
     </main>
 
     <?php include 'vista.footer.php'; ?>
+
+    <script>
+        document.getElementById('foto_perfil').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files.length > 0) {
+                document.getElementById('file-chosen').textContent = e.target.files[0].name;
+            }
+        });
+    </script>
 </body>
 
 </html>
