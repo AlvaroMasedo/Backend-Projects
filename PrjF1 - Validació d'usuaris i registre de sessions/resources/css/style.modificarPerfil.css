@@ -185,7 +185,7 @@ p{
     color: rgb(255, 255, 255);
 }
 
-.form-modificarUsuari input[type="text"] {
+.form-modificarUsuari input[type="text"], .form-modificarUsuari input[type="password"], .form-modificarUsuari input[type="email"] {
     height: 55px;
     width: 850px;
     padding: 3px 10px;
@@ -199,7 +199,7 @@ p{
     margin-bottom: 30px;
 }
 
-.form-modificarUsuari input[type="text"]:focus {
+.form-modificarUsuari input[type="text"]:focus, .form-modificarUsuari input[type="password"]:focus, .form-modificarUsuari input[type="email"]:focus {
     outline: none;
     border-color: #3399ff;
     box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
@@ -216,22 +216,6 @@ p{
     color: rgb(0, 0, 0);
     margin-bottom: 8px;
     font-size: 18px;
-}
-
-.form-modificarUsuari input[type="file"] {
-    margin-top: 1%;
-    width: 850px;
-    padding: 10px;
-    border: 2px dashed #000000;
-    border-radius: 10px;
-    background-color: #f6f6f6;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.form-modificarUsuari input[type="file"]:hover {
-    border-color: #D41616;
-    background-color: #fff;
 }
 
 .errors {
@@ -286,4 +270,12 @@ p{
     font-family: 'Formula1-Regular', cursive;
     color: #000000;
     font-size: 13px;
+}
+
+.subtitle {
+    font-family: 'Formula1-Bold', cursive;
+    color: rgb(53, 53, 53);
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 17px;
 }

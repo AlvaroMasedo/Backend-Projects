@@ -95,6 +95,23 @@ require_once __DIR__ . '/../../includes/session_check.php';
                     <?php echo $errorCognom ?? ''; ?>
                     <div class="separador_gran"></div>
 
+                    <!-- Mostrar el camp de contrasenya per canviar-la -->
+                    <p class="perfil-p"><strong>Contrasenya:</strong></p>
+                    <p>Escriu primer la teva contrasenya actual, després la nova contrasenya i confirma-la.</p>
+
+                    <p class="subtitle">Contrasenya actual.</p>
+                    <input type="password" name="contrasenya_actual" placeholder="Escriu la contrasenya actual">
+                    <?php echo $errorContrasenyaActual ?? ''; ?>
+
+                    <p class="subtitle">Nova contrasenya.</p>
+                    <input type="password" name="nova_contrasenya" placeholder="Escriu la nova contrasenya">
+                    <?php echo $errorNovaContrasenya ?? ''; ?>
+
+                    <p class="subtitle">Confirma la nova contrasenya.</p>
+                    <input type="password" name="confirma_nova_contrasenya" placeholder="Confirma la nova contrasenya">
+                    <?php echo $errorConfirmaNovaContrasenya ?? ''; ?>
+                    <div class="separador_gran"></div>
+                    
                     <!-- Botó per desar els canvis i tornar enrere -->
                     <?php echo $error ?? ''; ?>
                     <input class="button" type="submit" value="DESAR CANVIS">
