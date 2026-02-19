@@ -29,13 +29,11 @@ CREATE TABLE IF NOT EXISTS usuaris (
     remember_token VARCHAR(64) NULL,
     remember_expiry DATETIME NULL,
     reset_token VARCHAR(64) NULL,
-<<<<<<< HEAD
     reset_expiry DATETIME NULL,
     oauth_provider VARCHAR(20) NULL,
     oauth_id VARCHAR(255) NULL,
+    verification_code VARCHAR(6) NULL,
+    verification_expires DATETIME NULL,
     UNIQUE KEY unique_oauth (oauth_provider, oauth_id)
-=======
-    reset_expiry DATETIME NULL
->>>>>>> 49dfbc2658445a1c8756ce75c099f468fe185d8b
 );
 

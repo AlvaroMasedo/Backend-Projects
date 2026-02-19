@@ -183,3 +183,95 @@ p{
     border-left: 4px solid #00a800;
     text-align: center;
 }
+
+/* Banner de vinculació de comptes */
+.vincular-banner {
+    background: linear-gradient(135deg, #D41616 0%, #8b0f0f 100%);
+    color: #ffffff;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 1000px;
+    width: 85%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(212, 22, 22, 0.3);
+}
+
+.vincular-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.vincular-banner-text {
+    flex: 1;
+    min-width: 250px;
+}
+
+.vincular-banner h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-size: 28px;
+    font-family: 'Formula1-Bold', cursive;
+    color: #ffffff;
+}
+
+.vincular-banner p {
+    margin: 0;
+    font-size: 16px;
+    color: #f0f0f0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.vincular-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #D41616;
+    text-decoration: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.vincular-banner-btn:hover {
+    background-color: transparent;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.vincular-logo {
+    height: 24px;
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .vincular-banner {
+        padding: 1.5rem;
+        width: 90%;
+    }
+    
+    .vincular-banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .vincular-banner h2 {
+        font-size: 22px;
+    }
+    
+    .vincular-banner-btn {
+        width: 100%;
+    }
+}

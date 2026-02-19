@@ -444,4 +444,19 @@ class ModelUsers
             ':nickname' => $nickname
         ]);
     }
+
+    /* Mètode per actualitzar la contrasenya d'un usuari
+     * @param string $nickname Nickname de l'usuari
+     * @param string $hashedPassword Contrasenya hasheada amb password_hash()
+     * @return bool true si s'ha actualitzat, false si error
+     */
+    public function actualizarContrasenya(string $nickname, string $hashedPassword): bool
+    {
+        $sql = "UPDATE usuaris SET contrasenya = :contrasenya WHERE nickname = :nickname";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':contrasenya' => $hashedPassword,
+            ':nickname' => $nickname
+        ]);
+    }
 }

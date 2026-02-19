@@ -21,21 +21,102 @@ require_once __DIR__ . '/../../includes/session_check.php';
 </head>
 
 <body>
-    <?php if ($sessionExpired): ?>
-        <div class="alert-overlay">
-            <div class="alert">
-                <p>S'ha tancat la sessió.</p>
-                <a class="button" href="app/view/vista.login.php">INICIAR SESSIÓ</a>
-                <br>
-                <a class="link" href="../../index.php">Navega com usuari anònim</a>
-            </div>
-        </div>
-    <?php endif; ?>
-
     <!-- Header amb navegació -->
     <?php include __DIR__ . '/vista.header.php'; ?>
 
     <main>
+        <!-- Alertes a dalt de la pàgina -->
+        <div style="margin-top: 2rem;">
+            <?php if ($sessionExpired): ?>
+                <div class="alert-overlay">
+                    <div class="alert">
+                        <p>S'ha tancat la sessió.</p>
+                        <a class="button" href="app/view/vista.login.php">INICIAR SESSIÓ</a>
+                        <br>
+                        <a class="link" href="../../index.php">Navega com usuari anònim</a>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+                <div class="perfil-container" style="margin-top: 0; margin-left: 20%; margin-right: 20%; margin-bottom: 1rem;">
+                    <p class="success">Perfil modificat correctament!</p>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['vincular_success']) && $_GET['vincular_success'] == '1'): ?>
+                <div class="perfil-container" style="margin-top: 0; margin-left: 20%; margin-right: 20%; margin-bottom: 1rem;">
+                    <p class="success">✓ Compte vinculat amb Google correctament!</p>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['error'])): ?>
+                <div class="perfil-container" style="margin-top: 0; margin-left: 20%; margin-right: 20%; margin-bottom: 1rem;">
+                    <p style="color: #d41616; background-color: #ffe6e6; padding: 10px; border-radius: 5px; border-left: 4px solid #d41616; margin: 15px 0; font-weight: bold;">
+                        <?php 
+                        $error = $_GET['error'];
+                        $missatgesError = [
+                            'vincular_no_session' => '⚠ Debes estar connectat per vincular el teu compte.',
+                            'vincular_already_linked' => '⚠ Ja tens una conta OAuth vinculada.',
+                            'vincular_email_mismatch' => '⚠ L\'email de Google no coincideix amb el teu email.'
+                        ];
+                        echo $missatgesError[$error] ?? '⚠ Ha ocorregut un error desconegut.';
+                        ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($_SESSION['usuari'])): ?>
+            <?php 
+            // Obtenir informació completa de l'usuari des de la BD
+            require_once __DIR__ . '/../../config/db_connection.php';
+            require_once __DIR__ . '/../model/model.usuari.php';
+            $modelUsuaris = new ModelUsers($conn);
+            $usuariComplet = $modelUsuaris->obtenirPerNickname($_SESSION['usuari']['nickname']);
+            
+            // Determinar estat del compte per mostrar botons de vinculació
+            $teContrasenya = !empty($usuariComplet['contrasenya']) && $usuariComplet['contrasenya'] !== 'oauth_pending';
+            $teOAuth = !empty($usuariComplet['oauth_provider']) && !empty($usuariComplet['oauth_id']);
+            ?>
+
+            <!-- Banner de vinculació si no està completament vinculat -->
+            <?php if (($teContrasenya && !$teOAuth) || (!$teContrasenya && $teOAuth)): ?>
+                <?php if ($teContrasenya && !$teOAuth): ?>
+                    <!-- Compte normal sense OAuth -->
+                    <div class="vincular-banner">
+                        <div class="vincular-banner-content">
+                            <div class="vincular-banner-text">
+                                <h2>Vincula el teu compte amb Google</h2>
+                                <p>Inicia sessió més ràpidament amb una sola clicada</p>
+                            </div>
+                            <a href="<?php 
+                                require_once __DIR__ . '/../../lib/oauth_config.php';
+                                OAuthConfig::inicialitzar();
+                                echo OAuthConfig::obtenirUrlAuthGoogle('', 'vincular');
+                            ?>" class="vincular-banner-btn">
+                                <img src="../../uploads/img/googleLogo.ico" alt="Google" class="vincular-logo">
+                                Vincular amb Google
+                            </a>
+                        </div>
+                    </div>
+                <?php elseif (!$teContrasenya && $teOAuth): ?>
+                    <!-- Compte OAuth sense contrasenya -->
+                    <div class="vincular-banner">
+                        <div class="vincular-banner-content">
+                            <div class="vincular-banner-text">
+                                <h2>Estableix una contrasenya</h2>
+                                <p>Inicia sessió sense dependre de Google</p>
+                            </div>
+                            <a href="vista.vincularLocal.php" class="vincular-banner-btn">
+                                Vincular Compte Local
+                            </a>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
         <div class="perfil-container">
             <div class="modificarPerfil">
                 <a href="vista.modificarPerfil.php" class="button">Modificar Perfil</a>
@@ -43,11 +124,8 @@ require_once __DIR__ . '/../../includes/session_check.php';
             </div>
             <div class="separador"></div>
             
-            <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
-                <p class="success">Perfil modificat correctament!</p>
-            <?php endif; ?>
-            
             <?php if (isset($_SESSION['usuari'])): ?>
+                
                 <?php if (empty($_SESSION['usuari']['imatge_perfil'])): ?>
                     <img src="../../uploads/img/fotos_perfil/foto_predeterminada/null.png" alt="Imatge de perfil" class="perfil-imatge">
                 <?php else: ?>
@@ -76,6 +154,7 @@ require_once __DIR__ . '/../../includes/session_check.php';
 
                 <p class="perfil-p"><strong>Contrasenya: </strong></p>
                 <p>*************</p>
+                <div class="separador_gran"></div>
             <?php else: ?>
                 <p>No hi ha cap usuari connectat.</p>
             <?php endif; ?>

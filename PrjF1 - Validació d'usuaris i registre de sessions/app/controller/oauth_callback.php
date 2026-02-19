@@ -98,6 +98,50 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     $provider = $usuariOAuth['provider'];
     $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? '';
 
+    // ========================================================================
+    // CONTEXT: VINCULAR - Vincular compte OAuth a compte existent
+    // ========================================================================
+    if ($context === 'vincular') {
+        // Verificar que hi ha un usuari connectat
+        if (!isset($_SESSION['usuari']) || empty($_SESSION['usuari']['nickname'])) {
+            header('Location: ../view/vista.login.php?error=vincular_no_session');
+            exit;
+        }
+        
+        // Obtenir la informació completa del compte actual
+        $usuariActual = $modelUsuaris->obtenirPerNickname($_SESSION['usuari']['nickname']);
+        
+        // Verificar que l'email de Google coincideix amb l'email de la sessió
+        if ($usuariActual && $usuariActual['email'] === $email) {
+            // Email coincideix - procedir amb la vinculació
+            $teOAuthActual = !empty($usuariActual['oauth_provider']) && !empty($usuariActual['oauth_id']);
+            
+            if ($teOAuthActual) {
+                // Ja té OAuth vinculat
+                header('Location: ../view/vista.perfil.php?error=vincular_already_linked');
+                exit;
+            }
+            
+            // Vincular el provider OAuth a aquest compte
+            $modelUsuaris->conectarOAuthAUsuari($usuariActual['nickname'], $provider, $oauthId);
+            
+            // Actualitzar la sessió amb la nova informació
+            $_SESSION['oauth_login'] = true;
+            
+            // Borrar estat OAuth
+            unset($_SESSION['oauth_state']);
+            unset($_SESSION['oauth_pending']);
+            
+            // Redirigir al perfil amb missatge d'èxit
+            header('Location: ../view/vista.perfil.php?vincular_success=1');
+            exit;
+        } else {
+            // Email no coincideix
+            header('Location: ../view/vista.perfil.php?error=vincular_email_mismatch');
+            exit;
+        }
+    }
+
     // Verificar si el mail ja existeix
     $usuariExistent = $modelUsuaris->obtenirPerEmail($email);
 
