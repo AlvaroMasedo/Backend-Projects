@@ -48,10 +48,40 @@ require_once __DIR__ . '/app/controller/articles.php';
                 Registre completat amb èxit. Benvingut/da!
             </div>
             <script>
-                // Eliminar el parámetro de la URL després de mostrar el mensaje
+                // Eliminar el paràmetre de la URL després de mostrar el missatge
                 if (window.history.replaceState) {
                     const url = new URL(window.location);
                     url.searchParams.delete('registered');
+                    window.history.replaceState({}, document.title, url);
+                }
+            </script>
+        <?php endif; ?>
+        
+        <!-- Missatge registre OAuth completat amb èxit -->
+        <?php if (isset($_GET['oauth_registered']) && $_GET['oauth_registered'] == '1'): ?>
+            <div class="message-success">
+                Compte creat exitosament amb OAuth! Benvingut/da!
+            </div>
+            <script>
+                // Eliminar el paràmetre de la URL després de mostrar el missatge
+                if (window.history.replaceState) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('oauth_registered');
+                    window.history.replaceState({}, document.title, url);
+                }
+            </script>
+        <?php endif; ?>
+        
+        <!-- Missatge login OAuth completat amb èxit -->
+        <?php if (isset($_GET['oauth_login']) && $_GET['oauth_login'] == '1'): ?>
+            <div class="message-success">
+                Login completat exitosament. Benvingut/da novament!
+            </div>
+            <script>
+                // Eliminar el paràmetre de la URL després de mostrar el missatge
+                if (window.history.replaceState) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('oauth_login');
                     window.history.replaceState({}, document.title, url);
                 }
             </script>

@@ -11,6 +11,13 @@ $modelUsuaris = new ModelUsers($conn);
 $code = $_GET['code'] ?? $_POST['code'] ?? '';
 $id_token = $_GET['id_token'] ?? $_POST['id_token'] ?? '';
 $state = $_GET['state'] ?? $_POST['state'] ?? '';
+$context = $_GET['context'] ?? $_POST['context'] ?? 'login'; // Detectar si viene de login o signup
+
+// DEBUG: Log per verificar state
+error_log("OAuth Callback - State rebut: " . $state);
+error_log("OAuth Callback - State a la sessió: " . ($_SESSION['oauth_state'] ?? 'NO EXISTEIX'));
+error_log("OAuth Callback - Session ID: " . session_id());
+error_log("OAuth Callback - Context: " . $context);
 
 // DEBUG: Log per verificar state
 error_log("OAuth Callback - State rebut: " . $state);
@@ -34,7 +41,7 @@ if (isset($_SESSION['oauth_state']) && $_SESSION['oauth_state'] === $state) {
 $usuariOAuth = null;
 
 // ============================================================================
-// GOOGLE OAUTH - Intenta si hay code y no hay id_token (que es de Apple)
+// GOOGLE OAUTH - Intenta si hi ha code y no hi ha id_token (que es de Apple)
 // ============================================================================
 if ($code && !$id_token) {
     $tokenUrl = 'https://oauth2.googleapis.com/token';
@@ -110,7 +117,9 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
         $cognom = '';
     }
     
-    $foto = $usuariOAuth['picture'] ?? null;
+    // SEMPRE usar foto predeterminada de la web, NUNCA la de Google/Apple
+    $foto = 'uploads/img/fotos_perfil/foto_predeterminada/null.png';
+    
     $provider = $usuariOAuth['provider'];
     $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? '';
 
@@ -118,40 +127,26 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     $usuariExistent = $modelUsuaris->obtenirPerEmail($email);
 
     if ($usuariExistent) {
-        // El mail ja existeix: iniciar sessió automàticament amb el compte existent
-        session_regenerate_id(true);
-        $_SESSION['usuari'] = [
-            'nickname' => $usuariExistent['nickname'],
-            'nom' => $usuariExistent['nom'],
-            'cognom' => $usuariExistent['cognom'],
-            'email' => $usuariExistent['email'],
-            'administrador' => $usuariExistent['administrador'],
-            'imatge_perfil' => $usuariExistent['imatge_perfil']
-        ];
-        $_SESSION['session_created'] = time();
-        $_SESSION['remember_me'] = 0;
-        $_SESSION['contadorIntents'] = 0;
+        // El compte ja existeix
+        $teOAuth = !empty($usuariExistent['oauth_provider']) && !empty($usuariExistent['oauth_id']);
         
-        // Borrar estat OAuth
-        unset($_SESSION['oauth_state']);
-        unset($_SESSION['oauth_pending']);
-
-        header('Location: ../../index.php?oauth_login=1');
-        exit;
-    } else {
-        // El mail no existeix: crear usuari nou amb OAuth
-        $usuariNou = $modelUsuaris->guardarUsuariOAuth($email, $nom, $cognom, $foto, $provider, $oauthId);
-
-        if ($usuariNou) {
-            // Conectar automàticament
+        if ($context === 'signup') {
+            // Si ve del formulari de registre, mostrar error
+            header('Location: ../../app/view/vista.signup.php?error=oauth_account_exists');
+            exit;
+        }
+        
+        // Si ve del login (o no especificat)
+        if ($teOAuth && $usuariExistent['oauth_provider'] === $provider) {
+            // El mail ja existeix i te OAuth del mateix provider: iniciar sessió
             session_regenerate_id(true);
             $_SESSION['usuari'] = [
-                'nickname' => $usuariNou['nickname'],
-                'nom' => $usuariNou['nom'],
-                'cognom' => $usuariNou['cognom'],
-                'email' => $usuariNou['email'],
-                'administrador' => $usuariNou['administrador'],
-                'imatge_perfil' => $usuariNou['imatge_perfil']
+                'nickname' => $usuariExistent['nickname'],
+                'nom' => $usuariExistent['nom'],
+                'cognom' => $usuariExistent['cognom'],
+                'email' => $usuariExistent['email'],
+                'administrador' => $usuariExistent['administrador'],
+                'imatge_perfil' => $usuariExistent['imatge_perfil']
             ];
             $_SESSION['session_created'] = time();
             $_SESSION['remember_me'] = 0;
@@ -161,11 +156,9 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
             // Generar token únic per a aquesta sessió de navegador
             $browserToken = bin2hex(random_bytes(32));
             $_SESSION['browser_session_token'] = $browserToken;
-            
-            // Cookie temporal que expira al tancar navegador
             setcookie('browser_session_token', $browserToken, 0, '/', '', false, true);
             
-            // Generar "marcador" de navegador (per detectar si s'ha tancat)
+            // Generar "marcador" de navegador
             $browserMarker = bin2hex(random_bytes(16));
             $_SESSION['browser_marker'] = $browserMarker;
             setcookie('browser_marker', $browserMarker, 0, '/', '', false, true);
@@ -175,16 +168,36 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
             $sessionId = session_id();
             setcookie($sessionName, $sessionId, 0, '/', '', false, true);
             
+            // Marcar que és un login OAuth per a validacions més flexibles en session_check
+            $_SESSION['oauth_login'] = true;
+            
             // Borrar estat OAuth
             unset($_SESSION['oauth_state']);
             unset($_SESSION['oauth_pending']);
 
-            header('Location: ../../index.php?oauth_registered=1');
+            header('Location: ../../index.php?oauth_login=1');
+            exit;
+        } else if ($teOAuth && $usuariExistent['oauth_provider'] !== $provider) {
+            // Compte ja existeix amb OAuth, però d'altre provider
+            header('Location: ../view/vista.login.php?error=oauth_different_provider');
             exit;
         } else {
-            header('Location: ../view/vista.login.php?error=oauth_register_failed');
+            // Compte ja existeix però sense OAuth (registrat normalment)
+            header('Location: ../view/vista.login.php?error=oauth_need_normal_login');
             exit;
         }
+    } else {
+        // El mail no existeix - preguntar confirmació (tant per login com signup)
+        $_SESSION['oauth_pending_data'] = [
+            'email' => $email,
+            'nom' => $nom,
+            'cognom' => $cognom,
+            'provider' => $provider,
+            'oauth_id' => $oauthId,
+            'context' => $context
+        ];
+        header('Location: oauth_confirm.php');
+        exit;
     }
 }
 

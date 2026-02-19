@@ -58,21 +58,30 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
     
     // Si NO té remember-me actiu, forçar que expiri
     if ($remember_me == 0) {
-        $session_browser_token = $_SESSION['browser_session_token'] ?? null;
-        $cookie_browser_token = $_COOKIE['browser_session_token'] ?? null;
-        $browser_marker = $_COOKIE['browser_marker'] ?? null;
-        $session_marker = $_SESSION['browser_marker'] ?? null;
+        // EXCEPCIÓ: Si la sessió acaba de venir de OAuth login, saltar validacions estrictes
+        $oauth_login = isset($_SESSION['oauth_login']) && $_SESSION['oauth_login'] === true;
         
-        // Tokens de navegador han de coincidir exactament
-        if (!$session_browser_token || !$cookie_browser_token || $session_browser_token !== $cookie_browser_token) {
-            error_log("ALERTA: Tokens de navegador NO coincideixen. Tancant sessió.");
-            $_SESSION['must_logout'] = true;
-        }
-        
-        //  Marcador ha de existir en AMBOS llocs
-        if (!$browser_marker || !$session_marker || $browser_marker !== $session_marker) {
-            error_log("ALERTA: browser_marker NO coincideix o NO existeix. Tancant sessió.");
-            $_SESSION['must_logout'] = true;
+        if (!$oauth_login) {
+            // Só fer validacions estrictes si NO és OAuth login
+            $session_browser_token = $_SESSION['browser_session_token'] ?? null;
+            $cookie_browser_token = $_COOKIE['browser_session_token'] ?? null;
+            $browser_marker = $_COOKIE['browser_marker'] ?? null;
+            $session_marker = $_SESSION['browser_marker'] ?? null;
+            
+            // Tokens de navegador han de coincidir exactament
+            if (!$session_browser_token || !$cookie_browser_token || $session_browser_token !== $cookie_browser_token) {
+                error_log("ALERTA: Tokens de navegador NO coincideixen. Tancant sessió.");
+                $_SESSION['must_logout'] = true;
+            }
+            
+            //  Marcador ha de existir en AMBOS llocs
+            if (!$browser_marker || !$session_marker || $browser_marker !== $session_marker) {
+                error_log("ALERTA: browser_marker NO coincideix o NO existeix. Tancant sessió.");
+                $_SESSION['must_logout'] = true;
+            }
+        } else {
+            // Per a OAuth login, netejar bandera i permetre la sessió
+            unset($_SESSION['oauth_login']);
         }
         
         //  Si la sessió es vella sense activitat, cerrar

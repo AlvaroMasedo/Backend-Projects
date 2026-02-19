@@ -24,6 +24,19 @@
     $email = $formData['email'] ?? '';
     $contrasenya = $formData['contrasenya'] ?? '';
     $repContrasenya = $formData['repContrasenya'] ?? '';
+    
+    // Gestionar errors OAuth des de paràmetres GET
+    $enviatMissatge = '';
+    if (isset($_GET['error'])) {
+        switch ($_GET['error']) {
+            case 'oauth_account_exists':
+                $enviatMissatge = '<p class="error">AQUEST COMPTE JA EXISTEIX. INICIA SESSIÓ NORMALMENT I LLAVORS VINCULA GOOGLE DES DEL TEU PERFIL.</p>';
+                break;
+            case 'oauth_no_data':
+                $enviatMissatge = '<p class="error">ERROR: Dades de registre OAuth no vàlides.</p>';
+                break;
+        }
+    }
     ?>
     <header>
         <ul>
@@ -91,13 +104,13 @@
             <div class="social-login">
                 <div class="google-btn">
                     <img class="social-img" src="../../uploads/img/googleLogo.ico" alt="Logo de Google">
-                    <a href="<?php echo OAuthConfig::obtenirUrlAuthGoogle(); ?>">
+                    <a href="<?php echo OAuthConfig::obtenirUrlAuthGoogle('', 'signup'); ?>">
                         Registra't amb Google
                     </a>
                 </div>
                 <div class="apple-btn">
                     <img class="social-img" src="../../uploads/img/appleLogo.ico" alt="Logo d'Apple">
-                    <a href="<?php echo OAuthConfig::obtenirUrlAuthApple(); ?>">
+                    <a href="<?php echo OAuthConfig::obtenirUrlAuthApple('', 'signup'); ?>">
                         Registra't amb Apple
                     </a>
                 </div>

@@ -87,9 +87,10 @@ class OAuthConfig
     /**
      * Obtenir URL d'autenticació de Google
      * @param string $state Token de seguretat per evitar CSRF
+     * @param string $context 'login' o 'signup' per indicar origen
      * @return string URL de redirecció a Google
      */
-    public static function obtenirUrlAuthGoogle(string $state = ''): string
+    public static function obtenirUrlAuthGoogle(string $state = '', string $context = 'login'): string
     {
         // Assegurar-se que la sessió està iniciada
         if (session_status() === PHP_SESSION_NONE) {
@@ -108,7 +109,8 @@ class OAuthConfig
             'response_type' => 'code',
             'scope' => 'openid email profile',
             'state' => $state,
-            'access_type' => 'offline'
+            'access_type' => 'offline',
+            'context' => $context
         ];
 
         return 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params);
@@ -117,9 +119,10 @@ class OAuthConfig
     /**
      * Obtenir URL d'autenticació d'Apple
      * @param string $state Token de seguretat per evitar CSRF
+     * @param string $context 'login' o 'signup' per indicar origen
      * @return string URL de redirecció a Apple
      */ 
-    public static function obtenirUrlAuthApple(string $state = ''): string
+    public static function obtenirUrlAuthApple(string $state = '', string $context = 'login'): string
     {
         if (!$state) {
             $state = bin2hex(random_bytes(16));
@@ -132,7 +135,8 @@ class OAuthConfig
             'response_type' => 'code',
             'response_mode' => 'form_post',
             'scope' => 'openid email name',
-            'state' => $state
+            'state' => $state,
+            'context' => $context
         ];
 
         return 'https://appleid.apple.com/auth/authorize?' . http_build_query($params);

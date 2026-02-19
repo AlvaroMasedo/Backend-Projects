@@ -35,6 +35,12 @@ if (isset($_GET['error'])) {
         case 'oauth_invalid':
             $enviatMissatge = '<p class="error">ERROR: Dades OAuth invàlides.</p>';
             break;
+        case 'oauth_different_provider':
+            $enviatMissatge = '<p class="error">AQUEST COMPTE JA EXISTEIX VINCULAT A UN ALTRE PROVEÏDOR. INICIA SESSIÓ AMB EL PROVEÏDOR ORIGINAL O VINCULA\'L DES DEL TEU PERFIL.</p>';
+            break;
+        case 'oauth_need_normal_login':
+            $enviatMissatge = '<p class="error">AQUEST COMPTE VA SER CREAT AMB EMAIL I CONTRASENYA. INICIA SESSIÓ NORMALMENT I DESPRÉS VINCULA GOOGLE DES DEL TEU PERFIL.</p>';
+            break;
         default:
             $enviatMissatge = '<p class="error">ERROR DESCONEGUT: ' . htmlspecialchars($_GET['error']) . '</p>';
             break;
@@ -124,7 +130,7 @@ if (isset($_GET['error'])) {
                     <img class="social-img" src="../../uploads/img/googleLogo.ico" alt="Logo de Google">
                     <a href="<?php 
                         try {
-                            echo OAuthConfig::obtenirUrlAuthGoogle();
+                            echo OAuthConfig::obtenirUrlAuthGoogle('', 'login');
                         } catch (Exception $e) {
                             echo '#error-google';
                         }
@@ -136,7 +142,7 @@ if (isset($_GET['error'])) {
                     <img class="social-img" src="../../uploads/img/appleLogo.ico" alt="Logo d'Apple">
                     <a href="<?php 
                         try {
-                            echo OAuthConfig::obtenirUrlAuthApple();
+                            echo OAuthConfig::obtenirUrlAuthApple('', 'login');
                         } catch (Exception $e) {
                             echo '#error-apple';
                         }
