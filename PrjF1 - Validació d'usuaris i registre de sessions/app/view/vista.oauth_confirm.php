@@ -4,60 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../resources/css/style.oauth_confirm.css">
-    <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
     <title>Confirmar <?php echo ($context === 'login') ? 'Accés' : 'Registre'; ?> OAuth</title>
+    <link rel="stylesheet" href="../../resources/css/style.oauth_confirm.css">
+    <link rel="stylesheet" href="../../resources/css/style.header.css">
+    <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
 </head>
 <body>
-    <header>
-        <ul>
-            <li><a href="../../index.php"><b><img class="logoIMG" src="../../uploads/img/logo.webp" alt="home" title="Inici"></b></a></li>
-            <li><a class="button" href="../view/vista.login.php" title="Iniciar sessió"><b>Iniciar Sessió</b></a></li>
-        </ul>
-    </header>
+    <?php include __DIR__ . '/vista.header.php'; ?>
+    
     <main>
-        <h1>CONFIRMAR <?php echo ($context === 'login') ? 'ACCÉS' : 'REGISTRE'; ?></h1>
-        <div class="separador"></div>
-        
-        <div class="confirm-container">
-            <div class="confirm-content">
-                <p class="confirm-title">
-                    <?php 
-                        if ($context === 'login') {
-                            echo "Aquesta és la primera vegada que inicies sessió amb aquest email. Vols crear un compte nou?";
-                        } else {
-                            echo "¿Vols crear un compte nou amb les següents dades?";
-                        }
-                    ?>
-                </p>
+        <div class="confirm-wrapper">
+            <div class="section-title">
+                <h1>CONFIRMAR <?php echo ($context === 'login') ? 'ACCÉS' : 'REGISTRE'; ?></h1>
+            </div>
+            <div class="separador"></div>
+
+            <div class="confirm-layout">
+                <h2><?php 
+                    if ($context === 'login') {
+                        echo "Primera vegada amb aquest email";
+                    } else {
+                        echo "Confirma les teves dades";
+                    }
+                ?></h2>
                 
-                <div class="user-info-box">
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($oauthData['email']); ?></p>
-                    <p><strong>Nom:</strong> <?php echo htmlspecialchars($oauthData['nom']); ?></p>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <p class="info-value"><?php echo htmlspecialchars($oauthData['email']); ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Nom</span>
+                        <p class="info-value"><?php echo htmlspecialchars($oauthData['nom']); ?></p>
+                    </div>
+
                     <?php if (!empty($oauthData['cognom'])): ?>
-                        <p><strong>Cognom:</strong> <?php echo htmlspecialchars($oauthData['cognom']); ?></p>
+                    <div class="info-item">
+                        <span class="info-label">Cognom</span>
+                        <p class="info-value"><?php echo htmlspecialchars($oauthData['cognom']); ?></p>
+                    </div>
                     <?php endif; ?>
-                    <p><strong>Proveïdor:</strong> <?php echo ucfirst($oauthData['provider']); ?></p>
+
+                    <div class="info-item">
+                        <span class="info-label">Proveïdor</span>
+                        <p class="info-value"><?php echo ucfirst($oauthData['provider']); ?></p>
+                    </div>
                 </div>
-                
-                <form method="POST" class="confirm-form">
-                    <button type="submit" name="confirm" value="1" class="btn btn-success">
-                        ✓ CONFIRMAR I CREAR COMPTE
-                    </button>
-                    <button type="submit" name="cancel" value="1" class="btn btn-danger">
-                        ✗ CANCELAR
-                    </button>
-                </form>
-                
-                <p class="confirm-footer">
-                    <?php 
-                        if ($context === 'login') {
-                            echo "No vols crear el compte? <a href='../../app/view/vista.login.php' class='link'>Torna al login</a>";
-                        } else {
-                            echo "Si ja tens un compte, <a href='../view/vista.login.php' class='link'>inicia sessió aquí</a>";
-                        }
-                    ?>
-                </p>
+
+                <div class="action-box">
+                    <p>Tot sembla correcte?</p>
+                    
+                    <form method="POST" class="action-form">
+                        <button type="submit" name="confirm" value="1" class="btn-primary">CONFIRMAR I CREAR COMPTE</button>
+                    </form>
+                    
+                    <a href="<?php echo ($context === 'login') ? '../../app/view/vista.login.php' : '../../app/view/vista.signup.php'; ?>" class="btn-secondary">
+                        <?php echo ($context === 'login') ? 'Torna al login' : 'Corregir Dades'; ?>
+                    </a>
+                </div>
             </div>
         </div>
     </main>

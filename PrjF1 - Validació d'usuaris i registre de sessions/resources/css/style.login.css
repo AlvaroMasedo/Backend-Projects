@@ -358,8 +358,7 @@ p {
 	box-sizing: border-box;
 }
 
-.google-btn,
-.apple-btn {
+.google-btn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -381,29 +380,20 @@ p {
 	box-shadow: #0000002f 0px 10px 10px;
 }
 
-
 .google-btn {
 	background-color: #fff;
 	color: #000;
 	border: 2px solid #636363;
 }
 
-.apple-btn {
-	background-color: #000;
-	color: #fff;
-	border: 2px solid #000;
-}
-
-.google-btn a,
-.apple-btn a {
+.google-btn a {
 	text-decoration: none;
 	color: inherit;
 	font-weight: 800;
 	font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
 }
 
-.google-btn:hover,
-.apple-btn:hover {
+.google-btn:hover {
 	cursor: pointer;
 	opacity: 0.8;
 }

@@ -9,7 +9,6 @@ OAuthConfig::inicialitzar();
 
 $modelUsuaris = new ModelUsers($conn);
 $code = $_GET['code'] ?? $_POST['code'] ?? '';
-$id_token = $_GET['id_token'] ?? $_POST['id_token'] ?? '';
 $state = $_GET['state'] ?? $_POST['state'] ?? '';
 $context = $_GET['context'] ?? $_POST['context'] ?? 'login'; // Detectar si vindria de login o signup
 
@@ -41,9 +40,9 @@ if (isset($_SESSION['oauth_state']) && $_SESSION['oauth_state'] === $state) {
 $usuariOAuth = null;
 
 // ============================================================================
-// GOOGLE OAUTH - Intenta si hi ha code i no hi ha id_token (que es de Apple)
+// GOOGLE OAUTH
 // ============================================================================
-if ($code && !$id_token) {
+if ($code) {
     $tokenUrl = 'https://oauth2.googleapis.com/token';
     $params = [
         'client_id' => OAuthConfig::$GOOGLE_CLIENT_ID,
@@ -79,31 +78,6 @@ if ($code && !$id_token) {
 }
 
 // ============================================================================
-// APPLE OAUTH
-// ============================================================================
-if ($id_token) {
-    // Apple retorna el JWT en el camp id_token via form_post
-    // Nota: en producció es recomanable verificar la signatura del JWT
-    
-    // Decodificar JWT (sense verificació en desenvolupament)
-    $parts = explode('.', $id_token);
-    if (count($parts) === 3) {
-        $payload = json_decode(base64_decode($parts[1]), true);
-
-        $usuariOAuth = [
-            'id' => $payload['sub'] ?? '',
-            'email' => $payload['email'] ?? '',
-            'name' => $_POST['user_name']['firstName'] ?? 'Usuari',
-            'family_name' => $_POST['user_name']['lastName'] ?? '',
-            'provider' => 'apple'
-        ];
-    } else {
-        header('Location: ../view/vista.login.php?error=oauth_invalid_jwt');
-        exit;
-    }
-}
-
-// ============================================================================
 // PROCESSAR DADES DE USUARI OAUTH
 // ============================================================================
 if ($usuariOAuth && isset($usuariOAuth['email'])) {
@@ -117,7 +91,7 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
         $cognom = '';
     }
     
-    // SEMPRE usar foto predeterminada de la web, NUNCA la de Google/Apple
+    // SEMPRE usar foto predeterminada de la web, NUNCA la de Google
     // Guardar NULL perà que les vistes mostrin la imatge predeterminada
     $foto = null;
     
@@ -204,13 +178,3 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
 
 header('Location: ../view/vista.login.php?error=oauth_invalid');
 exit;
-
-// ============================================================================
-// AJUDANT: GENERAR CLIENT SECRET PER A APPLE
-// ============================================================================
-function generarClientSecretApple(): string
-{
-    // Aquesta és una versió simplificada. En producció, necessites signar un JWT amb la clau privada
-    // Per ara usem el client_id com a secret (no recomanat en producció)
-    return OAuthConfig::$APPLE_CLIENT_ID;
-}

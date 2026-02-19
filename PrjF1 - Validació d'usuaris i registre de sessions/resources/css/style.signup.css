@@ -273,8 +273,7 @@ a:hover {
 	justify-content: center;
 }
 
-.google-btn,
-.apple-btn {
+.google-btn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -296,14 +295,7 @@ a:hover {
 	border: 2px solid #636363;
 }
 
-.apple-btn {
-	background-color: #000;
-	color: #fff;
-	border: 2px solid #000;
-}
-
-.google-btn a,
-.apple-btn a {
+.google-btn a {
 	text-decoration: none;
 	color: inherit;
 	font-weight: 800;

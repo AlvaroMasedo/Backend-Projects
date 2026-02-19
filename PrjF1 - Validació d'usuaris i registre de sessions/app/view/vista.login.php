@@ -124,7 +124,7 @@ if (isset($_GET['error'])) {
                 <span>o</span>
             </div>
 
-            <!-- Iniciar sessió amb Google o Apple -->
+            <!-- Iniciar sessió amb Google -->
             <div class="social-login">
                 <div class="google-btn">
                     <img class="social-img" src="../../uploads/img/googleLogo.ico" alt="Logo de Google">
@@ -136,18 +136,6 @@ if (isset($_GET['error'])) {
                         }
                     ?>">
                         Inicia sessió amb Google
-                    </a>
-                </div>
-                <div class="apple-btn">
-                    <img class="social-img" src="../../uploads/img/appleLogo.ico" alt="Logo d'Apple">
-                    <a href="<?php 
-                        try {
-                            echo OAuthConfig::obtenirUrlAuthApple('', 'login');
-                        } catch (Exception $e) {
-                            echo '#error-apple';
-                        }
-                    ?>">
-                        Inicia sessió amb Apple
                     </a>
                 </div>
             </div>

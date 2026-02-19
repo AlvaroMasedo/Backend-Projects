@@ -19,9 +19,6 @@ Thumbs.db
 *.swo
 *~
 
-# Claus privades OAuth
-lib/apple_private_key.p8
-
 # Còpies de seguretat
 *.bak
 *.backup

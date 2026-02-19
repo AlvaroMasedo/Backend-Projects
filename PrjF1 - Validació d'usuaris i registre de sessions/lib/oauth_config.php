@@ -37,18 +37,13 @@ function carregarEnv(string $path): void {
 carregarEnv(__DIR__ . '/../.env');
 
 /**
- * Configuració OAuth per a Google i Apple
+ * Configuració OAuth per a Google
  * 
  * GOOGLE:
  * 1. Anar a https://console.cloud.google.com/
  * 2. Crear projecte i habilitar "Google+ API"
  * 3. Crear credencials OAuth 2.0 (pantalla de consentiment)
  * 4. Authorized redirect URIs: http://localhost/ruta/app/controller/oauth_callback.php
- * 
- * APPLE:
- * 1. Anar a https://developer.apple.com/account/
- * 2. Crear App ID i Services ID
- * 3. Configurar Sign in with Apple
  * 
  * NOTA: Les credencials es carreguen des de l'arxiu .env
  */
@@ -59,13 +54,6 @@ class OAuthConfig
     public static string $GOOGLE_CLIENT_ID = '';
     public static string $GOOGLE_CLIENT_SECRET = '';
     public static string $GOOGLE_REDIRECT_URI = '';
-    
-    // APPLE - Carregar des de variables d'entorn
-    public static string $APPLE_CLIENT_ID = '';
-    public static string $APPLE_TEAM_ID = '';
-    public static string $APPLE_KEY_ID = '';
-    public static string $APPLE_PRIVATE_KEY_PATH = __DIR__ . '/apple_private_key.p8';
-    public static string $APPLE_REDIRECT_URI = '';
 
     /**
      * Inicialitzar configuració OAuth des de variables d'entorn
@@ -75,13 +63,9 @@ class OAuthConfig
         // Carregar credencials des de variables d'entorn
         self::$GOOGLE_CLIENT_ID = $_ENV['GOOGLE_CLIENT_ID'] ?? 'YOUR_GOOGLE_CLIENT_ID_HERE';
         self::$GOOGLE_CLIENT_SECRET = $_ENV['GOOGLE_CLIENT_SECRET'] ?? 'YOUR_GOOGLE_CLIENT_SECRET_HERE';
-        self::$APPLE_CLIENT_ID = $_ENV['APPLE_CLIENT_ID'] ?? 'YOUR_APPLE_CLIENT_ID_HERE';
-        self::$APPLE_TEAM_ID = $_ENV['APPLE_TEAM_ID'] ?? 'YOUR_APPLE_TEAM_ID_HERE';
-        self::$APPLE_KEY_ID = $_ENV['APPLE_KEY_ID'] ?? 'YOUR_APPLE_KEY_ID_HERE';
         
-        // Configurar URIs de redirecció dinàmicament
+        // Configurar URI de redirecció dinàmicament
         self::$GOOGLE_REDIRECT_URI = BASE_URL . '/app/controller/oauth_callback.php';
-        self::$APPLE_REDIRECT_URI = BASE_URL . '/app/controller/oauth_callback.php';
     }
 
     /**
@@ -114,31 +98,5 @@ class OAuthConfig
         ];
 
         return 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params);
-    }
-
-    /**
-     * Obtenir URL d'autenticació d'Apple
-     * @param string $state Token de seguretat per evitar CSRF
-     * @param string $context 'login' o 'signup' per indicar origen
-     * @return string URL de redirecció a Apple
-     */ 
-    public static function obtenirUrlAuthApple(string $state = '', string $context = 'login'): string
-    {
-        if (!$state) {
-            $state = bin2hex(random_bytes(16));
-            $_SESSION['oauth_state'] = $state;
-        }
-
-        $params = [
-            'client_id' => self::$APPLE_CLIENT_ID,
-            'redirect_uri' => self::$APPLE_REDIRECT_URI,
-            'response_type' => 'code',
-            'response_mode' => 'form_post',
-            'scope' => 'openid email name',
-            'state' => $state,
-            'context' => $context
-        ];
-
-        return 'https://appleid.apple.com/auth/authorize?' . http_build_query($params);
     }
 }

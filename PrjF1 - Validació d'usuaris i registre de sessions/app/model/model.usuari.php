@@ -348,7 +348,7 @@ class ModelUsers
     }
 
     /* Mètode per obtenir un usuari per provider OAuth i ID
-     * @param string $provider google | apple
+     * @param string $provider google
      * @param string $oauthId ID de la compte OAuth
      * @return array|null Dades de l'usuari o null
      */
@@ -366,7 +366,7 @@ class ModelUsers
      * @param string $nom Nom de l'usuari
      * @param string $cognom Cognom de l'usuari
      * @param string|null $fotoPerfil URL o camí de la foto
-     * @param string $provider google | apple
+     * @param string $provider google
      * @param string $oauthId ID de la compte OAuth
      * @return array|null Dades de l'usuari creat o null si error
      */
@@ -430,7 +430,7 @@ class ModelUsers
 
     /* Mètode per conectar un provider OAuth a un usuari existent
      * @param string $nickname Nickname de l'usuari
-     * @param string $provider google | apple
+     * @param string $provider google
      * @param string $oauthId ID de la compte OAuth
      * @return bool true si s'ha conectat, false si error
      */

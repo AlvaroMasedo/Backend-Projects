@@ -100,18 +100,12 @@
                 <span>o</span>
             </div>
 
-            <!-- Registrar-se amb Google o Apple -->
+            <!-- Registrar-se amb Google -->
             <div class="social-login">
                 <div class="google-btn">
                     <img class="social-img" src="../../uploads/img/googleLogo.ico" alt="Logo de Google">
                     <a href="<?php echo OAuthConfig::obtenirUrlAuthGoogle('', 'signup'); ?>">
                         Registra't amb Google
-                    </a>
-                </div>
-                <div class="apple-btn">
-                    <img class="social-img" src="../../uploads/img/appleLogo.ico" alt="Logo d'Apple">
-                    <a href="<?php echo OAuthConfig::obtenirUrlAuthApple('', 'signup'); ?>">
-                        Registra't amb Apple
                     </a>
                 </div>
             </div>

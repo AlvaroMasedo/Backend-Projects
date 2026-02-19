@@ -1,204 +1,294 @@
 /* Álvaro Masedo Pérez */
-/* Estilos para la página de confirmación OAuth */
+/* Estils per a la pàgina de confirmació OAuth */
 
-:root {
-    --color-success: #28a745;
-    --color-danger: #dc3545;
-    --color-border: #e0e0e0;
-    --color-bg-light: #f0f0f0;
-    --color-text-muted: #666;
-    --font-main: Arial, sans-serif;
+body {
+    background-color: #f7f4f1;
+    margin: 0;
 }
 
-.confirm-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(80vh - 200px);
-    padding: 2rem;
-    animation: fadeIn 0.3s ease-in;
+main {
+    min-height: 72.9vh;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.confirm-content {
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    border-radius: 12px;
-    padding: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--color-border);
-}
-
-.confirm-title {
-    font-size: 1.1rem;
-    margin: 1rem 0 2rem;
-    text-align: center;
-    color: #333;
-    line-height: 1.6;
-    font-weight: 500;
-}
-
-.user-info-box {
-    background: var(--color-bg-light);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 2rem 0;
-    border-left: 4px solid var(--color-success);
-}
-
-.user-info-box p {
-    margin: 0.8rem 0;
-    font-size: 0.95rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.user-info-box strong {
-    color: #333;
-    font-weight: 600;
-    min-width: 100px;
-}
-
-.confirm-form {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin: 2.5rem 0;
-    flex-wrap: wrap;
-}
-
-.btn {
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.95rem;
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+    background-color: #D41616;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
     transition: all 0.3s ease;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    border: 1px solid red;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+img {
+    height: 30px;
+    transition: 0.3s;
+}
+
+img:hover {
+    height: 32px;
+}
+
+h1 {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 40px;
+}
+
+h2 {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 30px;
+}
+
+h3 {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 20px;
+}
+
+@font-face {
+    font-family: "Formula1-Regular";
+    src: url("../fonts/F1/Formula1-Regular_web_0.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Formula1-Bold";
+    src: url("../fonts/F1/Formula1-Bold_web_0.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Formula1-Wide";
+    src: url("../fonts/F1/Formula1-Wide_web_0.ttf") format("truetype");
+}
+
+.separador {
+    border-top: #acacac 1px solid;
+    margin-top: 20px;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 20px;
+}
+
+p {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.confirm-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-title h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.confirm-layout {
+    background-color: #f7f4f1;
+    border: 1px solid #000;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0px 8px 9px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.info-item {
+    padding: 1.5rem;
+    background-color: #fff;
+    border-left: 4px solid #D41616;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    flex: 1;
-    min-width: 200px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.btn-success {
-    background: var(--color-success);
-    color: white;
-}
-
-.btn-success:hover {
-    background: #218838;
-}
-
-.btn-danger {
-    background: var(--color-danger);
-    color: white;
-}
-
-.btn-danger:hover {
-    background: #c82333;
-}
-
-.confirm-footer {
-    margin-top: 2rem;
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    text-align: center;
-    line-height: 1.5;
-}
-
-.confirm-footer .link {
-    color: #007bff;
-    text-decoration: none;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    transition: color 0.3s ease;
+    font-family: 'Formula1-Bold', cursive;
 }
 
-.confirm-footer .link:hover {
-    color: #0056b3;
-    text-decoration: underline;
+.info-value {
+    font-size: 16px;
+    color: #222;
+    font-weight: 500;
+    margin: 0;
+}
+
+.action-box {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
+.action-box p {
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-family: 'Formula1-Bold', cursive;
+}
+
+.action-form {
+    margin-bottom: 1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 800;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0.5rem;
+    border: 2px solid #D41616;
+}
+
+.btn-primary {
+    background-color: #D41616;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: rgb(255, 255, 255);
+    color: #D41616;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #D41616;
+}
+
+.btn-secondary:hover {
+    background-color: #D41616;
+    color: white;
 }
 
 /* Responsive Design */
-@media (max-width: 600px) {
-    .confirm-content {
+@media (max-width: 768px) {
+    .confirm-layout {
         padding: 1.5rem;
-        border-radius: 8px;
     }
 
-    .confirm-title {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
+    h1 {
+        font-size: 32px;
     }
 
-    .user-info-box {
+    h2 {
+        font-size: 24px;
+    }
+
+    .separador {
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+}
+
+@media (max-width: 600px) {
+    .confirm-wrapper {
         padding: 1rem;
-        margin: 1.5rem 0;
     }
 
-    .user-info-box p {
-        flex-direction: column;
-        align-items: flex-start;
+    .confirm-layout {
+        padding: 1.5rem;
+        border-radius: 10px;
     }
 
-    .confirm-form {
-        flex-direction: column;
-        gap: 0.8rem;
-        margin: 1.5rem 0;
+    h1 {
+        font-size: 28px;
     }
 
-    .btn {
-        min-width: 100%;
-        width: 100%;
+    h2 {
+        font-size: 20px;
     }
 
-    .confirm-container {
+    .info-grid {
+        gap: 1rem;
+    }
+
+    .info-item {
         padding: 1rem;
-        min-height: calc(70vh - 200px);
+    }
+
+    .separador {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 10px 20px;
+        font-size: 12px;
+        margin: 0.5rem 0;
+        width: 90%;
     }
 }
 
 @media (max-width: 400px) {
-    .confirm-content {
+    .confirm-wrapper {
+        padding: 0.5rem;
+    }
+
+    .confirm-layout {
         padding: 1rem;
     }
 
-    .confirm-title {
-        font-size: 0.95rem;
+    h1 {
+        font-size: 24px;
     }
 
-    .btn {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.85rem;
+    h2 {
+        font-size: 18px;
     }
 
-    .user-info-box p {
-        font-size: 0.9rem;
+    .info-item {
+        padding: 0.8rem;
+    }
+
+    .info-label {
+        font-size: 11px;
+    }
+
+    .info-value {
+        font-size: 14px;
+    }
+
+    .separador {
+        margin-left: 5%;
+        margin-right: 5%;
     }
 }
+
