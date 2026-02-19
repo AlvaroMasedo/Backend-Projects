@@ -1,0 +1,204 @@
+/* Álvaro Masedo Pérez */
+/* Estilos para la página de confirmación OAuth */
+
+:root {
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-border: #e0e0e0;
+    --color-bg-light: #f0f0f0;
+    --color-text-muted: #666;
+    --font-main: Arial, sans-serif;
+}
+
+.confirm-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(80vh - 200px);
+    padding: 2rem;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.confirm-content {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
+}
+
+.confirm-title {
+    font-size: 1.1rem;
+    margin: 1rem 0 2rem;
+    text-align: center;
+    color: #333;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.user-info-box {
+    background: var(--color-bg-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    border-left: 4px solid var(--color-success);
+}
+
+.user-info-box p {
+    margin: 0.8rem 0;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info-box strong {
+    color: #333;
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.confirm-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2.5rem 0;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+    background: var(--color-success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.confirm-footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    line-height: 1.5;
+}
+
+.confirm-footer .link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.confirm-footer .link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .confirm-content {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .confirm-title {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .user-info-box {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .user-info-box p {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .confirm-form {
+        flex-direction: column;
+        gap: 0.8rem;
+        margin: 1.5rem 0;
+    }
+
+    .btn {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .confirm-container {
+        padding: 1rem;
+        min-height: calc(70vh - 200px);
+    }
+}
+
+@media (max-width: 400px) {
+    .confirm-content {
+        padding: 1rem;
+    }
+
+    .confirm-title {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.85rem;
+    }
+
+    .user-info-box p {
+        font-size: 0.9rem;
+    }
+}

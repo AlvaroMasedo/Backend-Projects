@@ -118,7 +118,8 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     }
     
     // SEMPRE usar foto predeterminada de la web, NUNCA la de Google/Apple
-    $foto = 'uploads/img/fotos_perfil/foto_predeterminada/null.png';
+    // Guardar NULL perà que les vistes mostrin la imatge predeterminada
+    $foto = null;
     
     $provider = $usuariOAuth['provider'];
     $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? '';
