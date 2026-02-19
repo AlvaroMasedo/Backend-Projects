@@ -84,18 +84,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         // === AUTENTICACIÓ ===
         $mail->Username = $emailAddress;
         $mail->Password = $emailPassword;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-        $mail->SMTPDebug = 0; // Canvia a 2 si necessites informació de debugging
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar TLS (més segur que 'tls' string)
+        $mail->Port = 587; // Port per a TLS
+        $mail->SMTPDebug = 0; // 0 = errors només, 2 = debug complet (per logs)
+        $mail->Debugoutput = 'error_log'; // Enviar output de debug al log de PHP
         
         // === CONFIGURACIÓ DEL MISSATGE ===
         $mail->setFrom('noreply@f1articles.com', 'F1 Articles');
         $mail->addAddress($usuari['email'], $usuari['nom']); // Envia al email de l'usuari registrat
         $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8'; // Importat per a accents i caràcters especials
         $mail->Subject = 'Codi de verificació - Vincular Google';
         
         // Crea el cos del mail amb el codi destacat
-        $mail->Body = "<h2>Vincular Compte amb Google</h2><p>Per vincular la teva compte amb Google, necessitem verificar la teva identitat.</p><p>El teu codi: <strong style='font-size:24px;'>" . $code . "</strong></p><p>Expira en 15 minuts.</p>";
+        $mail->Body = "<h2 style='color: #D41616; font-family: Arial, sans-serif;'>Vincular Compte amb Google</h2>
+                       <p style='font-family: Arial, sans-serif;'>Per vincular la teva compte amb Google, necessitem verificar la teva identitat.</p>
+                       <p style='font-family: Arial, sans-serif;'>El teu codi:</p>
+                       <p style='font-size: 32px; font-weight: bold; color: #D41616; font-family: Arial, sans-serif; letter-spacing: 5px;'>" . htmlspecialchars($code) . "</p>
+                       <p style='color: #666; font-family: Arial, sans-serif;'><em>Expira en 15 minuts.</em></p>";
+        
+        // Versió text per a clients que no suporten HTML
+        $mail->AltBody = "Codi de verificació: " . $code . "\nExpira en 15 minuts.";
         
         // === ENVIÓ DE L'EMAIL ===
         $mail->send();
@@ -103,8 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         // Si l'email s'envia correctament, redirigeix al step 2 per introduir el codi
         header('Location: ../view/vista.verificarEmailVincular.php?step=2');
     } catch (Exception $e) {
-        // Si hi ha error en l'envío, registra-ho al log d'errors i redirigeix amb missatge d'error
-        error_log("Email error: " . $e->getMessage());
+        // Si hi ha error en l'envío, registra-ho al log d'errors amb detalls
+        error_log("===== EMAIL ERROR EN VERIFICAREMAILVINCULAR =====");
+        error_log("Exception: " . $e->getMessage());
+        if (isset($mail)) {
+            error_log("PHPMailer ErrorInfo: " . $mail->ErrorInfo);
+        }
+        error_log("======================================");
         header('Location: ../view/vista.perfil.php?error=email_error');
     }
     exit;

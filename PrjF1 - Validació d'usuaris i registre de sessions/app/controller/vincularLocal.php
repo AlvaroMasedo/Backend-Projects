@@ -85,18 +85,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         // === AUTENTICACIÓ SMTP ===
         $mail->Username = $emailAddress;
         $mail->Password = $emailPassword;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-        $mail->SMTPDebug = 0; // Canvia a 2 per debugging detallat
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar TLS (més segur)
+        $mail->Port = 587; // Port per a TLS
+        $mail->SMTPDebug = 0; // 0 = errors només
+        $mail->Debugoutput = 'error_log'; // Enviar debug al log de PHP
         
         // === COMPOSICIÓ DEL MISSATGE ===
         $mail->setFrom('noreply@f1articles.com', 'F1 Articles');
         $mail->addAddress($usuari['email'], $usuari['nom']); // Envia al email registrat de l'usuari
         $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8'; // Per a caràcters especials
         $mail->Subject = 'Codi de verificació - Vincular Compte Local';
         
-        // Crea el cos del email amb el codi destacat
-        $mail->Body = "<h2>Vincular Compte Local</h2><p>Per establir una contrasenya local per a la teva compte, necessitem verificar-te.</p><p>El teu codi: <strong style='font-size:24px;'>" . htmlspecialchars($code) . "</strong></p><p>Expira en 15 minuts.</p>";
+        // Crea el cos del email amb el codi destacat i format millorat
+        $mail->Body = "<h2 style='color: #D41616; font-family: Arial, sans-serif;'>Vincular Compte Local</h2>
+                       <p style='font-family: Arial, sans-serif;'>Per establir una contrasenya local per a la teva compte, necessitem verificar-te.</p>
+                       <p style='font-family: Arial, sans-serif;'>El teu codi:</p>
+                       <p style='font-size: 32px; font-weight: bold; color: #D41616; font-family: Arial, sans-serif; letter-spacing: 5px;'>" . htmlspecialchars($code) . "</p>
+                       <p style='color: #666; font-family: Arial, sans-serif;'><em>Expira en 15 minuts.</em></p>";
+        
+        // Versió text simple
+        $mail->AltBody = "Codi de verificació: " . $code . "\nExpira en 15 minuts.";
         
         // === ENVIÓ ===
         $mail->send();
@@ -104,8 +113,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         // Si l'email s'envia correctament, passa al step 2
         header('Location: ../view/vista.vincularLocal.php?step=2');
     } catch (Exception $e) {
-        // Si hi ha error, registra'l i redirigeix amb missatge d'error
-        error_log("Email error: " . $e->getMessage());
+        // Si hi ha error, registra'l amb més detalls
+        error_log("===== EMAIL ERROR EN VINCULARLOCAL =====");
+        error_log("Exception: " . $e->getMessage());
+        if (isset($mail)) {
+            error_log("PHPMailer ErrorInfo: " . $mail->ErrorInfo);
+        }
+        error_log("======================================");
         header('Location: ../view/vista.vincularLocal.php?step=1&error=email_error');
     }
     exit;

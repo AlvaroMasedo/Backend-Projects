@@ -39,7 +39,7 @@ $errorMessages = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../resources/css/style.comprobarInfo.css">
+    <link rel="stylesheet" href="../../resources/css/style.verificarEmailVincular.css">
     <script src="https://c.webfontfree.com/c.js?f=Formula1-Display-Bold" type="text/javascript"></script>
     <title>Verificar Email - Vincular Google</title>
 </head>
@@ -99,7 +99,7 @@ $errorMessages = [
                     <!-- Si el codi és incorrecte o ha expirat, mostra el missatge d'error -->
                     <?php if ($error && isset($errorMessages[$error])): ?>
                         <div class="error-message">
-                            <?php echo htmlspecialchars($errorMessages[$error]); ?>
+                            ⚠️ <?php echo htmlspecialchars($errorMessages[$error]); ?>
                         </div>
                     <?php endif; ?>
                     

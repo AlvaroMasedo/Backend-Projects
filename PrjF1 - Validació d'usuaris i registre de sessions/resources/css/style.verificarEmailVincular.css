@@ -1,0 +1,283 @@
+:root {
+    --color-primary: #D41616;
+    --color-primary-hover: #8b0f0f;
+    --color-background: #f7f4f1;
+    --color-border: #acacac;
+    --color-text: #000;
+    --color-text-light: #666;
+    --color-error: #d41616;
+    --color-error-bg: #ffe6e6;
+    --color-success: #00a800;
+    --color-success-bg: #e6ffe6;
+    --color-white: #fff;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* === ESTILS GLOBALS === */
+body {
+    background-color: var(--color-background);
+    margin: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+main {
+    min-height: 72.9vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 0;
+}
+
+/* === FONTS === */
+@font-face {
+    font-family: "Formula1-Bold";
+    src: url("../fonts/F1/Formula1-Bold_web_0.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Formula1-Regular";
+    src: url("../fonts/F1/Formula1-Regular_web_0.ttf") format("truetype");
+}
+
+/* === TITOLS === */
+h1 {
+    text-align: center;
+    color: var(--color-text);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 40px;
+    margin: 0 0 1rem 0;
+}
+
+h2 {
+    text-align: center;
+    color: var(--color-text);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 28px;
+    margin: 0 0 1.5rem 0;
+}
+
+p {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: var(--color-text);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.main-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* === FORMULARI === */
+.form-container {
+    background-color: var(--color-white);
+    border: 2px solid var(--color-text);
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0px 8px 9px 10px var(--color-shadow);
+    margin-top: 1rem;
+}
+
+.form-container h2 {
+    margin-top: 0;
+}
+
+.form-container p {
+    text-align: center;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* === LABELS === */
+.form-container label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 1.5rem 0 0.5rem 0;
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* === INPUT FIELDS === */
+.form-container input[type="email"],
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    color: var(--color-text);
+    background-color: #fafafa;
+}
+
+.form-container input[type="email"]:disabled,
+.form-container input[type="text"]:disabled {
+    background-color: #e8e8e8;
+    cursor: not-allowed;
+    color: var(--color-text-light);
+}
+
+.form-container input[type="email"]:focus,
+.form-container input[type="text"]:focus,
+.form-container input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(212, 22, 22, 0.1);
+    background-color: var(--color-white);
+}
+
+/* === PLACEHOLDER === */
+.form-container input::placeholder {
+    color: #999;
+}
+
+/* === MISSATGES D'ERROR === */
+.error-message {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--color-error);
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* === MISSATGES DE ÈXIT === */
+.success-message {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--color-success);
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* === BOTONS PRINCIPALS === */
+.form-container input[type="submit"],
+.btn-enviar,
+.btn-reenviar {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 800;
+    border: 2px solid var(--color-primary);
+    border-radius: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.form-container input[type="submit"]:hover,
+.btn-enviar:hover,
+.btn-reenviar:hover {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+/* === BOTÓ REENVIAMENT === */
+.btn-reenviar {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-reenviar:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* === BOTÓ CANCELAR === */
+.link-cancelar {
+    display: block;
+    text-align: center;
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+}
+
+.link-cancelar:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+}
+
+/* === SEPARADOR === */
+.separador {
+    border-top: 1px solid var(--color-border);
+    margin: 20px 0;
+}
+
+/* === IMGS === */
+img {
+    height: 30px;
+    transition: 0.3s;
+}
+
+img:hover {
+    height: 32px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .main-container {
+        padding: 0 0.5rem;
+    }
+}
+
+/* === ACCESSIBILITY === */
+.form-container input:focus,
+.form-container label:focus {
+    outline: 2px solid var(--color-primary);
+}
+
+/* === PRINT === */
+@media print {
+    body {
+        background-color: var(--color-white);
+    }
+
+    main {
+        min-height: auto;
+    }
+
+    .form-container {
+        box-shadow: none;
+        border: 1px solid var(--color-border);
+    }
+}
