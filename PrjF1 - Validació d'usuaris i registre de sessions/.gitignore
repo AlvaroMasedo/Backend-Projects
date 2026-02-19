@@ -1,0 +1,27 @@
+# Arxius de credencials i configuració sensible
+.env
+
+# Arxius de sessió PHP
+*.session
+
+# Logs
+*.log
+error_log
+
+# Directoris de sistema
+.DS_Store
+Thumbs.db
+
+# Arxius temporals
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Claus privades OAuth
+lib/apple_private_key.p8
+
+# Còpies de seguretat
+*.bak
+*.backup

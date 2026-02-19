@@ -1,0 +1,148 @@
+header ul {
+  background-color: #333333;
+  list-style: none;
+  margin: 0;
+  display: flex;
+  height: 80px;
+  justify-content: flex-start;  
+  align-items: center;
+  padding: 0 2%;
+  gap: 20px;                   
+}
+
+header ul li.push-right {
+  margin-left: auto;
+}
+
+.logo-img {
+  height: 45px;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.logo-img:hover {
+  cursor: pointer;
+  height: 47px;
+}
+
+.button-usuari {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  font-weight: 800;
+  background-color: #D41616;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  transition: 0.3s;
+  border: 1px solid #ee1f1f;
+}
+
+.button-usuari:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+.menu-usuari {
+  position: relative;
+}
+
+.desplegable-usuari {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;           
+  left: auto;
+  margin: 0;          
+  padding: 0;        
+  list-style: none;
+  background-color: #f7f4f1;
+  min-width: 160px;
+  height: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  overflow: hidden;   
+}
+
+.desplegable-usuari li {
+  margin: 0;          
+  padding: 0;        
+}
+
+.desplegable-usuari li a {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;       
+  padding: 10px 16px;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #000;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular',
+               'Lucida Grande', 'Lucida Sans Unicode',
+               Geneva, Verdana, sans-serif;
+}
+
+.desplegable-usuari li a:hover {
+  background-color: #D41616;
+  color: #fff;
+}
+
+.menu-usuari:hover .desplegable-usuari {
+  display: block;
+}
+
+.search-bar {
+  flex-grow: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 2px solid #D41616;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: white;
+  color: #333;
+}
+
+.search-input:focus {
+  border-color: #ff3333;
+  box-shadow: 0 0 5px rgba(212, 22, 22, 0.3);
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #D41616;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.search-btn:hover {
+  background-color: #ff3333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-btn:active {
+  transform: translateY(0);
+}

@@ -1,0 +1,261 @@
+body {
+    background-image: url("../../uploads/img/fons/fonsFibraCarbono.webp");
+    margin: 0;
+}
+
+main {
+    min-height: 77vh;
+}
+
+.house-icon {
+    margin: 0;
+    padding-left: 0;
+}
+
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+    background-color: #D41616;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    transition: 0.3s;
+    border: 1px solid red;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+h1 {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 40px;
+}
+
+h2 {
+    text-align: center;
+    color: rgb(34, 34, 34);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 30px;
+}
+
+h3 {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-family: 'Formula1-Bold', cursive;
+    font-size: 20px;
+}
+
+@font-face {
+    font-family: "Formula1-Regular";
+    src: url("../fonts/F1/Formula1-Regular_web_0.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Formula1-Bold";
+    src: url("../fonts/F1/Formula1-Bold_web_0.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Formula1-Wide";
+    src: url("../fonts/F1/Formula1-Wide_web_0.ttf") format("truetype");
+}
+
+.separador {
+    border-top: #acacac 1px solid;
+    margin-top: 0px;
+    margin-left: 39%;
+    margin-right: 39%;
+    margin-bottom: 0px;
+}
+
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.alert {
+    background-color: #f7f4f1;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.alert p {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 1.5rem;
+}
+
+.alert a.link {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 800;
+    color: #D41616;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.alert a.link:hover {
+    text-decoration: underline;
+}
+
+.success {
+    color: green;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 120%;
+}
+
+.error {
+    color: #D41616;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    font-weight: bold;
+    border-left: 4px solid #D41616;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.form-afegir {
+    background-color: #f7f4f1;
+    border-radius: 10px;
+    margin-top: 2rem;
+    margin-left: 25%;
+    margin-bottom: 15px;
+    width: 950px;
+    height: auto;
+    padding: 16px;
+}
+
+.form-afegir label {
+    font-family: 'Formula1-Bold', cursive;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.form-afegir input[type="text"] {
+    height: 60px;
+    width: 930px;
+    padding: 3px 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: inline-block;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.form-afegir input[type="text"]:focus {
+    outline: none;
+    border-color: #3399ff;
+    box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
+}
+
+
+.form-afegir input[type="email"] {
+    height: 40px;
+    width: 580px;
+    padding: 3px 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+.form-afegir textarea {
+    font-size: 17px;
+    height: 120;
+    width: 930px;
+    padding: 3px 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: inline-block;
+    resize: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.form-afegir textarea:focus {
+    outline: none;
+    border-color: #3399ff;
+    box-shadow: 0 0 5px 2px rgba(51, 153, 255, 0.5);
+}
+
+.form-afegir input[type="submit"] {
+    width: 100%;
+    padding: 8px 16px;
+    margin-top: 32px;
+    border: 2px solid #ff3030;
+    border-radius: 5px;
+    display: block;
+    color: #fff;
+    background-color: #D41616;
+    font-weight: 800;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+}
+
+.form-afegir input[type="submit"]:hover {
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+.cancel-button {
+    width: 96.2%;
+    padding: 8px 16px;
+    margin-top: 32px;
+    border: 2px solid #ff3030;
+    border-radius: 5px;
+    display: block;
+    color: #000000;
+    background-color: rgb(255, 255, 255);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.cancel-button:hover {
+    cursor: pointer;
+    background-color: #D41616;
+    font-weight: 800;
+    color: rgb(255, 255, 255);
+}
+
+.requirit{
+	color: #D41616;
+	font-weight: 800;
+	font-size: 20px;
+	display: inline;
+}

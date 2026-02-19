@@ -1,0 +1,32 @@
+# Configuración de sesiones PHP
+# Forzar que les cookies de sesió expirin al tancar el navegador per defecte
+php_value session.cookie_lifetime 0
+php_value session.gc_maxlifetime 2400
+php_value session.use_only_cookies 1
+php_value session.use_strict_mode 1
+php_value session.cookie_httponly 1
+
+# Habilitar mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Detectar si estém en localhost
+    RewriteCond %{HTTP_HOST} ^localhost$ [OR]
+    RewriteCond %{HTTP_HOST} ^127\.0\.0\.1$
+    RewriteRule .* - [E=IS_LOCAL:1]
+    
+    # No reescriure archius i directoris existents
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+</IfModule>
+
+# Error 404 personalitzat
+# En localhost
+<If "%{ENV:IS_LOCAL} == '1'">
+    ErrorDocument 404 /Pr%C3%A0ctiques/Backend/PrjF1%20-%20Validaci%C3%B3%20d%27usuaris%20i%20registre%20de%20sessions/error404.php
+</If>
+
+# (Infinity)
+<If "%{ENV:IS_LOCAL} != '1'">
+    ErrorDocument 404 /error404.php
+</If>
