@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-//Älvaro Masedo Pérez
+//Álvaro Masedo Pérez
 // Auth helpers centralitzats
 
 // No iniciem sessió aquí: s'assumeix que `includes/session_check.php` ho fa

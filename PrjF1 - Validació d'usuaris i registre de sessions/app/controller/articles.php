@@ -52,7 +52,7 @@ if ($autor !== null && !usuari_es_admin()) {
 	$autorFilter = $autor;
 }
 
-// Comptar articles (filtrando per autor si no es admin)
+// Comptar articles (filtrant per autor si no és admin)
 $totalArticles = $pdoArticles->contarArticles($autorFilter);
 
 // Obtenir paràmetre de búsqueda si existeix

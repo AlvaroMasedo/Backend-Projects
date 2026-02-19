@@ -4,12 +4,12 @@
 $sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] == '1') || (isset($_COOKIE['session_expired']) && $_COOKIE['session_expired'] == '1');
 
 if ($sessionExpired && isset($_COOKIE['session_expired'])) {
-    setcookie('session_expired', '', time() - 3600, '/'); // Borrar cookie tras mostrar mensaje
+    setcookie('session_expired', '', time() - 3600, '/'); // Esborrar cookie després de mostrar el missatge
 }
 
-// Inicializar contadorIntents si no existe (por si se accede directamente a la vista)
+// Inicialitzar contadorIntents si no existeix (per si s'accedeix directament a la vista)
 if (!isset($contadorIntents)) {
-    // Usar funció centralitzada per garantir configuració correcta
+    // Fer ús d'una funció centralitzada per garantir configuració correcta
     require_once __DIR__ . '/../../includes/session_check.php';
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 }

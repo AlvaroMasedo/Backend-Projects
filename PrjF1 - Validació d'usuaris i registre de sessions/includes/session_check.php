@@ -1,5 +1,5 @@
 <?php
-//Alvaro Masedo Pérez
+//Álvaro Masedo Pérez
 // session_check.php
 
 require_once __DIR__ . '/../config/basepath.php';
@@ -35,18 +35,18 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
     $remember_me = $_SESSION['usuari'] ? ($_SESSION['remember_me'] ?? 0) : -1;
     
     if ($remember_me == 0) {
-        // Mantener un control estricto: la sesión actual debe ser reciente
-        // Si há passat més d'1 minut sense peticions i NO té remember-me, cerrar
-        // (Detecta navegador restaurat tras reinicio)
+        // Mantenir un control estricte: la sessió actual ha de ser recent
+        // Si ha passat més d'1 minut sense peticions i NO té remember-me, tancar
+        // (Detecta navegador restaurat després d'un reinici)
         if (isset($_SESSION['_last_request_time'])) {
             $time_since_last = time() - $_SESSION['_last_request_time'];
             if ($time_since_last > 60) {
-                // Más de 60 segundos desde última petición - probablemente navegador se reinició
+                // Més de 60 segons sense peticions - probablement navegador s'ha reiniciat
                 error_log("ALERTA: Sessió sense remember-me inactiva >60s. Posible reinicio de navegador. Tancant.");
                 $_SESSION['must_logout'] = true;
             }
         }
-        // Actualizar timestamp de última petición
+        // Actualitzar timestamp de l'última petició
         $_SESSION['_last_request_time'] = time();
     }
 }

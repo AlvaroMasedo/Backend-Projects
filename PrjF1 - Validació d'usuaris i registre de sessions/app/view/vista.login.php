@@ -4,7 +4,7 @@
 $sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] == '1') || (isset($_COOKIE['session_expired']) && $_COOKIE['session_expired'] == '1');
 
 if ($sessionExpired && isset($_COOKIE['session_expired'])) {
-    setcookie('session_expired', '', time() - 3600, '/'); // Borrar cookie després de mostrar missatge
+    setcookie('session_expired', '', time() - 3600, '/'); // Esborrar cookie després de mostrar el missatge
 }
 
 // SEMPRE requerir oauth_config per a la vista

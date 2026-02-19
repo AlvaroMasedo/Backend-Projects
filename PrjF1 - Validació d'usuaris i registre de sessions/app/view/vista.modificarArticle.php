@@ -4,7 +4,7 @@
 // Verificar si la sessió ha expirat mitjançant paràmetre GET o cookie
 $sessionExpired = (isset($_GET['session_expired']) && $_GET['session_expired'] == '1') || (isset($_COOKIE['session_expired']) && $_COOKIE['session_expired'] == '1');
 if ($sessionExpired && isset($_COOKIE['session_expired'])) {
-    setcookie('session_expired', '', time() - 3600, '/'); //Eliminar cookie després de mostrar missatge
+    setcookie('session_expired', '', time() - 3600, '/'); //Esborrar cookie després de mostrar el missatge
 }
 // Ara incloure session_check.php
 require_once __DIR__ . '/../../includes/session_check.php';

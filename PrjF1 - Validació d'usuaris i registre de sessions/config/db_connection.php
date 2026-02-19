@@ -2,7 +2,7 @@
 declare(strict_types=1);
 //Álvaro Masedo Pérez
 
-//Conexió a la base de dades amb PDO
+//Connexió a la base de dades amb PDO
 
 //Dades de connexió (local vs hosting)
 $isLocal = in_array($_SERVER['HTTP_HOST'] ?? 'localhost', ['localhost', '127.0.0.1'], true);

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-//Alvaro Masedo Pérez
+//Álvaro Masedo Pérez
 
 require __DIR__ . '/../../config/db_connection.php';
 require __DIR__ . '/../model/model.usuari.php';

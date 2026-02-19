@@ -11,7 +11,7 @@ $modelUsuaris = new ModelUsers($conn);
 $code = $_GET['code'] ?? $_POST['code'] ?? '';
 $id_token = $_GET['id_token'] ?? $_POST['id_token'] ?? '';
 $state = $_GET['state'] ?? $_POST['state'] ?? '';
-$context = $_GET['context'] ?? $_POST['context'] ?? 'login'; // Detectar si viene de login o signup
+$context = $_GET['context'] ?? $_POST['context'] ?? 'login'; // Detectar si vindria de login o signup
 
 // DEBUG: Log per verificar state
 error_log("OAuth Callback - State rebut: " . $state);
@@ -41,7 +41,7 @@ if (isset($_SESSION['oauth_state']) && $_SESSION['oauth_state'] === $state) {
 $usuariOAuth = null;
 
 // ============================================================================
-// GOOGLE OAUTH - Intenta si hi ha code y no hi ha id_token (que es de Apple)
+// GOOGLE OAUTH - Intenta si hi ha code i no hi ha id_token (que es de Apple)
 // ============================================================================
 if ($code && !$id_token) {
     $tokenUrl = 'https://oauth2.googleapis.com/token';
