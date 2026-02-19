@@ -80,34 +80,64 @@ require_once __DIR__ . '/../../includes/session_check.php';
             $teOAuth = !empty($usuariComplet['oauth_provider']) && !empty($usuariComplet['oauth_id']);
             ?>
 
-            <!-- Banner de vinculació si no està completament vinculat -->
+            <!-- 
+                BANNER DE VINCULACIÓ DE COMPTES
+                
+                Mostra un missatge diferent segons l'estat de vinculació de l'usuari:
+                - Si té contrasenya local però NO OAuth: Ofereix vinclar Google
+                - Si té OAuth però NO contrasenya local: Ofereix establir contrasenya
+                - Si té ambdues: No mostra res (compte completament vinculat)
+            -->
             <?php if (($teContrasenya && !$teOAuth) || (!$teContrasenya && $teOAuth)): ?>
+                
+                <!-- CASE 1: COMPTE LOCAL SEM OAUTH -->
+                <!-- Usuari que es va registrar normalment amb contrasenya i email -->
+                <!-- Li oferim vinclar Google per a facilitat d'accés -->
                 <?php if ($teContrasenya && !$teOAuth): ?>
-                    <!-- Compte normal sense OAuth -->
                     <div class="vincular-banner">
                         <div class="vincular-banner-content">
                             <div class="vincular-banner-text">
                                 <h2>Vincula el teu compte amb Google</h2>
                                 <p>Inicia sessió més ràpidament amb una sola clicada</p>
                             </div>
-                            <a href="<?php 
-                                require_once __DIR__ . '/../../lib/oauth_config.php';
-                                OAuthConfig::inicialitzar();
-                                echo OAuthConfig::obtenirUrlAuthGoogle('', 'vincular');
-                            ?>" class="vincular-banner-btn">
+                            <!-- 
+                                BOTÓ VINCULAR GOOGLE
+                                
+                                Fluxe:
+                                1. Clica -> Va a verificarEmailVincular.php (step 1)
+                                2. Solicita enviar codi al email
+                                3. Verifica-ho amb el codi rebut (step 2)
+                                4. Es redirigeix a Google OAuth amb context='vincular' en sessió
+                                5. Retorna a oauth_callback.php que valida email_verified_for_oauth
+                                6. Vincula provider+oauth_id a la compte local
+                            -->
+                            <a href="vista.verificarEmailVincular.php" class="vincular-banner-btn">
                                 <img src="../../uploads/img/googleLogo.ico" alt="Google" class="vincular-logo">
                                 Vincular amb Google
                             </a>
                         </div>
                     </div>
+                
+                <!-- CASE 2: COMPTE OAUTH SENSE CONTRASENYA LOCAL -->
+                <!-- Usuari que es va registrar amb Google OAuth i no té contrasenya local -->
+                <!-- Li oferim establir una contrasenya per poder iniciar sessió sense Google -->
                 <?php elseif (!$teContrasenya && $teOAuth): ?>
-                    <!-- Compte OAuth sense contrasenya -->
                     <div class="vincular-banner">
                         <div class="vincular-banner-content">
                             <div class="vincular-banner-text">
                                 <h2>Estableix una contrasenya</h2>
                                 <p>Inicia sessió sense dependre de Google</p>
                             </div>
+                            <!-- 
+                                BOTÓ ESTABLECER CONTRASENYA LOCAL
+                                
+                                Fluxe:
+                                1. Clica -> Va a vista.vincularLocal.php (step 1)
+                                2. Es solicita enviar codi al email
+                                3. Verifica-ho amb el codi rebut i estableix contrasenya (step 2)
+                                4. La contrasenya s'emmagatzema encriptada amb bcrypt
+                                5. Ja pot iniciar sessió amb contrasenya o Google
+                            -->
                             <a href="vista.vincularLocal.php" class="vincular-banner-btn">
                                 Vincular Compte Local
                             </a>

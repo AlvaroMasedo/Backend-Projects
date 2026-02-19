@@ -71,7 +71,7 @@ class OAuthConfig
     /**
      * Obtenir URL d'autenticació de Google
      * @param string $state Token de seguretat per evitar CSRF
-     * @param string $context 'login' o 'signup' per indicar origen
+     * @param string $context 'login', 'signup', o 'vincular' per indicar origen
      * @return string URL de redirecció a Google
      */
     public static function obtenirUrlAuthGoogle(string $state = '', string $context = 'login'): string
@@ -86,6 +86,9 @@ class OAuthConfig
             $_SESSION['oauth_state'] = $state;
             error_log("OAuth - State generat: " . $state . " | Session ID: " . session_id());
         }
+        
+        // Guardar context en sessió (Google no devuelve paràmetres custom)
+        $_SESSION['oauth_context'] = $context;
 
         $params = [
             'client_id' => self::$GOOGLE_CLIENT_ID,
@@ -93,8 +96,7 @@ class OAuthConfig
             'response_type' => 'code',
             'scope' => 'openid email profile',
             'state' => $state,
-            'access_type' => 'offline',
-            'context' => $context
+            'access_type' => 'offline'
         ];
 
         return 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params);

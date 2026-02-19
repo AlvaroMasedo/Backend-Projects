@@ -1,47 +1,71 @@
 <?php
+/**
+ * Controlador: OAuth Callback - Google OAuth
+ * 
+ * Gestiona la resposta de Google OAuth. Es crida quan Google redirigeix
+ * de tornada a l'aplicació després que l'usuari s'autentique amb Google.
+ * 
+ * Fluxes supportats:
+ * 1. login: Usuari normal iniciant sessió amb Google
+ * 2. signup: Usuari nou registrant-se amb Google
+ * 3. vincular: Usuari existent (amb contrasenya) vinculant Google OAuth
+ * 
+ * @author Álvaro Masedo Pérez
+ * @version 1.0
+ */
 declare(strict_types=1);
 
+// === INCLUDES ===
 require_once __DIR__ . '/../../config/db_connection.php';
 require_once __DIR__ . '/../../includes/session_check.php';
 require_once __DIR__ . '/../model/model.usuari.php';
 require_once __DIR__ . '/../../lib/oauth_config.php';
-OAuthConfig::inicialitzar();
 
+// === INICIALITZACIÓ ===
+OAuthConfig::inicialitzar();
 $modelUsuaris = new ModelUsers($conn);
+
+// === RECOLLIR PARÀMETRES ===
+// Obté el codi d'autorització de Google i l'estat (CSRF protection)
 $code = $_GET['code'] ?? $_POST['code'] ?? '';
 $state = $_GET['state'] ?? $_POST['state'] ?? '';
-$context = $_GET['context'] ?? $_POST['context'] ?? 'login'; // Detectar si vindria de login o signup
 
-// DEBUG: Log per verificar state
+// === OBTENCIÓ DE CONTEXT ===
+// El context pot ser:
+// - 'login': Iniciar sessió normal
+// - 'signup': Crear compte nou
+// - 'vincular': Vincular a compte existent (llegit des de SESSION, sent per verificarEmailVincular.php)
+$context = $_SESSION['oauth_context'] ?? 'login';
+
+// === DEBUGGING ===
+// Logs per verificar que els paràmetres arriben correctament
 error_log("OAuth Callback - State rebut: " . $state);
 error_log("OAuth Callback - State a la sessió: " . ($_SESSION['oauth_state'] ?? 'NO EXISTEIX'));
 error_log("OAuth Callback - Session ID: " . session_id());
 error_log("OAuth Callback - Context: " . $context);
 
-// DEBUG: Log per verificar state
-error_log("OAuth Callback - State rebut: " . $state);
-error_log("OAuth Callback - State a la sessió: " . ($_SESSION['oauth_state'] ?? 'NO EXISTEIX'));
-error_log("OAuth Callback - Session ID: " . session_id());
-
-// TEMPORAL: Desactivar validació estricta de state per debugging
-// TODO: Reactivar després de solucionar el problema de persistència de sessió
+// === VALIDACIÓ DE STATE (CSRF PROTECTION) ===
+// State és un token aleatori per prevenir CSRF attacks
+// Si els states coincideixen, significa que Google és de confiança
+// Actualment en mode DEBUG (TODO: Reactivar strict validation després)
 if (isset($_SESSION['oauth_state']) && $_SESSION['oauth_state'] === $state) {
-    // State correcte
+    // State correcte - seguir
     error_log("OAuth Callback - State vàlid");
 } else {
-    // State no coincideix, però continuem (TEMPORAL)
-    error_log("OAuth Callback - ADVERTÈNCIA: State no coincideix, però es continua (mode debug)");
-    // Regenerar state per a la sessió actual
+    // State no coincideix - AVÍS temporal
+    error_log("OAuth Callback - ADVERTÈNCIA: State no coincideix (modo debug, permissiu)");
     if (!empty($state)) {
         $_SESSION['oauth_state'] = $state;
     }
 }
 
+// === INICIALITZACIÓ DE VARIABLES ===
 $usuariOAuth = null;
 
 // ============================================================================
-// GOOGLE OAUTH
+// PROCESSAMENT DE GOOGLE OAUTH
 // ============================================================================
+// Aquesta secció intercanvia el codi per un token d'accés i obté les dades de l'usuari
 if ($code) {
     $tokenUrl = 'https://oauth2.googleapis.com/token';
     $params = [
@@ -80,31 +104,60 @@ if ($code) {
 // ============================================================================
 // PROCESSAR DADES DE USUARI OAUTH
 // ============================================================================
+// Si tenim dades de Google, procedim a processar-les
 if ($usuariOAuth && isset($usuariOAuth['email'])) {
+    // === EXTRAHIR DADES ===
     $email = $usuariOAuth['email'];
     $nom = $usuariOAuth['name'] ?? '';
     $cognom = $usuariOAuth['family_name'] ?? '';
     
-    // Si el cognom està buit o només espais, convertir-lo a cadena buida
+    // === NETEJAR COGNOM ===
+    // Si el cognom és buit o només espais, establir-lo com a cadena buida
     $cognom = trim($cognom);
     if (empty($cognom)) {
         $cognom = '';
     }
     
-    // SEMPRE usar foto predeterminada de la web, NUNCA la de Google
-    // Guardar NULL perà que les vistes mostrin la imatge predeterminada
+    // === FOTO DE PERFIL ===
+    // POLÍTICA: NO usar les fotos de Google. Sempre usar predeterminada.
+    // Raó: Proteger privacitat i perquè les fotos de Google són accessibles de forma pública
+    // així que guardant NULL, les vistes mostraran la imatge estàndard
     $foto = null;
     
-    $provider = $usuariOAuth['provider'];
-    $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? '';
+    // === INFORMACIÓ DE PROVIDER ===
+    $provider = $usuariOAuth['provider']; // Exemple: 'google'
+    $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? ''; // ID únic de Google
 
     // ========================================================================
-    // CONTEXT: VINCULAR - Vincular compte OAuth a compte existent
+    // CONTEXT: VINCULAR - Vincular compte OAuth a compte LOCAL EXISTENT
     // ========================================================================
+    // Es cridada quan un usuari local amb contrasenya vol vincular Google OAuth
+    // Fluxe:
+    // 1. Usuari fa clic a "Vincular amb Google" en perfil
+    // 2. Es mostra formulari de verificació d'email (verificarEmailVincular.php)
+    // 3. L'usuari verifica el seu email rebent codi
+    // 4. Es marca $_SESSION['email_verified_for_oauth'] = true
+    // 5. Es redirigeix a Google OAuth amb context='vincular' en sessió
+    // 6. Google retorna aquí (oauth_callback.php) amb context='vincular'
+    // 7. Es valida que email_verified_for_oauth és true
+    // 8. Es vincula el provider+oauth_id al compte local
     if ($context === 'vincular') {
-        // Verificar que hi ha un usuari connectat
+        // === VALIDACIÓ 1: USUARI AUTENTICAT ===
+        // Verifica que hi ha un usuari en sesió (no pot vincular sense estar loguejat)
         if (!isset($_SESSION['usuari']) || empty($_SESSION['usuari']['nickname'])) {
+            unset($_SESSION['oauth_context']);
             header('Location: ../view/vista.login.php?error=vincular_no_session');
+            exit;
+        }
+        
+        // === VALIDACIÓ 2: EMAIL VERIFICAT ===
+        // Comprova que l'usuari ha completat la verificació d'email
+        // Aquesta bandera és establerta per verificarEmailVincular.php
+        // després de validar el codi correct
+        if (!isset($_SESSION['email_verified_for_oauth']) || $_SESSION['email_verified_for_oauth'] !== true) {
+            unset($_SESSION['oauth_context']);
+            unset($_SESSION['email_verified_for_oauth']);
+            header('Location: ../view/vista.perfil.php?error=email_not_verified');
             exit;
         }
         
@@ -118,6 +171,8 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
             
             if ($teOAuthActual) {
                 // Ja té OAuth vinculat
+                unset($_SESSION['oauth_context']);
+                unset($_SESSION['email_verified_for_oauth']);
                 header('Location: ../view/vista.perfil.php?error=vincular_already_linked');
                 exit;
             }
@@ -128,15 +183,19 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
             // Actualitzar la sessió amb la nova informació
             $_SESSION['oauth_login'] = true;
             
-            // Borrar estat OAuth
+            // Borrar estat OAuth i banderes de verificació
             unset($_SESSION['oauth_state']);
             unset($_SESSION['oauth_pending']);
+            unset($_SESSION['oauth_context']);
+            unset($_SESSION['email_verified_for_oauth']);
             
             // Redirigir al perfil amb missatge d'èxit
             header('Location: ../view/vista.perfil.php?vincular_success=1');
             exit;
         } else {
             // Email no coincideix
+            unset($_SESSION['oauth_context']);
+            unset($_SESSION['email_verified_for_oauth']);
             header('Location: ../view/vista.perfil.php?error=vincular_email_mismatch');
             exit;
         }
@@ -151,6 +210,7 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
         
         if ($context === 'signup') {
             // Si ve del formulari de registre, mostrar error
+            unset($_SESSION['oauth_context']);
             header('Location: ../../app/view/vista.signup.php?error=oauth_account_exists');
             exit;
         }
@@ -193,15 +253,18 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
             // Borrar estat OAuth
             unset($_SESSION['oauth_state']);
             unset($_SESSION['oauth_pending']);
+            unset($_SESSION['oauth_context']);
 
             header('Location: ../../index.php?oauth_login=1');
             exit;
         } else if ($teOAuth && $usuariExistent['oauth_provider'] !== $provider) {
             // Compte ja existeix amb OAuth, però d'altre provider
+            unset($_SESSION['oauth_context']);
             header('Location: ../view/vista.login.php?error=oauth_different_provider');
             exit;
         } else {
             // Compte ja existeix però sense OAuth (registrat normalment)
+            unset($_SESSION['oauth_context']);
             header('Location: ../view/vista.login.php?error=oauth_need_normal_login');
             exit;
         }
@@ -220,5 +283,6 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     }
 }
 
+unset($_SESSION['oauth_context']);
 header('Location: ../view/vista.login.php?error=oauth_invalid');
 exit;
