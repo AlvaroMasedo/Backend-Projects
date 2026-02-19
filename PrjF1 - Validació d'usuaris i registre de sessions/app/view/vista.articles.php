@@ -79,7 +79,7 @@ require_once __DIR__ . '/../controller/articles.php';
                 <!-- Si hi ha sessió, mostrar els articles amb opcions de modificació/eliminació -->
                 <?php if (empty($articles)): ?>
                     <div class="no-articles">
-                        <h3>No hi ha cap article per mostrar</h3>
+                        <h3 class="textWhite">No hi ha cap article per mostrar</h3>
                     </div>
                 <?php endif; ?>
 

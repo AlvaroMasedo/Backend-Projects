@@ -48,6 +48,10 @@ h3 {
     font-size: 20px;
 }
 
+.textWhite {
+    color: white;
+}
+
 @font-face {
     font-family: "Formula1-Regular";
     src: url("../fonts/F1/Formula1-Regular_web_0.ttf") format("truetype");
