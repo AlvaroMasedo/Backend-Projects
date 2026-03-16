@@ -5,8 +5,11 @@ require_once __DIR__ . '/../config/basepath.php';
 
 /**
  * Carregar variables d'entorn des de .env
+ *
+ * @param string $path Ruta del fitxer .env
+ * @param bool $overwrite Si és true, sobreescriu valors ja carregats (útil en desenvolupament)
  */
-function carregarEnv(string $path): void {
+function carregarEnv(string $path, bool $overwrite = true): void {
     if (!file_exists($path)) {
         return;
     }
@@ -23,9 +26,16 @@ function carregarEnv(string $path): void {
             list($key, $value) = explode('=', $line, 2);
             $key = trim($key);
             $value = trim($value);
+            // Suport per valors entre cometes dobles o simples
+            if (
+                (str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+                (str_starts_with($value, "'") && str_ends_with($value, "'"))
+            ) {
+                $value = substr($value, 1, -1);
+            }
             
-            // Establir variable d'entorn si no existeix
-            if (!array_key_exists($key, $_ENV)) {
+            // En desenvolupament volem refrescar els valors si canvia el .env
+            if ($overwrite || !array_key_exists($key, $_ENV)) {
                 $_ENV[$key] = $value;
                 putenv("$key=$value");
             }

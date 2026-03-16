@@ -30,7 +30,9 @@ $error = $_GET['error'] ?? '';
 $errorMessages = [
     'invalid_code' => 'El codi és incorrecte',
     'expired' => 'El codi ha expirat. Demana un de nou',
-    'email_error' => 'Error enviante email. Torna a intentar',
+    'email_error' => 'Error enviant email. Torna a intentar.',
+    'session_email_invalid' => 'No hem trobat un email vàlid a la sessió. Torna a iniciar sessió.',
+    'user_not_found' => 'No hem trobat l\'usuari a la base de dades. Torna a iniciar sessió.',
 ];
 ?>
 <!DOCTYPE html>
@@ -62,6 +64,13 @@ $errorMessages = [
                 <form method="POST" action="../controller/verificarEmailVincular.php" class="form-container">
                     <h2>Verificar Email</h2>
                     <p>Se enviarà un codi de verificació al teu email per confirmar la vinculació amb Google.</p>
+
+                    <!-- === MOSTRAR ERROR SI N'HI HA === -->
+                    <?php if ($error && isset($errorMessages[$error])): ?>
+                        <div class="error-message">
+                            ⚠️ <?php echo htmlspecialchars($errorMessages[$error]); ?>
+                        </div>
+                    <?php endif; ?>
                     
                     <!-- === CAMP EMAIL === -->
                     <!-- Mostra l'email de l'usuari en mode lectura (disabled) -->

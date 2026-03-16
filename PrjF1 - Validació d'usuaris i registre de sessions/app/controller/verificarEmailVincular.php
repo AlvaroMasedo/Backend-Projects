@@ -14,8 +14,26 @@
  */
 declare(strict_types=1);
 
+$earlyLogDir = __DIR__ . '/../../tmp';
+if (!is_dir($earlyLogDir)) {
+    @mkdir($earlyLogDir, 0777, true);
+}
+@file_put_contents(
+    $earlyLogDir . '/smtp_vinculacio.log',
+    json_encode([
+        'time' => date('Y-m-d H:i:s'),
+        'context' => 'verificarEmailVincular.early_request',
+        'data' => [
+            'method' => $_SERVER['REQUEST_METHOD'] ?? null,
+            'has_action' => isset($_POST['action']),
+            'post_keys' => array_keys($_POST ?? []),
+            'session_id_pre' => session_id(),
+        ],
+    ], JSON_UNESCAPED_UNICODE) . PHP_EOL,
+    FILE_APPEND
+);
+
 // === INCLUDES I DEPENDÈNCIES ===
-require_once __DIR__ . '/../../includes/session_check.php';
 require_once __DIR__ . '/../../config/db_connection.php';
 require_once __DIR__ . '/../model/model.usuari.php';
 require_once __DIR__ . '/../../lib/phpmailer/src/Exception.php';
@@ -23,7 +41,35 @@ require_once __DIR__ . '/../../lib/phpmailer/src/PHPMailer.php';
 require_once __DIR__ . '/../../lib/phpmailer/src/SMTP.php';
 require_once __DIR__ . '/../../lib/oauth_config.php';
 
+// Sessió simplificada per evitar tancaments agressius en fluxos de verificació per email
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 use PHPMailer\PHPMailer\PHPMailer;
+
+/**
+ * Escriu traça de diagnòstic SMTP a un fitxer local del projecte.
+ */
+function logSmtpVincularDebug(string $context, array $data = []): void
+{
+    $logDir = __DIR__ . '/../../tmp';
+    if (!is_dir($logDir)) {
+        @mkdir($logDir, 0777, true);
+    }
+
+    $entry = [
+        'time' => date('Y-m-d H:i:s'),
+        'context' => $context,
+        'data' => $data,
+    ];
+
+    @file_put_contents(
+        $logDir . '/smtp_vinculacio.log',
+        json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL,
+        FILE_APPEND
+    );
+}
 
 // === CARREGADOR DE VARIABLES D'ENTORN ===
 // Carrega les credencials de Gmail des del fitxer .env
@@ -32,14 +78,34 @@ carregarEnv(__DIR__ . '/../../.env');
 // === VALIDACIÓ DE SESIÓ ===
 // Verifica que l'usuari està autenticat. Si no, redirigeix al login
 if (!isset($_SESSION['usuari'])) {
+    logSmtpVincularDebug('verificarEmailVincular.no_user_session', [
+        'session_id' => session_id(),
+        'cookie_phpsessid' => $_COOKIE['PHPSESSID'] ?? null,
+    ]);
     header('Location: ../view/vista.login.php');
     exit;
 }
 
 // === INICIALITZACIÓ DE VARIABLES ===
 $modelUsuaris = new ModelUsers($conn);
-$nickname = $_SESSION['usuari']['nickname'];
-$usuari = $modelUsuaris->obtenirPerNickname($nickname);
+$sessionEmail = trim((string) ($_SESSION['usuari']['email'] ?? ''));
+logSmtpVincularDebug('verificarEmailVincular.session', [
+    'session_email' => $sessionEmail,
+    'session_nickname' => $_SESSION['usuari']['nickname'] ?? null,
+]);
+
+if ($sessionEmail === '' || !filter_var($sessionEmail, FILTER_VALIDATE_EMAIL)) {
+    logSmtpVincularDebug('verificarEmailVincular.invalid_session_email', ['session_email' => $sessionEmail]);
+    header('Location: ../view/vista.verificarEmailVincular.php?step=1&error=session_email_invalid');
+    exit;
+}
+
+$usuari = $modelUsuaris->obtenirPerEmail($sessionEmail);
+if (!$usuari) {
+    logSmtpVincularDebug('verificarEmailVincular.user_not_found', ['session_email' => $sessionEmail]);
+    header('Location: ../view/vista.verificarEmailVincular.php?step=1&error=user_not_found');
+    exit;
+}
 
 // ==============================================================================
 // STEP 1: GENERAR I ENVIAR CODI
@@ -59,13 +125,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     // === GUARDAR EL CODI A LA BASE DE DADES ===
     // Actualitza la taula usuaris amb el codi de verificació i la seva data d'expiració
     // Reutilitza les columnes verification_code i verification_expires que ja existeixen
-    $sql = "UPDATE usuaris SET verification_code = :code, verification_expires = :expires WHERE nickname = :nickname";
+    $sql = "UPDATE usuaris SET verification_code = :code, verification_expires = :expires WHERE email = :email";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([':code' => $code, ':expires' => $expires, ':nickname' => $nickname]);
+    $stmt->execute([':code' => $code, ':expires' => $expires, ':email' => $sessionEmail]);
     
     // === ENVIAR EMAIL AMB EL CODI ===
     try {
         $mail = new PHPMailer(true);
+
+        // Mateixa configuració robusta del fluxe de recuperació de contrasenya
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ];
         
         // === CONFIGURACIÓ SMTP ===
         $mail->isSMTP();
@@ -73,27 +148,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         $mail->SMTPAuth = true;
         
         // Obtenir credencials des de les variables d'entorn carregades de .env
-        $emailAddress = getenv('GOOGLE_OAUTH_EMAIL');
-        $emailPassword = getenv('GOOGLE_OAUTH_PASSWORD');
+        // Si la contrasenya d'app ve amb espais (format habitual de Google), els eliminem.
+        $emailAddress = trim((string) (getenv('GOOGLE_OAUTH_EMAIL') ?: ''));
+        $emailPassword = str_replace(' ', '', trim((string) (getenv('GOOGLE_OAUTH_PASSWORD') ?: '')));
         
         // Validar que les credencials existeixen
-        if (!$emailAddress || !$emailPassword) {
+        if ($emailAddress === '' || $emailPassword === '') {
             throw new Exception("Credencials de email no configurades. Verifica el fitxer .env amb GOOGLE_OAUTH_EMAIL i GOOGLE_OAUTH_PASSWORD.");
         }
         
         // === AUTENTICACIÓ ===
         $mail->Username = $emailAddress;
         $mail->Password = $emailPassword;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar TLS (més segur que 'tls' string)
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
+        $mail->SMTPSecure = 'tls';
         $mail->Port = 587; // Port per a TLS
         $mail->SMTPDebug = 0; // 0 = errors només, 2 = debug complet (per logs)
         $mail->Debugoutput = 'error_log'; // Enviar output de debug al log de PHP
         
         // === CONFIGURACIÓ DEL MISSATGE ===
-        $mail->setFrom('noreply@f1articles.com', 'F1 Articles');
-        $mail->addAddress($usuari['email'], $usuari['nom']); // Envia al email de l'usuari registrat
+        // Important: amb Gmail SMTP el remitent ha de ser el compte autenticat (o un alias verificat).
+        $mail->setFrom($emailAddress, 'F1 Articles');
+        $recipientEmail = trim((string) ($usuari['email'] ?? $sessionEmail));
+        if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('Email de destinatari no vàlid per a verificació.');
+        }
+        logSmtpVincularDebug('verificarEmailVincular.send_attempt', [
+            'recipient' => $recipientEmail,
+            'smtp_user' => $emailAddress,
+            'code' => $code,
+        ]);
+        $mail->addAddress($recipientEmail); // Envia al email de l'usuari registrat
         $mail->isHTML(true);
-        $mail->CharSet = 'UTF-8'; // Importat per a accents i caràcters especials
         $mail->Subject = 'Codi de verificació - Vincular Google';
         
         // Crea el cos del mail amb el codi destacat
@@ -108,18 +195,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         
         // === ENVIÓ DE L'EMAIL ===
         $mail->send();
+        logSmtpVincularDebug('verificarEmailVincular.send_success', [
+            'recipient' => $recipientEmail,
+        ]);
         
         // Si l'email s'envia correctament, redirigeix al step 2 per introduir el codi
         header('Location: ../view/vista.verificarEmailVincular.php?step=2');
-    } catch (Exception $e) {
+    } catch (\Throwable $e) {
         // Si hi ha error en l'envío, registra-ho al log d'errors amb detalls
+        logSmtpVincularDebug('verificarEmailVincular.send_error', [
+            'recipient' => $recipientEmail ?? null,
+            'smtp_user' => $emailAddress ?? null,
+            'exception' => $e->getMessage(),
+            'phpmailer_error' => isset($mail) ? $mail->ErrorInfo : null,
+        ]);
         error_log("===== EMAIL ERROR EN VERIFICAREMAILVINCULAR =====");
+        error_log("Recipient Email: " . ($recipientEmail ?? 'NO_DEFINIT'));
+        error_log("SMTP Username: " . ($emailAddress ?? 'NO_CONFIGURAT'));
         error_log("Exception: " . $e->getMessage());
         if (isset($mail)) {
             error_log("PHPMailer ErrorInfo: " . $mail->ErrorInfo);
         }
         error_log("======================================");
-        header('Location: ../view/vista.perfil.php?error=email_error');
+        header('Location: ../view/vista.verificarEmailVincular.php?step=1&error=email_error');
     }
     exit;
 }
@@ -140,9 +238,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     
     // === OBTENIR EL CODI DE LA BASE DE DADES ===
     // Busca el codi guardat per a aquest usuari i la seva data d'expiració
-    $sql = "SELECT verification_code, verification_expires FROM usuaris WHERE nickname = :nickname";
+    $sql = "SELECT verification_code, verification_expires FROM usuaris WHERE email = :email";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([':nickname' => $nickname]);
+    $stmt->execute([':email' => $sessionEmail]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // === VALIDACIÓ DEL CODI ===
@@ -161,9 +259,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     
     // === NETEJAR EL CODI DE LA BASE DE DADES ===
     // Una vegada verificat, esborrem el codi per evitar reutilitzacions
-    $sql = "UPDATE usuaris SET verification_code = NULL, verification_expires = NULL WHERE nickname = :nickname";
+    $sql = "UPDATE usuaris SET verification_code = NULL, verification_expires = NULL WHERE email = :email";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([':nickname' => $nickname]);
+    $stmt->execute([':email' => $sessionEmail]);
     
     // === MARCAR EMAIL COM A VERIFICAT EN LA SESIÓ ===
     // Aquesta bandera indica que l'usuari ha verificat el seu email correctament

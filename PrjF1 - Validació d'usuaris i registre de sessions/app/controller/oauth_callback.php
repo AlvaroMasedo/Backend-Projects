@@ -21,7 +21,6 @@ require_once __DIR__ . '/../../includes/session_check.php';
 require_once __DIR__ . '/../model/model.usuari.php';
 require_once __DIR__ . '/../../lib/oauth_config.php';
 
-// === INICIALITZACIÓ ===
 OAuthConfig::inicialitzar();
 $modelUsuaris = new ModelUsers($conn);
 
@@ -119,9 +118,6 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     }
     
     // === FOTO DE PERFIL ===
-    // POLÍTICA: NO usar les fotos de Google. Sempre usar predeterminada.
-    // Raó: Proteger privacitat i perquè les fotos de Google són accessibles de forma pública
-    // així que guardant NULL, les vistes mostraran la imatge estàndard
     $foto = null;
     
     // === INFORMACIÓ DE PROVIDER ===
@@ -129,18 +125,9 @@ if ($usuariOAuth && isset($usuariOAuth['email'])) {
     $oauthId = $usuariOAuth['id'] ?? $usuariOAuth['sub'] ?? ''; // ID únic de Google
 
     // ========================================================================
-    // CONTEXT: VINCULAR - Vincular compte OAuth a compte LOCAL EXISTENT
+    // VINCULAR - Vincular compte OAuth a compte LOCAL EXISTENT
     // ========================================================================
     // Es cridada quan un usuari local amb contrasenya vol vincular Google OAuth
-    // Fluxe:
-    // 1. Usuari fa clic a "Vincular amb Google" en perfil
-    // 2. Es mostra formulari de verificació d'email (verificarEmailVincular.php)
-    // 3. L'usuari verifica el seu email rebent codi
-    // 4. Es marca $_SESSION['email_verified_for_oauth'] = true
-    // 5. Es redirigeix a Google OAuth amb context='vincular' en sessió
-    // 6. Google retorna aquí (oauth_callback.php) amb context='vincular'
-    // 7. Es valida que email_verified_for_oauth és true
-    // 8. Es vincula el provider+oauth_id al compte local
     if ($context === 'vincular') {
         // === VALIDACIÓ 1: USUARI AUTENTICAT ===
         // Verifica que hi ha un usuari en sesió (no pot vincular sense estar loguejat)

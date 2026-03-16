@@ -56,7 +56,9 @@ if (isset($_GET['error'])) {
         'expired' => 'Codi expirat. Solicita un de nou.',
         'mismatch' => 'Les contrasenyes no coincideixen.',
         'invalid_password' => 'Contrasenya no vàlida. Requereix: 12-20 caràcters, majúscula, minúscula, número, especial',
-        'email_error' => 'Error enviant email. Torna a intentar.'
+        'email_error' => 'Error enviant email. Torna a intentar.',
+        'session_email_invalid' => 'No hem trobat un email vàlid a la sessió. Torna a iniciar sessió.',
+        'user_not_found' => 'No hem trobat l\'usuari a la base de dades. Torna a iniciar sessió.'
     ];
     // Mostra el missatge d'error en una caixa de color vermell
     $error = '<p style="color: #d41616; font-weight: bold; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin: 15px 0;">' . ($msgs[$_GET['error']] ?? 'Error desconegut') . '</p>';

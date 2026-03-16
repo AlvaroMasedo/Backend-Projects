@@ -35,15 +35,16 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
     $remember_me = $_SESSION['usuari'] ? ($_SESSION['remember_me'] ?? 0) : -1;
     
     if ($remember_me == 0) {
-        // Mantenir un control estricte: la sessió actual ha de ser recent
-        // Si ha passat més d'1 minut sense peticions i NO té remember-me, tancar
-        // (Detecta navegador restaurat després d'un reinici)
+        // Registrar l'activitat de l'usuari.
+        // IMPORTANT: no tanquem sessió amb un llindar curt (ex: 60s),
+        // perquè talla fluxos normals com verificacions per email.
+        // La caducitat real ja es controla més avall (45 minuts d'inactivitat).
         if (isset($_SESSION['_last_request_time'])) {
             $time_since_last = time() - $_SESSION['_last_request_time'];
-            if ($time_since_last > 60) {
-                // Més de 60 segons sense peticions - probablement navegador s'ha reiniciat
-                error_log("ALERTA: Sessió sense remember-me inactiva >60s. Posible reinicio de navegador. Tancant.");
-                $_SESSION['must_logout'] = true;
+            if ($time_since_last > 45 * 60) {
+                // Només registrar com a traça informativa.
+                // La lògica de tancament es fa al bloc de caducitat de sessió.
+                error_log("INFO: Sessió sense remember-me inactiva >45 min.");
             }
         }
         // Actualitzar timestamp de l'última petició
@@ -68,14 +69,15 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
             $browser_marker = $_COOKIE['browser_marker'] ?? null;
             $session_marker = $_SESSION['browser_marker'] ?? null;
             
-            // Tokens de navegador han de coincidir exactament
-            if (!$session_browser_token || !$cookie_browser_token || $session_browser_token !== $cookie_browser_token) {
+            // Si tots dos tokens existeixen, han de coincidir exactament.
+            // Si en falta algun, no forcem logout (evitem falsos positius per polítiques del navegador).
+            if ($session_browser_token && $cookie_browser_token && $session_browser_token !== $cookie_browser_token) {
                 error_log("ALERTA: Tokens de navegador NO coincideixen. Tancant sessió.");
                 $_SESSION['must_logout'] = true;
             }
             
-            //  Marcador ha de existir en AMBOS llocs
-            if (!$browser_marker || !$session_marker || $browser_marker !== $session_marker) {
+            // Mateixa idea per al marcador: només validar desigualtat quan existeix en ambdós llocs.
+            if ($browser_marker && $session_marker && $browser_marker !== $session_marker) {
                 error_log("ALERTA: browser_marker NO coincideix o NO existeix. Tancant sessió.");
                 $_SESSION['must_logout'] = true;
             }
