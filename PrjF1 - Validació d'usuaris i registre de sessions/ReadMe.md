@@ -1,35 +1,35 @@
-# 🔐 PrjF1 - Validació d'usuaris i registre de sessions
+#  PrjF1 - Validació d'usuaris i registre de sessions
 
 Projecte educatiu de gestió d'usuaris i articles per a DAW.
 
 ---
 
-## 📋 Qué té el projecte?
+##  Qué té el projecte?
 
-✅ **Sistema d'Autenticació**
+ **Sistema d'Autenticació**
 - Login i registre local (email + contrasenya)
 - Login amb Google (OAuth2)
 - Recuperar contrasenya per email
 - "Recorda'm" (estàs loguejat 30 dies)
 
-✅ **Articles** 
+**Articles** 
 - Crear, editar, eliminar articles
 - Paginació (8 articles per pàgina)
 - Búsqueda per título
 - Permisos: l'autor (o admin) pot editar/eliminar
 
-✅ **Perfil d'Usuari**
+ **Perfil d'Usuari**
 - Ver perfil
 - Editar nickname, nom, cognom
 - Pujar foto de perfil
 
-✅ **Admin**
+ **Admin**
 - Veure llista d'usuaris
 - Eliminar usuaris (elimina articles automàticament)
 
 ---
 
-## 🏗️ Estructura (MVC)
+##  Estructura (MVC)
 
 ```
 app/
@@ -55,10 +55,10 @@ uploads/           → Fotos d'usuaris
 
 **PDO Prepared Statements (no SQL directe):**
 ```php
-// ❌ Insegur - SQL Injection
+// Insegur - SQL Injection
 SELECT * FROM usuaris WHERE email = '$email'
 
-// ✅ Segur
+//  Segur
 SELECT * FROM usuaris WHERE email = :email
 ```
 
@@ -76,7 +76,7 @@ SELECT * FROM usuaris WHERE email = :email
 
 ---
 
-## 🚀 Instal·lació
+##  Instal·lació
 
 ### 1. Base de Dades
 ```
@@ -108,7 +108,7 @@ GOOGLE_OAUTH_PASSWORD=app_password
 
 ---
 
-## 🔑 Fluxes Principals
+##  Fluxes Principals
 
 ### Login Local
 ```
@@ -155,7 +155,7 @@ Eliminar:  Solo si eres autor o admin
 
 ---
 
-## 📊 Schema BD (Simplificat)
+##  Schema BD (Simplificat)
 
 ```sql
 -- Usuaris
@@ -191,30 +191,30 @@ CREATE TABLE articles (
 ## 🛡️ Seguretat
 
 **Actualment (OK per pràctica educativa):**
-- ✅ PDO Prepared Statements (prevé SQL injection)
-- ✅ Sessions segures (HttpOnly + SameSite)
-- ✅ reCAPTCHA (atacs força bruta)
-- ⚠️ SHA-256 per contrasenya (no és ideal)
+-  PDO Prepared Statements (prevé SQL injection)
+-  Sessions segures (HttpOnly + SameSite)
+-  reCAPTCHA (atacs força bruta)
+-  SHA-256 per contrasenya (no és ideal)
 
 **En PRODUCCIÓ hauríem de:**
 ```php
-// ❌ Actual (no és prou)
+//  Actual (no és prou)
 $hash = sha1($contrasenya);
 
-// ✅ Producció (millor)
+//  Producció (millor)
 $hash = password_hash($contrasenya, PASSWORD_ARGON2ID);
 if (password_verify($contrasenya, $hash)) { OK }
 ```
 
 **Altres millores per producció:**
-- ✅ HTTPS obligatori
-- ✅ NO commitar `.env` (include al .gitignore)
-- ✅ XSS prevention: `htmlspecialchars()` al output
-- ✅ Rate limiting en login
+-  HTTPS obligatori
+-  NO commitar `.env` (include al .gitignore)
+-  XSS prevention: `htmlspecialchars()` al output
+-  Rate limiting en login
 
 ---
 
-## 📝 Funcionalitats Noves
+## Funcionalitats Noves
 
 ### 1. Remember-Me (Recorda'm)
 - Checkbox "Recorda'm" al login
@@ -241,7 +241,7 @@ if (password_verify($contrasenya, $hash)) { OK }
 
 ---
 
-## ✅ Probes Ràpides
+## Probes Ràpides
 
 ```
 1. Registrar usuari novo
@@ -256,18 +256,8 @@ if (password_verify($contrasenya, $hash)) { OK }
 
 ---
 
-## 🔄 Milloraments Futures
 
-- [ ] 2FA (Two-Factor Authentication)
-- [ ] Social login (GitHub, Microsoft)
-- [ ] Password strength meter (feedback contrasenya)
-- [ ] Activity logs (auditoría)
-- [ ] TOTP (autenticador app)
-- [ ] API REST per a apps mòbils
-
----
-
-## 📚 Recursos
+## Recursos
 
 - [OWASP](https://owasp.org/)
 - [PHP Password](https://www.php.net/manual/es/function.password-hash.php)
