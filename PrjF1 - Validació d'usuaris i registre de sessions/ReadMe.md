@@ -46,7 +46,7 @@ uploads/           → Fotos d'usuaris
 
 ---
 
-## ⚙️ Per qué aquesta estructura?
+## Per qué aquesta estructura?
 
 **Model separada de Controller:**
 - Reutilitzar queries als models
@@ -102,11 +102,6 @@ GOOGLE_CLIENT_SECRET=vostre_secret
 GOOGLE_OAUTH_EMAIL=vostre_email@gmail.com
 GOOGLE_OAUTH_PASSWORD=app_password
 ```
-
-### 4. Probar
-`http://localhost/[carpeta-projecte]` → Register → Login → Create Article
-
----
 
 ##  Fluxes Principals
 
@@ -185,35 +180,6 @@ CREATE TABLE articles (
     FOREIGN KEY (autor_id) REFERENCES usuaris(id)
 );
 ```
-
----
-
-## 🛡️ Seguretat
-
-**Actualment (OK per pràctica educativa):**
--  PDO Prepared Statements (prevé SQL injection)
--  Sessions segures (HttpOnly + SameSite)
--  reCAPTCHA (atacs força bruta)
--  SHA-256 per contrasenya (no és ideal)
-
-**En PRODUCCIÓ hauríem de:**
-```php
-//  Actual (no és prou)
-$hash = sha1($contrasenya);
-
-//  Producció (millor)
-$hash = password_hash($contrasenya, PASSWORD_ARGON2ID);
-if (password_verify($contrasenya, $hash)) { OK }
-```
-
-**Altres millores per producció:**
--  HTTPS obligatori
--  NO commitar `.env` (include al .gitignore)
--  XSS prevention: `htmlspecialchars()` al output
--  Rate limiting en login
-
----
-
 ## Funcionalitats Noves
 
 ### 1. Remember-Me (Recorda'm)
