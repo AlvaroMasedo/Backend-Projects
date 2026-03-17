@@ -5,6 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/db_connection.php';
 require_once __DIR__ . '/../model/model.usuari.php';
 require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../lib/oauth_config.php';
+carregarEnv(__DIR__ . '/../../.env');
 
 function carregarPHPMailer(): ?string
 {
@@ -135,12 +137,15 @@ if ($action === 'recuperarContrasenya') {
                     $mail->CharSet = 'UTF-8';
                     $mail->Encoding = 'base64';
 
-                    $mail->Username = 'a.masedo@sapalomera.cat';
-                    $mail->Password = 'febx klgw ptfw lfsb';
                     $mail->SMTPSecure = 'tls';
                     $mail->Port = 587;
 
-                    $mail->setFrom('a.masedo@sapalomera.cat', 'F1 Articles');
+                    $emailAddress = trim((string) (getenv('GOOGLE_OAUTH_EMAIL') ?: ''));
+                    $emailPassword = str_replace(' ', '', trim((string) (getenv('GOOGLE_OAUTH_PASSWORD') ?: '')));
+
+                    $mail->Username = $emailAddress;
+                    $mail->Password = $emailPassword;
+                    $mail->setFrom($emailAddress, 'F1 Articles');
                     $mail->addAddress($email);
 
                     $mail->isHTML(true);
