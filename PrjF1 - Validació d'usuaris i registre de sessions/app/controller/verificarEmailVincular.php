@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controlador per a la verificació d'email per vincular compte amb Google OAuth
  * 
@@ -12,6 +13,7 @@
  * @author Álvaro Masedo Pérez
  * @version 1.0
  */
+
 declare(strict_types=1);
 
 $earlyLogDir = __DIR__ . '/../../tmp';
@@ -117,18 +119,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     // Genera un nombre aleatori entre 0 i 999999, i l'omple amb zeros a l'esquerra per tenir exactament 6 dígits
     // Exemple: 12345 → "012345"
     $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-    
+
     // === ESTABLIT EXPIRACIÓ ===
     // El codi expira en 15 minuts des del moment de la generació
     $expires = date('Y-m-d H:i:s', time() + (15 * 60));
-    
+
     // === GUARDAR EL CODI A LA BASE DE DADES ===
     // Actualitza la taula usuaris amb el codi de verificació i la seva data d'expiració
     // Reutilitza les columnes verification_code i verification_expires que ja existeixen
     $sql = "UPDATE usuaris SET verification_code = :code, verification_expires = :expires WHERE email = :email";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':code' => $code, ':expires' => $expires, ':email' => $sessionEmail]);
-    
+
     // === ENVIAR EMAIL AMB EL CODI ===
     try {
         $mail = new PHPMailer(true);
@@ -141,22 +143,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
                 'allow_self_signed' => true
             ]
         ];
-        
+
         // === CONFIGURACIÓ SMTP ===
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        
+
         // Obtenir credencials des de les variables d'entorn carregades de .env
         // Si la contrasenya d'app ve amb espais (format habitual de Google), els eliminem.
-        $emailAddress = trim((string) (getenv('GOOGLE_OAUTH_EMAIL') ?: ''));
-        $emailPassword = str_replace(' ', '', trim((string) (getenv('GOOGLE_OAUTH_PASSWORD') ?: '')));
-        
+        $emailAddress = trim((string) ($_ENV['GOOGLE_OAUTH_EMAIL'] ?? ''));
+        $emailPassword = str_replace(' ', '', trim((string) ($_ENV['GOOGLE_OAUTH_PASSWORD'] ?? '')));
+
         // Validar que les credencials existeixen
         if ($emailAddress === '' || $emailPassword === '') {
             throw new Exception("Credencials de email no configurades. Verifica el fitxer .env amb GOOGLE_OAUTH_EMAIL i GOOGLE_OAUTH_PASSWORD.");
         }
-        
+
         // === AUTENTICACIÓ ===
         $mail->Username = $emailAddress;
         $mail->Password = $emailPassword;
@@ -166,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         $mail->Port = 587; // Port per a TLS
         $mail->SMTPDebug = 0; // 0 = errors només, 2 = debug complet (per logs)
         $mail->Debugoutput = 'error_log'; // Enviar output de debug al log de PHP
-        
+
         // === CONFIGURACIÓ DEL MISSATGE ===
         // Important: amb Gmail SMTP el remitent ha de ser el compte autenticat (o un alias verificat).
         $mail->setFrom($emailAddress, 'F1 Articles');
@@ -182,23 +184,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         $mail->addAddress($recipientEmail); // Envia al email de l'usuari registrat
         $mail->isHTML(true);
         $mail->Subject = 'Codi de verificació - Vincular Google';
-        
+
         // Crea el cos del mail amb el codi destacat
         $mail->Body = "<h2 style='color: #D41616; font-family: Arial, sans-serif;'>Vincular Compte amb Google</h2>
                        <p style='font-family: Arial, sans-serif;'>Per vincular la teva compte amb Google, necessitem verificar la teva identitat.</p>
                        <p style='font-family: Arial, sans-serif;'>El teu codi:</p>
                        <p style='font-size: 32px; font-weight: bold; color: #D41616; font-family: Arial, sans-serif; letter-spacing: 5px;'>" . htmlspecialchars($code) . "</p>
                        <p style='color: #666; font-family: Arial, sans-serif;'><em>Expira en 15 minuts.</em></p>";
-        
+
         // Versió text per a clients que no suporten HTML
         $mail->AltBody = "Codi de verificació: " . $code . "\nExpira en 15 minuts.";
-        
+
         // === ENVIÓ DE L'EMAIL ===
         $mail->send();
         logSmtpVincularDebug('verificarEmailVincular.send_success', [
             'recipient' => $recipientEmail,
         ]);
-        
+
         // Si l'email s'envia correctament, redirigeix al step 2 per introduir el codi
         header('Location: ../view/vista.verificarEmailVincular.php?step=2');
     } catch (\Throwable $e) {
@@ -228,46 +230,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
 // Aquesta secció s'executa quan l'usuari submíteix el codi en el formulari de verificació
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     $code = $_POST['code'] ?? '';
-    
+
     // === VALIDACIÓ DEL FORMAT DEL CODI ===
     // Comprova que el codi introduït és exactament 6 dígits numèrics
     if (!preg_match('/^[0-9]{6}$/', $code)) {
         header('Location: ../view/vista.verificarEmailVincular.php?step=2&error=invalid_code');
         exit;
     }
-    
+
     // === OBTENIR EL CODI DE LA BASE DE DADES ===
     // Busca el codi guardat per a aquest usuari i la seva data d'expiració
     $sql = "SELECT verification_code, verification_expires FROM usuaris WHERE email = :email";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':email' => $sessionEmail]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     // === VALIDACIÓ DEL CODI ===
     // Verifica que el codi introduït coincideix exactament amb el guardat a la BD
     if (!$row || $row['verification_code'] !== $code) {
         header('Location: ../view/vista.verificarEmailVincular.php?step=2&error=invalid_code');
         exit;
     }
-    
+
     // === VALIDACIÓ DE L'EXPIRACIÓ ===
     // Comprova que el codi no ha expirat comparant la data d'expiració amb l'hora actual
     if (strtotime($row['verification_expires']) < time()) {
         header('Location: ../view/vista.verificarEmailVincular.php?step=2&error=expired');
         exit;
     }
-    
+
     // === NETEJAR EL CODI DE LA BASE DE DADES ===
     // Una vegada verificat, esborrem el codi per evitar reutilitzacions
     $sql = "UPDATE usuaris SET verification_code = NULL, verification_expires = NULL WHERE email = :email";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':email' => $sessionEmail]);
-    
+
     // === MARCAR EMAIL COM A VERIFICAT EN LA SESIÓ ===
     // Aquesta bandera indica que l'usuari ha verificat el seu email correctament
     // Es necessària per procedir amb la vinculació amb Google OAuth
     $_SESSION['email_verified_for_oauth'] = true;
-    
+
     // === REDIRIGIR A GOOGLE OAUTH ===
     // Una vegada verificat l'email, disparem el fluxe d'autenticació amb Google
     // context='vincular' indica a oauth_callback.php que es vinculan dues comptes
@@ -279,5 +281,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
 // === REDIRECCCIÓ PER DEFECTE ===
 // Si es crida aquest fit sense POST o amb paràmetres incorrectes, retorna al perfil
 header('Location: ../view/vista.perfil.php');
-?>
-

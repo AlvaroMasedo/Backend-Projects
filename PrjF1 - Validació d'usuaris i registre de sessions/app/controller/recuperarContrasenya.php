@@ -140,8 +140,8 @@ if ($action === 'recuperarContrasenya') {
                     $mail->SMTPSecure = 'tls';
                     $mail->Port = 587;
 
-                    $emailAddress = trim((string) (getenv('GOOGLE_OAUTH_EMAIL') ?: ''));
-                    $emailPassword = str_replace(' ', '', trim((string) (getenv('GOOGLE_OAUTH_PASSWORD') ?: '')));
+                    $emailAddress = trim((string) ($_ENV['GOOGLE_OAUTH_EMAIL'] ?? ''));
+                    $emailPassword = str_replace(' ', '', trim((string) ($_ENV['GOOGLE_OAUTH_PASSWORD'] ?? '')));
 
                     $mail->Username = $emailAddress;
                     $mail->Password = $emailPassword;

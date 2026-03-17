@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controlador per a la Vinculació Local - Establir Contrasenya
  * 
@@ -15,6 +16,7 @@
  * @author Álvaro Masedo Pérez
  * @version 1.0
  */
+
 declare(strict_types=1);
 
 $earlyLogDir = __DIR__ . '/../../tmp';
@@ -121,17 +123,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     // === GENERAR CODI SEGUR ===
     // Crea un codi de 6 dígits aleatori
     $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-    
+
     // === ESTABLIR EXPIRACIÓ ===
     // El codi expira en 15 minuts (900 segons)
     $expires = date('Y-m-d H:i:s', time() + (15 * 60));
-    
+
     // === GUARDAR A LA BASE DE DADES ===
     // Emmagatzema el codi en les columnes verification_code i verification_expires
     $sql = "UPDATE usuaris SET verification_code = :code, verification_expires = :expires WHERE email = :email";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':code' => $code, ':expires' => $expires, ':email' => $sessionEmail]);
-    
+
     // === ENVIAR EMAIL AMB EL CODI ===
     try {
         $mail = new PHPMailer(true);
@@ -144,22 +146,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
                 'allow_self_signed' => true
             ]
         ];
-        
+
         // === CONFIGURACIÓ SMTP ===
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        
+
         // Obtenir credencials de les variables d'entorn (del .env)
         // Si la contrasenya d'app ve amb espais (format habitual de Google), els eliminem.
-        $emailAddress = trim((string) (getenv('GOOGLE_OAUTH_EMAIL') ?: ''));
-        $emailPassword = str_replace(' ', '', trim((string) (getenv('GOOGLE_OAUTH_PASSWORD') ?: '')));
-        
+        $emailAddress = trim((string) ($_ENV['GOOGLE_OAUTH_EMAIL'] ?? ''));
+        $emailPassword = str_replace(' ', '', trim((string) ($_ENV['GOOGLE_OAUTH_PASSWORD'] ?? '')));
+
         // Validar que s'han configurat les credencials
         if ($emailAddress === '' || $emailPassword === '') {
             throw new Exception("Credencials de email no configurades. Afegeix GOOGLE_OAUTH_EMAIL i GOOGLE_OAUTH_PASSWORD al fitxer .env.");
         }
-        
+
         // === AUTENTICACIÓ SMTP ===
         $mail->Username = $emailAddress;
         $mail->Password = $emailPassword;
@@ -169,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         $mail->Port = 587; // Port per a TLS
         $mail->SMTPDebug = 0; // 0 = errors només
         $mail->Debugoutput = 'error_log'; // Enviar debug al log de PHP
-        
+
         // === COMPOSICIÓ DEL MISSATGE ===
         // Important: amb Gmail SMTP el remitent ha de ser el compte autenticat (o un alias verificat).
         $mail->setFrom($emailAddress, 'F1 Articles');
@@ -185,23 +187,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         $mail->addAddress($recipientEmail); // Envia al email registrat de l'usuari
         $mail->isHTML(true);
         $mail->Subject = 'Codi de verificació - Vincular Compte Local';
-        
+
         // Crea el cos del email amb el codi destacat i format millorat
         $mail->Body = "<h2 style='color: #D41616; font-family: Arial, sans-serif;'>Vincular Compte Local</h2>
                        <p style='font-family: Arial, sans-serif;'>Per establir una contrasenya local per a la teva compte, necessitem verificar-te.</p>
                        <p style='font-family: Arial, sans-serif;'>El teu codi:</p>
                        <p style='font-size: 32px; font-weight: bold; color: #D41616; font-family: Arial, sans-serif; letter-spacing: 5px;'>" . htmlspecialchars($code) . "</p>
                        <p style='color: #666; font-family: Arial, sans-serif;'><em>Expira en 15 minuts.</em></p>";
-        
+
         // Versió text simple
         $mail->AltBody = "Codi de verificació: " . $code . "\nExpira en 15 minuts.";
-        
+
         // === ENVIÓ ===
         $mail->send();
         logSmtpVincularLocalDebug('vincularLocal.send_success', [
             'recipient' => $recipientEmail,
         ]);
-        
+
         // Si l'email s'envia correctament, passa al step 2
         header('Location: ../view/vista.vincularLocal.php?step=2');
     } catch (\Throwable $e) {
@@ -234,42 +236,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     $code = $_POST['code'] ?? '';
     $contrasenya = $_POST['contrasenya'] ?? '';
     $repContrasenya = $_POST['repContrasenya'] ?? '';
-    
+
     // === VALIDACIÓ 1: FORMAT DEL CODI ===
     // Comprova que el codi és exactament 6 dígits numèrics
     if (!preg_match('/^[0-9]{6}$/', $code)) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=invalid_code');
         exit;
     }
-    
+
     // === VALIDACIÓ 2: OBTENIR CODI DE LA BD ===
     // Busca el codi guardat per a aquest usuari
     $sql = "SELECT verification_code, verification_expires FROM usuaris WHERE email = :email";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':email' => $sessionEmail]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     // === VALIDACIÓ 3: COINCIDÈNCIA DE CODI ===
     // Verifica que el codi introduït coincideix amb el guardat
     if (!$row || $row['verification_code'] !== $code) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=invalid_code');
         exit;
     }
-    
+
     // === VALIDACIÓ 4: EXPIRACIÓ ===
     // Comprova que el codi no ha expirat
     if (strtotime($row['verification_expires']) < time()) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=expired');
         exit;
     }
-    
+
     // === VALIDACIÓ 5: COINCIDÈNCIA DE CONTRASENYES ===
     // Verifica que ambdós camps de contrasenya són idèntics
     if ($contrasenya !== $repContrasenya) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=mismatch');
         exit;
     }
-    
+
     // === VALIDACIÓ 6: FORÇA DE LA CONTRASENYA ===
     // Regex que valida:
     // - Almenys una lletra minúscula: (?=.*[a-z])
@@ -288,20 +290,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=invalid_password');
         exit;
     }
-    
+
     // === GUARDAR CONTRASENYA ENCRIPTADA ===
     // Encripta la contrasenya amb l'algoritme bcrypt de PHP
     // PASSWORD_BCRYPT: Algoritme de hash segur que inclou salt automàticament
     // Una contrasenya encriptada no pot desencriptar-se, només comparar-se
     $hashed = password_hash($contrasenya, PASSWORD_BCRYPT);
-    
+
     // === ACTUALITZAR LA BASE DE DADES ===
     // Guarda la contrasenya encriptada i neteja els codis de verificació
     // ja que ja no són necessaris
     $sql = "UPDATE usuaris SET contrasenya = :contrasenya, verification_code = NULL, verification_expires = NULL WHERE nickname = :nickname";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':contrasenya' => $hashed, ':nickname' => $nickname]);
-    
+
     // === REDIRIGIR A ÈXIT ===
     // Mostra el missatge de èxit a la vista
     header('Location: ../view/vista.vincularLocal.php?step=2&success=1');
@@ -311,4 +313,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
 // === REDIRECCCIÓ PER DEFECTE ===
 // Si es crida sense POST o amb paràmetres incorrectes, retorna a la vista principal
 header('Location: ../view/vista.vincularLocal.php');
-?>
