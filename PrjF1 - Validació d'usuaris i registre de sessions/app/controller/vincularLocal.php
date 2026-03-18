@@ -273,28 +273,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     }
 
     // === VALIDACIÓ 6: FORÇA DE LA CONTRASENYA ===
-    // Regex que valida:
-    // - Almenys una lletra minúscula: (?=.*[a-z])
-    // - Almenys una lletra majúscula: (?=.*[A-Z])
-    // - Almenys un dígit: (?=.*\d)
-    // - Almenys un caràcter especial: (?=.*[@$!%*?&])
-    // - Longitud entre 12 i 20 caràcters: [a-zA-Z\d@$!%*?&]{12,20}
-    // === VALIDACIÓ 6: FORÇA DE LA CONTRASENYA ===
-    // Regex que valida:
-    // - Almenys una lletra minúscula: (?=.*[a-z])
-    // - Almenys una lletra majúscula: (?=.*[A-Z])
-    // - Almenys un dígit: (?=.*\d)
-    // - Almenys un caràcter especial: (?=.*[@$!%*?&])
-    // - Longitud entre 12 i 20 caràcters: [a-zA-Z\d@$!%*?&]{12,20}
     if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{12,20}$/', $contrasenya)) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=invalid_password');
         exit;
     }
 
     // === GUARDAR CONTRASENYA ENCRIPTADA ===
-    // Encripta la contrasenya amb l'algoritme bcrypt de PHP
-    // PASSWORD_BCRYPT: Algoritme de hash segur que inclou salt automàticament
-    // Una contrasenya encriptada no pot desencriptar-se, només comparar-se
     $hashed = password_hash($contrasenya, PASSWORD_BCRYPT);
 
     // === ACTUALITZAR LA BASE DE DADES ===
