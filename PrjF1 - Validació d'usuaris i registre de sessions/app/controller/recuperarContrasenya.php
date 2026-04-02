@@ -222,7 +222,7 @@ if ($action === 'actualitzarContrasenya') {
             $errorRepContrasenya = '<p class="error">LES CONTRASENYES NO COINCIDEIXEN.</p>';
             $tokenValido = true;
         } else {
-            $ok = $modelUsers->actualitzarContrasenya($usuari['nickname'], hash('sha256', $novaContrasenya));
+            $ok = $modelUsers->actualitzarContrasenya($usuari['nickname'], password_hash($novaContrasenya, PASSWORD_BCRYPT));
             if ($ok) {
                 $modelUsers->netejarTokenRecuperacio($usuari['email']);
                 $enviatMissatge = '<p class="success">CONTRASENYA ACTUALITZADA CORRECTAMENT.</p>';

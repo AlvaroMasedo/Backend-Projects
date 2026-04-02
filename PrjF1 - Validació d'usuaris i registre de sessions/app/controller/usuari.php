@@ -35,7 +35,6 @@ if ($action === 'modificar') {
         $nom = trim($_POST['nom'] ?? '');
         $cognom = trim($_POST['cognom'] ?? '');
         $contrasenyaActual = trim($_POST['contrasenya_actual'] ?? '');
-        $contrasenyaActualHash = hash('sha256', $contrasenyaActual);
         $novaContrasenya = trim($_POST['nova_contrasenya'] ?? '');
         $confirmaNovaContrasenya = trim($_POST['confirma_nova_contrasenya'] ?? '');
 
@@ -63,7 +62,7 @@ if ($action === 'modificar') {
                 $errorCanviContrasenya = true;
             } else if (!empty($contrasenyaActual) && !empty($novaContrasenya) && !empty($confirmaNovaContrasenya)) {
                 // Verificar contrasenya actual
-                if (!$pdoUsers->verificarContrasenya($nickname_actual, $contrasenyaActualHash)) {
+                if (!$pdoUsers->verificarContrasenya($nickname_actual, $contrasenyaActual)) {
                     $errorContrasenyaActual = '<p class="error">LA CONTRASENYA ACTUAL ÉS INCORRECTA.</p>';
                     $errorCanviContrasenya = true;
                 } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $novaContrasenya)) {
@@ -80,7 +79,7 @@ if ($action === 'modificar') {
                 // Actualitzar la contrasenya si es va intentar canviar
                 if (!empty($contrasenyaActual) && !empty($novaContrasenya) && !empty($confirmaNovaContrasenya)) {
                     try {
-                        $pdoUsers->actualitzarContrasenya($nickname_actual, hash('sha256', $novaContrasenya));
+                        $pdoUsers->actualitzarContrasenya($nickname_actual, password_hash($novaContrasenya, PASSWORD_BCRYPT));
                     } catch (PDOException $e) {
                         throw new PDOException('Error a l\'actualització de la contrasenya: ' . $e->getMessage());
                     }

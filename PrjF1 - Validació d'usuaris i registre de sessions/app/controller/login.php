@@ -34,7 +34,6 @@ function iniciarSessio()
         //Obtenir dades del formulari
         $email = trim($_POST['email'] ?? '');
         $contrasenya = trim($_POST['contrasenya'] ?? '');
-        $contrasenya_encriptada = hash('sha256', $contrasenya);
 
         // Si qualsevol camp està buit donarà error
         if (empty($email) || empty($contrasenya)) {
@@ -68,7 +67,7 @@ function iniciarSessio()
                 $errorEmail = '<p class="error">AQUEST COMPTE ESTÀ VINCULAT A GOOGLE. UTILITZA EL BOTÓ "INICIA SESSIÓ AMB GOOGLE" PER ACCEDIR.</p>';
 
                 // Si la contrasenya es incorrecta dona error
-            } else if (!$controlarUsers->comprobarContrasenya($contrasenya_encriptada, $email)) {
+            } else if (!$controlarUsers->comprobarContrasenya($contrasenya, $email)) {
                 $errorContrasenya = '<p class="error">CONTRASENYA INCORRECTA, TORNA A PROVAR</p>';
                 $contrasenya = '';
                 // Incrementar i guardar el contador d'intents a la sessió
@@ -104,7 +103,7 @@ function iniciarSessio()
                 // Si no hi ha missatge d'error (el reCAPTCHA s'ha passat o no era necessari), procedim a fer login
                 if (empty($enviatMissatge)) {
                     try {
-                        $ok = $controlarUsers->login($email, $contrasenya_encriptada);
+                        $ok = $controlarUsers->login($email, $contrasenya);
 
                         if ($ok) {
                             //Resetem el contador d'intents

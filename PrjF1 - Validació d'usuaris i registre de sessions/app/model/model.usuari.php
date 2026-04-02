@@ -16,6 +16,23 @@ class ModelUsers
         $this->conn = $conn;
     }
 
+    /**
+     * Comprova una contrasenya en format pla contra un hash guardat.
+     * Accepta bcrypt i, per compatibilitat, hash SHA-256 antics.
+     */
+    private function verificarHashContrasenya(string $contrasenya, string $hashGuardat): bool
+    {
+        if ($hashGuardat === '') {
+            return false;
+        }
+
+        if (password_verify($contrasenya, $hashGuardat)) {
+            return true;
+        }
+
+        return hash('sha256', $contrasenya) === $hashGuardat;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////                                   SELECTS                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,18 +43,34 @@ class ModelUsers
      */
     public function login(string $email, string $contrasenya): ?array
     {
-        //Obtenir les dades de l'usuari per mostrar al seu perfil
-        $sql = "SELECT * FROM usuaris WHERE email = :email AND contrasenya = :contrasenya LIMIT 1";
+        // Obtenir les dades de l'usuari i validar la contrasenya amb hash segur
+        $sql = "SELECT * FROM usuaris WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':email' => $email,
-            ':contrasenya' => $contrasenya
-        ]);
+        $stmt->execute([':email' => $email]);
 
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Retorna l'array de l'usuari si existeix
-        return $usuario ?: null;
+        if (!$usuario || !isset($usuario['contrasenya'])) {
+            return null;
+        }
+
+        if (!$this->verificarHashContrasenya($contrasenya, (string) $usuario['contrasenya'])) {
+            return null;
+        }
+
+        // Migrem les contrasenyes antigues amb SHA-256 a bcrypt en el primer login vàlid
+        if (!password_get_info((string) $usuario['contrasenya'])['algo']) {
+            $nouHash = password_hash($contrasenya, PASSWORD_BCRYPT);
+            $sqlUpdate = "UPDATE usuaris SET contrasenya = :contrasenya WHERE email = :email";
+            $stmtUpdate = $this->conn->prepare($sqlUpdate);
+            $stmtUpdate->execute([
+                ':contrasenya' => $nouHash,
+                ':email' => $email
+            ]);
+            $usuario['contrasenya'] = $nouHash;
+        }
+
+        return $usuario;
     }
 
     /* Mètode per obtenir tots els usuaris
@@ -172,14 +205,12 @@ class ModelUsers
      */
     public function verificarContrasenya(string $nickname, string $contrasenya): bool
     {
-        $sql = "SELECT COUNT(*) FROM usuaris WHERE nickname = :nickname AND contrasenya = :contrasenya";
+        $sql = "SELECT contrasenya FROM usuaris WHERE nickname = :nickname LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':nickname' => $nickname,
-            ':contrasenya' => $contrasenya
-        ]);
-        $count = $stmt->fetchColumn();
-        return $count > 0;
+        $stmt->execute([':nickname' => $nickname]);
+        $hashGuardat = $stmt->fetchColumn();
+
+        return is_string($hashGuardat) && $this->verificarHashContrasenya($contrasenya, $hashGuardat);
     }
 
 
@@ -188,14 +219,12 @@ class ModelUsers
      */
     public function comprobarContrasenya(string $contrasenya, string $email): bool
     {
-        $sql = "SELECT COUNT(*) FROM usuaris WHERE email = :email AND contrasenya = :contrasenya";
+        $sql = "SELECT contrasenya FROM usuaris WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':email' => $email,
-            ':contrasenya' => $contrasenya
-        ]);
-        $count = $stmt->fetchColumn();
-        return $count > 0;
+        $stmt->execute([':email' => $email]);
+        $hashGuardat = $stmt->fetchColumn();
+
+        return is_string($hashGuardat) && $this->verificarHashContrasenya($contrasenya, $hashGuardat);
     }
 
     /* Mètode per comprovar si l'email existeix

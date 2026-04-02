@@ -34,7 +34,7 @@ function registrarUsuari()
         $email = trim($_POST['email'] ?? '');
         $contrasenya = trim($_POST['contrasenya'] ?? '');
         $repContrasenya = trim($_POST['repContrasenya'] ?? '');
-        $contrasenya_encriptada = hash('sha256', $contrasenya);
+        $contrasenya_encriptada = password_hash($contrasenya, PASSWORD_BCRYPT);
         $administrador = 0;
 
         // Si qualsevol camp està buit donarà error
