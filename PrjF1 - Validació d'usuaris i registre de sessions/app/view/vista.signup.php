@@ -18,15 +18,15 @@
     require_once __DIR__ . '/../../lib/oauth_config.php';
     OAuthConfig::inicialitzar();
     $formData = $_SESSION['form_data'] ?? [];
-    $nom = $formData['nom'] ?? '';
-    $cognom = $formData['cognom'] ?? '';
-    $nickname = $formData['nickname'] ?? '';
-    $email = $formData['email'] ?? '';
-    $contrasenya = $formData['contrasenya'] ?? '';
-    $repContrasenya = $formData['repContrasenya'] ?? '';
+    $nom = $nom ?? ($formData['nom'] ?? '');
+    $cognom = $cognom ?? ($formData['cognom'] ?? '');
+    $nickname = $nickname ?? ($formData['nickname'] ?? '');
+    $email = $email ?? ($formData['email'] ?? '');
+    $contrasenya = $contrasenya ?? ($formData['contrasenya'] ?? '');
+    $repContrasenya = $repContrasenya ?? ($formData['repContrasenya'] ?? '');
     
     // Gestionar errors OAuth des de paràmetres GET
-    $enviatMissatge = '';
+    $enviatMissatge = $enviatMissatge ?? '';
     if (isset($_GET['error'])) {
         switch ($_GET['error']) {
             case 'oauth_account_exists':
