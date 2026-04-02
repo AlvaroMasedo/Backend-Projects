@@ -214,7 +214,7 @@ if ($action === 'actualitzarContrasenya') {
         } elseif ($novaContrasenya === '' || $repContrasenya === '') {
             $errorContrasenya = '<p class="error">TOTS ELS CAMPS AMB * SON OBLIGATORIS.</p>';
             $tokenValido = true;
-        } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $novaContrasenya)) {
+        } elseif (!$modelUsers->esContrasenyaSegura($novaContrasenya)) {
             $errorContrasenya = '<p class="error">LA NOVA CONTRASENYA NO COMPLEIX ELS REQUISITS.</p>';
             $tokenValido = true;
         } elseif ($novaContrasenya !== $repContrasenya) {

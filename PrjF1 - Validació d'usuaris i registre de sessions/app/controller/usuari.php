@@ -41,13 +41,13 @@ if ($action === 'modificar') {
         // Validacions
         if (empty($nickname_nou) || empty($nom)) {
             $missatge = '<p class="error">EL NICKNAME I EL NOM SÓN OBLIGATORIS.</p>';
-        } else if (!preg_match('/^[A-Za-z0-9_]{3,20}$/', $nickname_nou)) {
+        } else if (!$pdoUsers->esNicknamePerfilValid($nickname_nou)) {
             $errorNickname = '<p class="error">EL NICKNAME NOMÉS POT CONTENIR LLETRES, NÚMEROS I GUIÓ BAIX (3-20 CARÀCTERS).</p>';
         } else if ($nickname_nou !== $nickname_actual && $pdoUsers->existeixNickname($nickname_nou)) {
             $errorNickname = '<p class="error">AQUEST NICKNAME JA EXISTEIX.</p>';
-        } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
+        } else if (!$pdoUsers->esNomValid($nom, 2, 50)) {
             $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
-        } else if (!empty($cognom) && !preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $cognom)) {
+        } else if (!empty($cognom) && !$pdoUsers->esNomValid($cognom, 2, 50)) {
             $errorCognom = '<p class="error">EL COGNOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
         } else {
             // Validar canvi de contrasenya si s'intent fer
@@ -65,7 +65,7 @@ if ($action === 'modificar') {
                 if (!$pdoUsers->verificarContrasenya($contrasenyaActual, $nickname_actual, 'nickname')) {
                     $errorContrasenyaActual = '<p class="error">LA CONTRASENYA ACTUAL ÉS INCORRECTA.</p>';
                     $errorCanviContrasenya = true;
-                } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $novaContrasenya)) {
+                } else if (!$pdoUsers->esContrasenyaSegura($novaContrasenya)) {
                     $errorNovaContrasenya = '<p class="error">LA NOVA CONTRASENYA NO COMPLEIX ELS REQUISITS MÍNIMS.</p>';
                     $errorCanviContrasenya = true;
                 } else if ($novaContrasenya !== $confirmaNovaContrasenya) {

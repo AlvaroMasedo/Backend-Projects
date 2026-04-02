@@ -20,7 +20,7 @@ $controlarUsers = new ModelUsers($conn);
 //Funció per registrar un Usuari
 function registrarUsuari()
 {
-    global $conn;
+    global $conn, $controlarUsers;
 
     // Iniciar la sessió amb configuració segura
     require_once __DIR__ . '/session_check.php';
@@ -41,19 +41,19 @@ function registrarUsuari()
             $enviatMissatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
 
             // Si el nom no té concordança amb el regex donarà error        
-        } else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,25}$/u', $nom)) {
+        } else if (!$controlarUsers->esNomValid($nom, 2, 25)) {
             $errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-25 CARÀCTERS).</p>';
 
             // Si el cognom no és buit i no té concordança amb el regex donarà error
-        } else if (!empty($cognom) && !preg_match('/^[A-Za-zÀ-ÿ\s]{2,25}$/u', $cognom)) {
+        } else if (!empty($cognom) && !$controlarUsers->esNomValid($cognom, 2, 25)) {
             $errorCognom = '<p class="error">EL COGNOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-25 CARÀCTERS).</p>';
 
             // Si el nickname no té concordança amb el regex donarà error
-        } else if (!preg_match('/^[A-Za-z0-9._]{3,15}$/u', $nickname)) {
+        } else if (!$controlarUsers->esNicknameRegistreValid($nickname)) {
             $errorNickname = '<p class="error">EL NICKNAME HA DE TENIR ENTRE 3 I 15 CARÀCTERS (LLETRES, NÚMEROS, PUNTS O GUIÓ BAIX).</p>';
 
             // Si la contrasenya no té concordança amb el regex donarà error
-        } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $contrasenya)) {
+        } else if (!$controlarUsers->esContrasenyaSegura($contrasenya)) {
             $errorContrasenya = '<p class="error">LA CONTRASENYA NO COMPLEIX ELS REQUISITS MÍNIMS.</p>';
 
             // Si la contrasenya i la repetició no coincideixen donarà error

@@ -34,6 +34,43 @@ class ModelUsers
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
+    /////////                            VALIDACIONS COMUNES                           //////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Valida un nom/cognom amb lletres i espais, amb rang configurable.
+     */
+    public function esNomValid(string $valor, int $min = 2, int $max = 50): bool
+    {
+        $regex = '/^[A-Za-zÀ-ÿ\s]{' . $min . ',' . $max . '}$/u';
+        return preg_match($regex, $valor) === 1;
+    }
+
+    /**
+     * Valida nickname per al registre (admet punt i guió baix).
+     */
+    public function esNicknameRegistreValid(string $nickname): bool
+    {
+        return preg_match('/^[A-Za-z0-9._]{3,15}$/u', $nickname) === 1;
+    }
+
+    /**
+     * Valida nickname per a perfil (només guió baix).
+     */
+    public function esNicknamePerfilValid(string $nickname): bool
+    {
+        return preg_match('/^[A-Za-z0-9_]{3,20}$/', $nickname) === 1;
+    }
+
+    /**
+     * Valida fortalesa de contrasenya segons la política comuna del projecte.
+     */
+    public function esContrasenyaSegura(string $contrasenya): bool
+    {
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $contrasenya) === 1;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
     /////////                                   SELECTS                                 //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 

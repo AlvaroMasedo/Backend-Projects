@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'verify') {
     }
 
     // === VALIDACIÓ 6: FORÇA DE LA CONTRASENYA ===
-    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{12,20}$/', $contrasenya)) {
+    if (!$modelUsuaris->esContrasenyaSegura($contrasenya)) {
         header('Location: ../view/vista.vincularLocal.php?step=2&error=invalid_password');
         exit;
     }
