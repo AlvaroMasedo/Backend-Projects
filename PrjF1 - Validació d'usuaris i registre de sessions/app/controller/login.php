@@ -127,7 +127,8 @@ function iniciarSessio()
                             // Si l'usuari ha marcat "recorda'm", generar i guardar token persistent
                             if (isset($_POST['recorda']) && $_POST['recorda'] === 'on') {
                                 // Guardar token de Remember Me (cookie persistent de 30 dies)
-                                $controlarUsers->guardarRememberMe($ok['nickname']);
+                                $rememberToken = $controlarUsers->guardarRememberMe($ok['nickname']);
+                                setcookie('remember_token', $rememberToken, time() + (30 * 24 * 60 * 60), '/', '', false, true);
                                 $_SESSION['remember_me'] = 1; // Marcar que té Remember Me actiu
 
                                 // Eliminar token de navegador temporal si existeix
@@ -138,6 +139,7 @@ function iniciarSessio()
                                 $_SESSION['remember_me'] = 0;
                                 // Eliminar qualsevol remember_token anterior si existeix
                                 $controlarUsers->eliminarRememberMe($ok['nickname']);
+                                setcookie('remember_token', '', time() - 3600, '/', '', false, true);
 
                                 // Generar token únic per a aquesta sessió de navegador
                                 $browserToken = bin2hex(random_bytes(32));

@@ -279,9 +279,6 @@ class ModelUsers
             ':nickname' => $nickname
         ]);
 
-        // Guardar token en cookie (NO les credencials)
-        setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true);
-
         return $token;
     }
 
@@ -303,9 +300,6 @@ class ModelUsers
      */
     public function eliminarRememberMe(?string $nickname = null): void
     {
-        // Eliminar cookie
-        setcookie('remember_token', '', time() - 3600, '/');
-
         // Si tenim nickname, eliminar token de la BBDD
         if ($nickname !== null) {
             $sql = "UPDATE usuaris SET remember_token = NULL, remember_expiry = NULL WHERE nickname = :nickname";
