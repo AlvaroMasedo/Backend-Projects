@@ -2,21 +2,15 @@
 
 declare(strict_types=1);
 //Álvaro Masedo Pérez
-//Controlador per gestionar la lògica dels articles
-//S 'usa per obtenir els articles
+// Controlador per gestionar la lògica dels articles
 
-//Carregar connexió a la BD i model
 require_once __DIR__ . '/../../config/db_connection.php';
-
-// Assegurar que la sessió està iniciada i gestionar logout
 require_once __DIR__ . '/session_check.php';
 require_once __DIR__ . '/../model/model.articles.php';
 require_once __DIR__ . '/../../lib/auth.php';
 
 // Obtenir l'acció a realitzar (si n'hi ha)
 $action = $_GET['action'] ?? '';
-
-// Decidir quins articles carregar segons si l'usuari és administrador o no
 $pdoArticles = new ModelArticles($conn);
 
 // Identifiquem el script actual (per saber si som a la vista de modificació o eliminació)
@@ -41,44 +35,30 @@ if ($scriptActual === 'vista.modificarArticle.php' && isset($_GET['id'])) {
 	}
 }
 
-
 // Paginació senzilla 
 $autor = nickname_usuari_actual();
 
 // Si l'usuari no és admin, només veurà els seus articles
-// Si és admin, veurà tots els articles
 $autorFilter = null;
 if ($autor !== null && !usuari_es_admin()) {
 	$autorFilter = $autor;
 }
 
-// Comptar articles (filtrant per autor si no és admin)
 $totalArticles = $pdoArticles->contarArticles($autorFilter);
-
-// Obtenir paràmetre de búsqueda si existeix
 $busquedaTerm = trim($_GET['q'] ?? '');
 $esBusqueda = !empty($busquedaTerm);
-
-// Si hi ha búsqueda, actualitzar el total de articles
 if ($esBusqueda) {
 	$totalArticles = $pdoArticles->contarBusqueda($busquedaTerm, $autorFilter);
 }
 
-$scriptActual = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['SCRIPT_FILENAME'] ?? ''));
 $perPageRaw = $_GET['per_page'] ?? null;
-
-// Si estem a la vista d'articles i l'usuari està loguejat, per defecte volem mostrar TOTS
 if ($perPageRaw === null && $scriptActual === 'vista.articles.php' && isset($_SESSION['usuari'])) {
 	$perPageRaw = 'all';
 }
 
-// Determinar nombre d'articles per pàgina a index.php
 if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)) {
-	// Mostrar tots els articles
 	$articlesPerPagina = $totalArticles > 0 ? $totalArticles : 1;
-	$perPageMode = 'all';
 } else {
-	// Valor numèric (o default)
 	$articlesPerPagina = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 8;
 	if ($articlesPerPagina < 1) {
 		$articlesPerPagina = 1;
@@ -86,25 +66,21 @@ if ($perPageRaw === 'all' || (is_numeric($perPageRaw) && (int)$perPageRaw === 0)
 	if ($articlesPerPagina > 10) {
 		$articlesPerPagina = 10;
 	}
-	$perPageMode = 'paged';
 }
 
 $paginaActual = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// Obtenir ordre dels articles
 $ordreActual = $_GET['ordenar'] ?? 'recent';
 $ordresPermesos = ['recent', 'antic', 'asc', 'desc'];
-if (!in_array($ordreActual, $ordresPermesos)) {
+if (!in_array($ordreActual, $ordresPermesos, true)) {
 	$ordreActual = 'recent';
 }
 
-// Calcul pagines 
-$totalPagines = ($articlesPerPagina > 0) ? (int)ceil($totalArticles / $articlesPerPagina) : 1;
+$totalPagines = ($articlesPerPagina > 0) ? (int) ceil($totalArticles / $articlesPerPagina) : 1;
 if ($paginaActual > $totalPagines) {
 	$paginaActual = $totalPagines;
 }
 
-// Obtenir articles amb SQL LIMIT/OFFSET (filtrant per autor si no es admin)
 $offset = ($paginaActual - 1) * $articlesPerPagina;
 if ($esBusqueda) {
 	$articles = $pdoArticles->buscar($busquedaTerm, $articlesPerPagina, $offset, $autorFilter, $ordreActual);
@@ -112,25 +88,31 @@ if ($esBusqueda) {
 	$articles = $pdoArticles->obtenirPaginat($articlesPerPagina, $offset, $autorFilter, $ordreActual);
 }
 
-// URLs per a controls de paginació (mantenint per_page i ordre)
 $baseUrl = 'index.php';
 $prevPage = max(1, $paginaActual - 1);
 $nextPage = min($totalPagines, $paginaActual + 1);
-$perPageForUrl = $_GET['per_page'] ?? (string)$articlesPerPagina;
+$perPageForUrl = $_GET['per_page'] ?? (string) $articlesPerPagina;
 $busquedaParam = $esBusqueda ? '&q=' . urlencode($busquedaTerm) : '';
 $prevUrl = $baseUrl . '?page=' . $prevPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual . $busquedaParam;
 $nextUrl = $baseUrl . '?page=' . $nextPage . '&per_page=' . $perPageForUrl . '&ordenar=' . $ordreActual . $busquedaParam;
 
-// Afegir articles 
+// API JSON simple per a Ajax
+if ($action === 'api') {
+	header('Content-Type: application/json; charset=utf-8');
+	echo json_encode([
+		'ok' => true,
+		'articles' => $articles,
+	], JSON_UNESCAPED_UNICODE);
+	exit;
+}
+
+// Afegir article
 if ($action === 'afegir') {
-	// Assegurar que l'usuari està loguejat abans d'afegir un article
 	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		//Obtenir dades del formulari
 		$nom = trim($_POST['Nom'] ?? '');
 		$cos = trim($_POST['Cos'] ?? '');
-
 
 		if (empty($nom) || empty($cos)) {
 			$missatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
@@ -138,15 +120,13 @@ if ($action === 'afegir') {
 			$errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
 		} else {
 			try {
-				$ok = $pdoArticles->afegir($autor, $nom, $cos);
-
+				$ok = $pdoArticles->afegir((string) $autor, $nom, $cos);
 				if ($ok) {
 					header('Location: ../view/vista.articles.php?added=1');
 					exit;
-				} else {
-					header('Location: ../view/vista.articles.php?error=add');
-					exit;
 				}
+				header('Location: ../view/vista.articles.php?error=add');
+				exit;
 			} catch (PDOException $e) {
 				throw new PDOException('Error a l\'afegir l\'article: ' . $e->getMessage());
 			}
@@ -157,48 +137,43 @@ if ($action === 'afegir') {
 	exit;
 }
 
-// Modificar articles
-if ($action === "modificar") {
-	// Assegurar que l'usuari està loguejat abans de modificar un article
+// Modificar article
+if ($action === 'modificar') {
 	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		//Obtenir dades del formulari
-		$id = (int)($_POST['id'] ?? 0);
+		$id = (int) ($_POST['id'] ?? 0);
 		$nom = trim($_POST['Nom'] ?? '');
 		$cos = trim($_POST['Cos'] ?? '');
 
 		if (empty($nom) || empty($cos)) {
-			$missatge = '<p class="error">TOTS ELS CAMPS AMB UNN * SÓN OBLIGATORIS.</p>';
+			$missatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
 		} else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
 			$errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
 		} else {
 			try {
 				$ok = $pdoArticles->modificar($id, $nom, $cos);
-
 				if ($ok) {
-					//Redirigir a la vista d'articles després de modificar
 					header('Location: ../view/vista.articles.php?modified=1');
 					exit;
-				} else {
-					header('Location: ../view/vista.articles.php?error=modify');
-					exit;
 				}
+				header('Location: ../view/vista.articles.php?error=modify');
+				exit;
 			} catch (PDOException $e) {
 				throw new PDOException('Error a la modificació de l\'article: ' . $e->getMessage());
 			}
 		}
 	}
+
 	require __DIR__ . '/../view/vista.modificarArticle.php';
 	exit;
 }
 
-//Eliminar articles (només autor o admin). Endpoint directe via GET amb confirm al client.
+// Eliminar article (només autor o admin)
 if ($action === 'eliminar') {
-	// Assegurar que l'usuari està loguejat abans d'eliminar un article
 	requerir_inici_sessio_o_redirigir('../view/vista.login.php');
 
-	$id = (int)($_GET['id'] ?? 0);
+	$id = (int) ($_GET['id'] ?? 0);
 	if ($id <= 0) {
 		header('Location: ../view/vista.articles.php?error=invalid');
 		exit;
@@ -216,7 +191,7 @@ if ($action === 'eliminar') {
 	}
 
 	try {
-		$ok = $pdoArticles->eliminar((string)$id);
+		$ok = $pdoArticles->eliminar((string) $id);
 		if ($ok) {
 			header('Location: ../view/vista.articles.php?deleted=1');
 			exit;
