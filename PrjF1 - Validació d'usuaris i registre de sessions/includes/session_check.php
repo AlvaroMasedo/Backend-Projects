@@ -4,19 +4,6 @@
 
 require_once __DIR__ . '/../config/basepath.php';
 
-// Carregar la connexió i el model només quan aquest fitxer pot necessitar
-// operacions sobre la base de dades.
-$calCarregarBD = (
-    (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) ||
-    (!isset($_SESSION['usuari']) && isset($_COOKIE['remember_token'])) ||
-    (isset($_GET['logout']) && $_GET['logout'] == '1')
-);
-
-if ($calCarregarBD) {
-    require_once __DIR__ . '/../config/db_connection.php';
-    require_once __DIR__ . '/../app/model/model.usuari.php';
-}
-
 /**
  * Funció per iniciar sessió amb configuració correcta
  * SEMPRE usar aquesta funció per garantir que les cookies expirin al tancar el navegador
@@ -32,7 +19,7 @@ function iniciar_sessio_segura() {
             'httponly' => true,      // Protecció contra XSS
             'samesite' => 'Lax'     // Protecció contra CSRF
         ]);
-        
+
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_lifetime', '0'); // Forzar cookie de sessió sin persistencia
@@ -41,8 +28,23 @@ function iniciar_sessio_segura() {
     }
 }
 
-// Iniciar sessió automàticament
+// Iniciar sessió abans de calcular condicions que depenen de $_SESSION
 iniciar_sessio_segura();
+
+// Carregar la connexió i el model només quan aquest fitxer pot necessitar
+// operacions sobre la base de dades.
+$calCarregarBD = (
+    (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) ||
+    (isset($_SESSION['usuari']) && isset($_SESSION['session_created'])) ||
+    (!isset($_SESSION['usuari']) && isset($_COOKIE['remember_token'])) ||
+    (isset($_GET['logout']) && $_GET['logout'] == '1')
+);
+
+if ($calCarregarBD) {
+    require_once __DIR__ . '/../config/db_connection.php';
+    require_once __DIR__ . '/../app/model/model.usuari.php';
+    $controlarUsers = new ModelUsers($conn);
+}
 
 if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
     $remember_me = $_SESSION['usuari'] ? ($_SESSION['remember_me'] ?? 0) : -1;
@@ -112,7 +114,6 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
         
         // Si alguna validació ha fallat, destruir sessió
         if (isset($_SESSION['must_logout']) && $_SESSION['must_logout'] === true) {
-            $controlarUsers = new ModelUsers($conn);
             
             if (isset($_SESSION['usuari']['nickname'])) {
                 $controlarUsers->eliminarRememberMe($_SESSION['usuari']['nickname']);
@@ -136,7 +137,6 @@ if (isset($_SESSION['usuari']) && !isset($_COOKIE['remember_token'])) {
 
 // Si no hi ha sessió iniciada, intentar login automàtic amb Remember Me TOKEN
 if (!isset($_SESSION['usuari']) && isset($_COOKIE['remember_token'])) {
-    $controlarUsers = new ModelUsers($conn);
     $token = $_COOKIE['remember_token'];
     
     // Verificar token en la base de dades
@@ -169,7 +169,6 @@ if (isset($_SESSION['usuari']) && isset($_SESSION['session_created'])) {
     $temps_maxim = 40 * 60; // 40 minuts (2400 segons)
     
     if ($temps_transcorregut > $temps_maxim) {
-        $controlarUsers = new ModelUsers($conn);
         
         // Eliminar token de Remember Me si hi ha
         if (isset($_SESSION['usuari']['nickname'])) {
@@ -199,7 +198,6 @@ if (isset($_SESSION['usuari']) && isset($_SESSION['session_created'])) {
 
 // Tancar sessió manualment
 if (isset($_GET['logout']) && $_GET['logout'] == '1') {
-    $controlarUsers = new ModelUsers($conn);
     
     // Eliminar token de Remember Me si hi ha usuari en sessió
     if (isset($_SESSION['usuari']['nickname'])) {
