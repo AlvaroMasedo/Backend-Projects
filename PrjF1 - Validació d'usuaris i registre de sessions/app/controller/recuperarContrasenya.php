@@ -85,6 +85,8 @@ $errorToken = '';
 $token = '';
 $tokenValido = false;
 
+// Instanciar el model
+$modelUsers = new ModelUsers($conn);
 function construirEnllacRecuperacio(string $token): string
 {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -102,7 +104,6 @@ if ($action === 'recuperarContrasenya') {
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errorEmail = '<p class="error">EL FORMAT DE L\'EMAIL NO ES VALID.</p>';
         } else {
-            $modelUsers = new ModelUsers($conn);
 
             if (!$modelUsers->existeixEmail($email)) {
                 $errorEmail = '<p class="error">NO HI HA CAP COMPTA REGISTRADA AMB AQUEST EMAIL.</p>';
@@ -181,7 +182,6 @@ if ($action === 'recuperarContrasenya') {
 
 if ($action === 'resetForm') {
     $token = trim($_GET['token'] ?? '');
-    $modelUsers = new ModelUsers($conn);
 
     if ($token === '') {
         $errorToken = '<p class="error">TOKEN INVALID O INEXISTENT.</p>';
@@ -206,7 +206,6 @@ if ($action === 'actualitzarContrasenya') {
         $novaContrasenya = trim($_POST['nova_contrasenya'] ?? '');
         $repContrasenya = trim($_POST['rep_contrasenya'] ?? '');
 
-        $modelUsers = new ModelUsers($conn);
         $usuari = ($token === '') ? null : $modelUsers->obtenirUsuariPerTokenRecuperacio($token);
 
         if ($usuari === null) {

@@ -14,14 +14,13 @@ $nickname = $nom = $cognom = $email = $contrasenya = $repContrasenya = '';
 $errorNickname = $errorNom = $errorCognom = $errorEmail = $errorContrasenya = $errorRepContrasenya = '';
 $enviatMissatge = '';
 
-
+// Instanciar el model
+$controlarUsers = new ModelUsers($conn);
 
 //Funció per registrar un Usuari
 function registrarUsuari()
 {
     global $conn;
-    // Instanciar el model
-    $controlarUsers = new ModelUsers($conn);
 
     // Iniciar la sessió amb configuració segura
     require_once __DIR__ . '/../../includes/session_check.php';
@@ -105,8 +104,6 @@ function registrarUsuari()
 function confirmarRegistre()
 {
     global $conn;
-    // Instanciar el model
-    $controlarUsers = new ModelUsers($conn);
 
     // Usar la funció centralitzada
     require_once __DIR__ . '/../../includes/session_check.php';

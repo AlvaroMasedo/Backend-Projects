@@ -131,9 +131,6 @@ if ($action === 'afegir') {
 		$nom = trim($_POST['Nom'] ?? '');
 		$cos = trim($_POST['Cos'] ?? '');
 
-		// Instanciar el model i afegir
-		$afegir = new ModelArticles($conn);
-
 
 		if (empty($nom) || empty($cos)) {
 			$missatge = '<p class="error">TOTS ELS CAMPS AMB UN * SÓN OBLIGATORIS.</p>';
@@ -141,7 +138,7 @@ if ($action === 'afegir') {
 			$errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
 		} else {
 			try {
-				$ok = $afegir->afegir($autor, $nom, $cos);
+				$ok = $pdoArticles->afegir($autor, $nom, $cos);
 
 				if ($ok) {
 					header('Location: ../view/vista.articles.php?added=1');
@@ -171,16 +168,13 @@ if ($action === "modificar") {
 		$nom = trim($_POST['Nom'] ?? '');
 		$cos = trim($_POST['Cos'] ?? '');
 
-		//Instanciar el model i modificar
-		$modificar = new ModelArticles($conn);
-
 		if (empty($nom) || empty($cos)) {
 			$missatge = '<p class="error">TOTS ELS CAMPS AMB UNN * SÓN OBLIGATORIS.</p>';
 		} else if (!preg_match('/^[A-Za-zÀ-ÿ\s]{2,50}$/u', $nom)) {
 			$errorNom = '<p class="error">EL NOM NOMÉS POT CONTENIR LLETRES I ESPAIS (2-50 CARÀCTERS).</p>';
 		} else {
 			try {
-				$ok = $modificar->modificar($id, $nom, $cos);
+				$ok = $pdoArticles->modificar($id, $nom, $cos);
 
 				if ($ok) {
 					//Redirigir a la vista d'articles després de modificar
