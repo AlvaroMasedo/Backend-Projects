@@ -388,18 +388,6 @@ class ModelUsers
     /////////                              OAUTH                                       //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    /* Mètode per generar un nickname a partir de l'email
-     * exemple@gmail.com → exemple
-     */
-    private function generarNicknameDesdeEmail(string $email): string
-    {
-        $nickname = explode('@', $email)[0];
-        // Sanitizar: només lletres, números i guió baix, màxim 15 caràcters
-        $nickname = preg_replace('/[^a-zA-Z0-9_]/', '_', $nickname);
-        $nickname = substr($nickname, 0, 15);
-        return $nickname;
-    }
-
     /* Mètode per obtenir un usuari per provider OAuth i ID
      * @param string $provider google
      * @param string $oauthId ID de la compte OAuth
@@ -414,48 +402,33 @@ class ModelUsers
         return $usuari ?: null;
     }
 
-    /* Mètode per guardar un usuari nou des de OAuth
+    /* Mètode per guardar un usuari nou des de OAuth (només persistència)
+     * @param string $nickname Nickname ja resolt al controlador
      * @param string $email Email de OAuth
      * @param string $nom Nom de l'usuari
-     * @param string $cognom Cognom de l'usuari
+     * @param string|null $cognom Cognom de l'usuari (pot ser null)
      * @param string|null $fotoPerfil URL o camí de la foto
      * @param string $provider google
      * @param string $oauthId ID de la compte OAuth
-     * @return array|null Dades de l'usuari creat o null si error
+     * @return bool true si s'ha guardat correctament, false si error
      */
     public function guardarUsuariOAuth(
+        string $nickname,
         string $email,
         string $nom,
-        string $cognom,
+        ?string $cognom,
         ?string $fotoPerfil,
         string $provider,
         string $oauthId
-    ): ?array {
-        // Generar nickname a partir del email
-        $nicknameBase = $this->generarNicknameDesdeEmail($email);
-        $nickname = $nicknameBase;
-        $contador = 1;
-
-        // Si el nickname existeix, afegir un número
-        while ($this->existeixNickname($nickname)) {
-            $nickname = $nicknameBase . $contador;
-            $contador++;
-        }
-
+    ): bool {
         try {
-            // Convertir cognom buit a NULL
-            $cognomFinal = trim($cognom);
-            if (empty($cognomFinal)) {
-                $cognomFinal = null;
-            }
-            
             $sql = "INSERT INTO usuaris (nickname, nom, cognom, email, contrasenya, administrador, imatge_perfil, oauth_provider, oauth_id) 
                     VALUES (:nickname, :nom, :cognom, :email, :contrasenya, :administrador, :imatge, :provider, :oauth_id)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([
+            return $stmt->execute([
                 ':nickname' => $nickname,
                 ':nom' => $nom,
-                ':cognom' => $cognomFinal,
+                ':cognom' => $cognom,
                 ':email' => $email,
                 ':contrasenya' => 'oauth_pending',  // Marcador per indicar que és OAuth
                 ':administrador' => 0,
@@ -463,21 +436,9 @@ class ModelUsers
                 ':provider' => $provider,
                 ':oauth_id' => $oauthId
             ]);
-
-            // Retornar les dades de l'usuari creat
-            return [
-                'nickname' => $nickname,
-                'nom' => $nom,
-                'cognom' => $cognomFinal,
-                'email' => $email,
-                'administrador' => 0,
-                'imatge_perfil' => $fotoPerfil,
-                'oauth_provider' => $provider,
-                'oauth_id' => $oauthId
-            ];
         } catch (PDOException $e) {
             error_log("Error al guardar usuari OAuth: " . $e->getMessage());
-            return null;
+            return false;
         }
     }
 
