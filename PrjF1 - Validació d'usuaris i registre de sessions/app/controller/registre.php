@@ -103,7 +103,7 @@ function registrarUsuari()
 
 function confirmarRegistre()
 {
-    global $conn;
+    global $conn, $controlarUsers;
 
     // Usar la funció centralitzada
     require_once __DIR__ . '/session_check.php';
