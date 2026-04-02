@@ -18,6 +18,12 @@ Projecte educatiu de gestió d'usuaris i articles per a DAW.
 - Búsqueda per título
 - Permisos: l'autor (o admin) pot editar/eliminar
 
+**API + Ajax**
+- Endpoint JSON simple a `/api`
+- Cerca d'articles sense recarregar la pàgina
+- Consum de l'API des del header amb `fetch()`
+- Implementació pensada per demostrar com es consumeix una API des del frontend
+
  **Perfil d'Usuari**
 - Ver perfil
 - Editar nickname, nom, cognom
@@ -147,6 +153,46 @@ Editar:    Solo si eres autor o admin
 Eliminar:  Solo si eres autor o admin
 ```
 
+### API d'Articles
+La web exposa un endpoint senzill a `api/index.php` que retorna JSON amb els articles.
+
+Exemple de resposta:
+```json
+{
+    "ok": true,
+    "articles": [
+        {
+            "id": 1,
+            "autor": "alvaro",
+            "Nom": "Article d'exemple",
+            "Cos": "Contingut de prova",
+            "ultima_modificacio": "2026-04-02 10:00:00"
+        }
+    ]
+}
+```
+
+L'endpoint accepta el paràmetre `q` per filtrar per nom d'article:
+```text
+/api/?q=ferrari
+```
+
+### Ajax del buscador
+S'ha afegit Ajax al buscador del header amb `fetch()` perquè:
+- evita recarregar tota la pàgina cada vegada que busques
+- fa la cerca més ràpida i més còmoda per a l'usuari
+- serveix per demostrar la comunicació entre frontend i backend
+
+Funcionament bàsic:
+```text
+1. L'usuari escriu un text al buscador
+2. JavaScript fa una petició a `/api/?q=...`
+3. El servidor respon amb JSON
+4. El navegador pinta els resultats a la pàgina
+```
+
+Per tant, el Ajax no s'ha afegit per "fer-ho més modern", sinó per tenir una funcionalitat útil i fàcil d'explicar: un buscador que consulta l'API sense refrescar la web.
+
 ---
 
 ##  Schema BD (Simplificat)
@@ -192,7 +238,8 @@ CREATE TABLE articles (
 
 ### 3. Búsqueda Articles
 - Barra a la navegació
-- Búsqueda case-insensitive per título
+- Búsqueda amb Ajax contra `/api`
+- Resultats sense recarregar la pàgina
 
 ### 4. Filtrat Articles
 - Per autor
