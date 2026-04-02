@@ -44,7 +44,7 @@ class ModelUsers
     public function login(string $email, string $contrasenya): ?array
     {
         // Obtenir les dades de l'usuari i validar la contrasenya amb hash segur
-        $sql = "SELECT * FROM usuaris WHERE email = :email LIMIT 1";
+        $sql = "SELECT nickname, nom, cognom, email, contrasenya, administrador, imatge_perfil FROM usuaris WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':email' => $email]);
 
@@ -88,7 +88,7 @@ class ModelUsers
      */
     public function obtenirPerNickname(string $nickname): ?array
     {
-        $sql = "SELECT * FROM usuaris WHERE nickname = :nickname LIMIT 1";
+        $sql = "SELECT nickname, nom, cognom, email, contrasenya, administrador, imatge_perfil, oauth_provider, oauth_id FROM usuaris WHERE nickname = :nickname LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':nickname' => $nickname]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -100,7 +100,7 @@ class ModelUsers
      */
     public function obtenirPerEmail(string $email): ?array
     {
-        $sql = "SELECT * FROM usuaris WHERE email = :email LIMIT 1";
+        $sql = "SELECT nickname, nom, cognom, email, contrasenya, administrador, imatge_perfil, oauth_provider, oauth_id FROM usuaris WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':email' => $email]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -281,7 +281,7 @@ class ModelUsers
      */
     public function obtenirUsuariPerToken(string $token): ?array
     {
-        $sql = "SELECT * FROM usuaris WHERE remember_token = :token AND remember_expiry > NOW() LIMIT 1";
+        $sql = "SELECT nickname, nom, cognom, email, administrador, imatge_perfil FROM usuaris WHERE remember_token = :token AND remember_expiry > NOW() LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':token' => $token]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -331,7 +331,7 @@ class ModelUsers
      */
     public function obtenirUsuariPerTokenRecuperacio(string $token): ?array
     {
-        $sql = "SELECT * FROM usuaris WHERE reset_token = :token AND reset_expiry > NOW() LIMIT 1";
+        $sql = "SELECT nickname, email FROM usuaris WHERE reset_token = :token AND reset_expiry > NOW() LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':token' => $token]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -370,7 +370,7 @@ class ModelUsers
      */
     public function obtenirUsuariPerOAuth(string $provider, string $oauthId): ?array
     {
-        $sql = "SELECT * FROM usuaris WHERE oauth_provider = :provider AND oauth_id = :oauth_id LIMIT 1";
+        $sql = "SELECT nickname, nom, cognom, email, administrador, imatge_perfil, oauth_provider, oauth_id FROM usuaris WHERE oauth_provider = :provider AND oauth_id = :oauth_id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':provider' => $provider, ':oauth_id' => $oauthId]);
         $usuari = $stmt->fetch(PDO::FETCH_ASSOC);
