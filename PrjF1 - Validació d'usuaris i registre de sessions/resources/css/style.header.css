@@ -99,9 +99,18 @@ header ul li.push-right {
   margin: 0 20px;
 }
 
+.search-bar:has(#api-search-input) {
+  max-width: 520px;
+}
+
 .search-form {
   display: flex;
   gap: 10px;
+}
+
+.search-form .search-input {
+  flex: 1;
+  min-width: 0;
 }
 
 .search-input {
@@ -145,4 +154,12 @@ header ul li.push-right {
 
 .search-btn:active {
   transform: translateY(0);
+}
+
+.api-search-status {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }

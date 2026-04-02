@@ -19,11 +19,11 @@
                 </a>
             </li>
 
-            <!-- Barra de búsqueda -->
+            <!-- Cerca amb Ajax -->
             <li class="search-bar">
-                <form class="search-form" method="get" action="<?php echo BASE_PATH; ?>/index.php">
-                    <input type="text" name="q" placeholder="Buscar articles..." class="search-input" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
-                    <button type="submit" class="search-btn">Buscar</button>
+                <form class="search-form" id="api-search-form" action="#" onsubmit="return false;">
+                    <input type="text" id="api-search-input" placeholder="Buscar articles..." class="search-input" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
+                    <button type="button" class="search-btn" id="api-search-btn">Buscar</button>
                 </form>
             </li>
 
@@ -56,6 +56,75 @@
             <?php endif; ?>
         </ul>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('api-search-input');
+            const button = document.getElementById('api-search-btn');
+            const status = document.getElementById('api-search-status');
+            const results = document.getElementById('api-search-results');
+            const apiUrl = <?= json_encode(BASE_PATH . '/api/?q=') ?>;
+
+            if (!input || !button || !status || !results) {
+                return;
+            }
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#039;');
+            }
+
+            function pintarArticles(articles) {
+                if (!Array.isArray(articles) || articles.length === 0) {
+                    results.innerHTML = '';
+                    status.textContent = 'No s\'han trobat articles.';
+                    return;
+                }
+
+                results.innerHTML = articles.map(function (article) {
+                    return '<article class="card">'
+                        + '<header class="card__header"><h2 class="card__title">' + escapeHtml(article.Nom ?? '') + '</h2></header>'
+                        + '<div class="card__body">'
+                        + '<p>' + escapeHtml(article.Cos ?? '') + '</p>'
+                        + '<p class="autor">Autor: ' + escapeHtml(article.autor ?? '') + '</p>'
+                        + '</div>'
+                        + '</article>';
+                }).join('');
+
+                status.textContent = 'S\'han trobat ' + articles.length + ' article(s).';
+            }
+
+            async function buscarArticles() {
+                const q = input.value.trim();
+                status.textContent = 'Carregant...';
+                results.innerHTML = '';
+
+                try {
+                    const response = await fetch(apiUrl + encodeURIComponent(q));
+                    if (!response.ok) {
+                        throw new Error('Error HTTP');
+                    }
+
+                    const data = await response.json();
+                    pintarArticles(data.articles);
+                } catch (error) {
+                    status.textContent = 'Error carregant els articles.';
+                }
+            }
+
+            button.addEventListener('click', buscarArticles);
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    buscarArticles();
+                }
+            });
+        });
+    </script>
 
 </body>
 

@@ -13,7 +13,6 @@ require_once __DIR__ . '/app/controller/articles.php';
 ?>
 <!DOCTYPE html>
 <html lang="ca">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,6 +40,9 @@ require_once __DIR__ . '/app/controller/articles.php';
 
     <main>
         <img class="F1-title" src="uploads/img/Formula1.webp" alt="Formula1-logo">
+
+        <div id="api-search-status" class="api-search-status"></div>
+        <div id="api-search-results" class="cards-grid"></div>
 
         <!-- Missatge de registre exitoso -->
         <?php if (isset($_GET['registered']) && $_GET['registered'] == '1'): ?>

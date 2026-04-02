@@ -8,7 +8,14 @@ require_once __DIR__ . '/../app/model/model.articles.php';
 header('Content-Type: application/json; charset=utf-8');
 
 $pdoArticles = new ModelArticles($conn);
-$articles = $pdoArticles->obtenirTots();
+$busquedaTerm = trim($_GET['q'] ?? '');
+
+if ($busquedaTerm !== '') {
+	$totalArticles = $pdoArticles->contarBusqueda($busquedaTerm);
+	$articles = $pdoArticles->buscar($busquedaTerm, $totalArticles > 0 ? $totalArticles : 1, 0);
+} else {
+	$articles = $pdoArticles->obtenirTots();
+}
 
 echo json_encode([
 	'ok' => true,
