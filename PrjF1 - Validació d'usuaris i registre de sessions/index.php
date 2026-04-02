@@ -8,7 +8,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
 }
 
 // Ara incloure session_check.php
-require_once __DIR__ . '/includes/session_check.php';
+require_once __DIR__ . '/app/controller/session_check.php';
 require_once __DIR__ . '/app/controller/articles.php';
 ?>
 <!DOCTYPE html>

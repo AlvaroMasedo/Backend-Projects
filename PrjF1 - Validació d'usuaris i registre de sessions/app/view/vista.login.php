@@ -9,7 +9,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
 
 // SEMPRE requerir oauth_config per a la vista
 require_once __DIR__ . '/../../lib/oauth_config.php';
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../app/controller/session_check.php';
 
 // Inicialitzar contadorIntents si no existeix (per si s'accedeix directament a la vista)
 if (!isset($contadorIntents)) {

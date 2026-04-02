@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../config/db_connection.php';
 require_once __DIR__ . '/../model/model.usuari.php';
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/session_check.php';
 require_once __DIR__ . '/../../lib/oauth_config.php';
 carregarEnv(__DIR__ . '/../../.env');
 
@@ -69,7 +69,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../../config/db_connection.php';
 require_once __DIR__ . '/../model/model.usuari.php';
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/session_check.php';
 require_once __DIR__ . '/../../lib/phpmailer/src/PHPMailer.php';
 require_once __DIR__ . '/../../lib/phpmailer/src/SMTP.php';
 require_once __DIR__ . '/../../lib/phpmailer/src/Exception.php';

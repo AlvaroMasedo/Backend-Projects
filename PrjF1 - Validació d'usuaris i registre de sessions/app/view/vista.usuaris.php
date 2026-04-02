@@ -7,7 +7,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); //Esborrar cookie després de mostrar el missatge
 }
 // Ara incloure session_check.php
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../app/controller/session_check.php';
 
 // Verificar que l'usuari sigui administrador
 if (!isset($_SESSION['usuari']) || $_SESSION['usuari']['administrador'] != 1) {

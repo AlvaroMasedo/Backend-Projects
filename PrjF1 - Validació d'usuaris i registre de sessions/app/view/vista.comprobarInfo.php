@@ -1,6 +1,6 @@
 <!--Alvaro Masedo Pérez -->
 <?php
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../app/controller/session_check.php';
 
 // Comprovar que hi hagi dades de registre
 if (!isset($_SESSION['dades_registre'])) {

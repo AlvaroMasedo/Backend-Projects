@@ -10,7 +10,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
 // Inicialitzar contadorIntents si no existeix (per si s'accedeix directament a la vista)
 if (!isset($contadorIntents)) {
     // Fer ús d'una funció centralitzada per garantir configuració correcta
-    require_once __DIR__ . '/../../includes/session_check.php';
+    require_once __DIR__ . '/../../app/controller/session_check.php';
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 }
 

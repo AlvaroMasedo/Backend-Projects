@@ -9,7 +9,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config/db_connection.php';
 
 // Assegurar que la sessió està iniciada i gestionar logout
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/session_check.php';
 require_once __DIR__ . '/../model/model.articles.php';
 require_once __DIR__ . '/../../lib/auth.php';
 

@@ -9,7 +9,7 @@
 -->
 <?php
 // === INCLUSIÓ DE FITXERS REQUERITS ===
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../app/controller/session_check.php';
 
 // === VALIDACIÓ DE SESIÓ ===
 // Verifica que l'usuari està autenticat. Si no, redirigeix al login

@@ -3,7 +3,7 @@ declare(strict_types=1);
 //Álvaro Masedo Pérez
 // Auth helpers centralitzats
 
-// No iniciem sessió aquí: s'assumeix que `includes/session_check.php` ho fa
+// No iniciem sessió aquí: s'assumeix que `app/controller/session_check.php` ho fa
 if (session_status() === PHP_SESSION_NONE) {
     
 }

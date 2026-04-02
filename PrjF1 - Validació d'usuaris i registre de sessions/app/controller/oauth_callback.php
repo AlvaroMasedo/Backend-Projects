@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 // === INCLUDES ===
 require_once __DIR__ . '/../../config/db_connection.php';
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/session_check.php';
 require_once __DIR__ . '/../model/model.usuari.php';
 require_once __DIR__ . '/../../lib/oauth_config.php';
 

@@ -7,7 +7,7 @@ if ($sessionExpired && isset($_COOKIE['session_expired'])) {
     setcookie('session_expired', '', time() - 3600, '/'); //Eliminar cookie després de mostrar missatge
 }
 // Ara incloure session_check.php
-require_once __DIR__ . '/../../includes/session_check.php';
+require_once __DIR__ . '/../../app/controller/session_check.php';
 // Si no hi ha sessió volem ocultar els botons d'autenticació al header d'aquesta vista
 $ocultarBotons = !isset($_SESSION['usuari']);
 // Carregar controlador d'articles per obtenir $articles i paginació

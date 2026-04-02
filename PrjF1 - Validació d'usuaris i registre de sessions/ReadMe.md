@@ -34,11 +34,10 @@ Projecte educatiu de gestió d'usuaris i articles per a DAW.
 ```
 app/
 ├── model/          → Connecció BD (queries, prepared statements)
-├── controller/     → Lògica negoci (fluxes, validacions)
+├── controller/     → Lògica negoci (fluxes, validacions) + session_check.php
 └── view/           → Formularis i vistes (HTML)
 
 config/            → Configuració BD + .env secrets
-includes/          → session_check.php (manages sessions)
 lib/               → OAuth, reCAPTCHA, email (PHPMailer)
 resources/css/     → Estils
 uploads/           → Fotos d'usuaris

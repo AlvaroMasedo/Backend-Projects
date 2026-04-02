@@ -14,7 +14,7 @@
 <body>
     <?php
     // Verificar si hi ha dades prèvies del formulari per omplir els camps
-    require_once __DIR__ . '/../../includes/session_check.php';
+    require_once __DIR__ . '/../../app/controller/session_check.php';
     require_once __DIR__ . '/../../lib/oauth_config.php';
     OAuthConfig::inicialitzar();
     $formData = $_SESSION['form_data'] ?? [];

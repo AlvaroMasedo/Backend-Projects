@@ -23,7 +23,7 @@ function registrarUsuari()
     global $conn;
 
     // Iniciar la sessió amb configuració segura
-    require_once __DIR__ . '/../../includes/session_check.php';
+    require_once __DIR__ . '/session_check.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Obtenir dades del formulari
@@ -106,7 +106,7 @@ function confirmarRegistre()
     global $conn;
 
     // Usar la funció centralitzada
-    require_once __DIR__ . '/../../includes/session_check.php';
+    require_once __DIR__ . '/session_check.php';
 
     // Comprovar que hi hagi dades de registre a la sessió
     if (!isset($_SESSION['dades_registre'])) {

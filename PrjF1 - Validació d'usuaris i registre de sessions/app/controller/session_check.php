@@ -2,7 +2,7 @@
 //Álvaro Masedo Pérez
 // session_check.php
 
-require_once __DIR__ . '/../config/basepath.php';
+require_once __DIR__ . '/../../config/basepath.php';
 
 /**
  * Funció per iniciar sessió amb configuració correcta
@@ -41,8 +41,8 @@ $calCarregarBD = (
 );
 
 if ($calCarregarBD) {
-    require_once __DIR__ . '/../config/db_connection.php';
-    require_once __DIR__ . '/../app/model/model.usuari.php';
+    require_once __DIR__ . '/../../config/db_connection.php';
+    require_once __DIR__ . '/../model/model.usuari.php';
     $controlarUsers = new ModelUsers($conn);
 }
 

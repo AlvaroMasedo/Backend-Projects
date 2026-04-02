@@ -25,7 +25,7 @@ function iniciarSessio()
     $controlarUsers = new ModelUsers($conn);
 
     // Iniciar sessió amb configuració segura
-    require_once __DIR__ . '/../../includes/session_check.php';
+    require_once __DIR__ . '/session_check.php';
 
     $contadorIntents = $_SESSION['contadorIntents'] ?? 0;
 
