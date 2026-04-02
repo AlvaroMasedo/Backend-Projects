@@ -200,28 +200,21 @@ class ModelUsers
     /////////                                   COUNTS                                  //////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    /* Mètode per verificar la contrasenya d'un usuari per nickname
+    /* Mètode per verificar la contrasenya per email o nickname
+     * @param string $contrasenya Contrasenya en text pla
+     * @param string $identificador Valor a cercar (email o nickname)
+     * @param string $tipusIdentificador 'email' o 'nickname'
      * Retorna true si la contrasenya és correcta, false en cas contrari
      */
-    public function verificarContrasenya(string $nickname, string $contrasenya): bool
+    public function verificarContrasenya(string $contrasenya, string $identificador, string $tipusIdentificador = 'email'): bool
     {
-        $sql = "SELECT contrasenya FROM usuaris WHERE nickname = :nickname LIMIT 1";
+        if (!in_array($tipusIdentificador, ['email', 'nickname'], true)) {
+            return false;
+        }
+
+        $sql = "SELECT contrasenya FROM usuaris WHERE {$tipusIdentificador} = :identificador LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':nickname' => $nickname]);
-        $hashGuardat = $stmt->fetchColumn();
-
-        return is_string($hashGuardat) && $this->verificarHashContrasenya($contrasenya, $hashGuardat);
-    }
-
-
-    /* Mètode per comprovar si la contrasenya és correcta per a un email donat
-     * Retorna true si la contrasenya és correcta, false en cas contrari
-     */
-    public function comprobarContrasenya(string $contrasenya, string $email): bool
-    {
-        $sql = "SELECT contrasenya FROM usuaris WHERE email = :email LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':email' => $email]);
+        $stmt->execute([':identificador' => $identificador]);
         $hashGuardat = $stmt->fetchColumn();
 
         return is_string($hashGuardat) && $this->verificarHashContrasenya($contrasenya, $hashGuardat);

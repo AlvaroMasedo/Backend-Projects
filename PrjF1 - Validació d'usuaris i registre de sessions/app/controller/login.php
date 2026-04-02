@@ -67,7 +67,7 @@ function iniciarSessio()
                 $errorEmail = '<p class="error">AQUEST COMPTE ESTÀ VINCULAT A GOOGLE. UTILITZA EL BOTÓ "INICIA SESSIÓ AMB GOOGLE" PER ACCEDIR.</p>';
 
                 // Si la contrasenya es incorrecta dona error
-            } else if (!$controlarUsers->comprobarContrasenya($contrasenya, $email)) {
+            } else if (!$controlarUsers->verificarContrasenya($contrasenya, $email, 'email')) {
                 $errorContrasenya = '<p class="error">CONTRASENYA INCORRECTA, TORNA A PROVAR</p>';
                 $contrasenya = '';
                 // Incrementar i guardar el contador d'intents a la sessió

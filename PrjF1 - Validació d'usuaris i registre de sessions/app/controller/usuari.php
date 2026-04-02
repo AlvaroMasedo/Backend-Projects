@@ -62,7 +62,7 @@ if ($action === 'modificar') {
                 $errorCanviContrasenya = true;
             } else if (!empty($contrasenyaActual) && !empty($novaContrasenya) && !empty($confirmaNovaContrasenya)) {
                 // Verificar contrasenya actual
-                if (!$pdoUsers->verificarContrasenya($nickname_actual, $contrasenyaActual)) {
+                if (!$pdoUsers->verificarContrasenya($contrasenyaActual, $nickname_actual, 'nickname')) {
                     $errorContrasenyaActual = '<p class="error">LA CONTRASENYA ACTUAL ÉS INCORRECTA.</p>';
                     $errorCanviContrasenya = true;
                 } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,20}$/u', $novaContrasenya)) {
