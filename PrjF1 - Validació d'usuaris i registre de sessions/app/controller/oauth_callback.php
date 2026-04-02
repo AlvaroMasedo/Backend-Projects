@@ -45,18 +45,24 @@ error_log("OAuth Callback - Context: " . $context);
 
 // === VALIDACIÓ DE STATE (CSRF PROTECTION) ===
 // State és un token aleatori per prevenir CSRF attacks
-// Si els states coincideixen, significa que Google és de confiança
-// Actualment en mode DEBUG (TODO: Reactivar strict validation després)
-if (isset($_SESSION['oauth_state']) && $_SESSION['oauth_state'] === $state) {
-    // State correcte - seguir
-    error_log("OAuth Callback - State vàlid");
-} else {
-    // State no coincideix - AVÍS temporal
-    error_log("OAuth Callback - ADVERTÈNCIA: State no coincideix (modo debug, permissiu)");
-    if (!empty($state)) {
-        $_SESSION['oauth_state'] = $state;
-    }
+// Si els states no coincideixen, la petició es considera potencialment maliciosa.
+$stateSessio = $_SESSION['oauth_state'] ?? null;
+$stateValid = is_string($stateSessio)
+    && $stateSessio !== ''
+    && is_string($state)
+    && $state !== ''
+    && hash_equals($stateSessio, $state);
+
+if (!$stateValid) {
+    error_log("OAuth Callback - ERROR CSRF: state invàlid o no coincideix.");
+    unset($_SESSION['oauth_state']);
+    unset($_SESSION['oauth_pending']);
+    unset($_SESSION['oauth_context']);
+    header('Location: ../view/vista.login.php?error=oauth_state_invalid');
+    exit;
 }
+
+error_log("OAuth Callback - State vàlid");
 
 // === INICIALITZACIÓ DE VARIABLES ===
 $usuariOAuth = null;
